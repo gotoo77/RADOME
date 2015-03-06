@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html id="html" lang="en" ng-app="RADOME_Module" ng-controller="RADOME_MainCtrl">
+<head>
+  	<link rel="icon"  type="image/png" href="img/radome_icone_40x40.png" />
+    <meta charset="utf-8">
+    <title> {{ 'RADOME_ProjectName' | translate }} : {{ 'RADOME_ProjectName_content' | translate }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="css/RADOME.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-select.css">
+<style>
+ 
+</style>
+</head>
+
+<body >
+<!--
+<div class="container">
+
+
+<div id="content">
+    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+        <li class="active"><a href="#red" data-toggle="tab">Red</a></li>
+        <li><a href="#orange" data-toggle="tab">Orange</a></li>
+        <li><a href="#yellow" data-toggle="tab">Yellow</a></li>
+        <li><a href="#green" data-toggle="tab">Green</a></li>
+        <li><a href="#blue" data-toggle="tab">Blue</a></li>
+    </ul>
+    <div id="my-tab-content" class="tab-content">
+        <div class="tab-pane active" id="red">
+            <h1>Red</h1>
+            <p>red red red red red red</p>
+        </div>
+        <div class="tab-pane" id="orange">
+            <h1>Orange</h1>
+            <p>orange orange orange orange orange</p>
+        </div>
+        <div class="tab-pane" id="yellow">
+            <h1>Yellow</h1>
+            <p>yellow yellow yellow yellow yellow</p>
+        </div>
+        <div class="tab-pane" id="green">
+            <h1>Green</h1>
+            <p>green green green green green</p>
+        </div>
+        <div class="tab-pane" id="blue">
+            <h1>Blue</h1>
+  
+
+        </div>
+		
+		
+		
+		
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#tabs').tab();
+    });
+	
+</script>    
+</div> <!-- container 
+-->
+<div class="header">
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-inner">
+	  <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  
+		  <span id="myprojectName">
+				<a class="navbar-brand home-menu" id="pop" 
+					href="#" 
+					class="btn btn-lg btn-danger" 
+					data-toggle="popover" 
+					data-content="{{ 'RADOME_ProjectName_content' | translate }}"
+				> {{ 'RADOME_ProjectName' | translate }}</a>
+			</span>
+		  
+
+        </div>
+        <div class="navbar-collapse collapse" style="height: 1px;">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> {{ 'RADOME_Home' | translate }} </a></li>
+
+			<li class="header_bar"><a id="MenuBtnDebug"><span class="glyphicon glyphicon-wrench"></span> {{ 'RADOME_Debug' | translate }}</a></li>
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-globe"></span> {{ 'RADOME_Menu_1' | translate }} <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a ng-click="setLang('en_EN')"><img class="flag flag-england" /> {{ 'RADOME_SubMenu_1' | translate }}</a></li>
+					<li><a ng-click="setLang('fr_FR')"><img class="flag flag-fr" /> {{ 'RADOME_SubMenu_2' | translate }}</a></li>
+				</ul>
+			</li>
+          </ul>
+		  <ul class="nav navbar-nav pull-right">
+		  	<li class="dropdown" id="RADOME_Server_Info">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-question-sign"></span> {{ 'RADOME_Server_Info' | translate }} <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li> {{ 'RADOME_Server_release'| translate }}		:	<span class="badge"> {{ versionInfo.release }}</span>	</li>
+					<li> {{ 'RADOME_Server_buildDate'| translate }}	:	<span class="badge"> {{ versionInfo.buildDate }}</span>  </li>
+					<li> {{ 'RADOME_Server_buildTime'| translate }}	:	<span class="badge"> {{ versionInfo.buildTime }}</span>  </li>
+					<li role="presentation" class="divider"></li>
+					<li> {{ 'RADOME_Server_LWS_vers'| translate }}	:	<span class="badge"> {{ versionInfo.LWS_version }}</span>  </li>
+				</ul>
+			</li>
+			<li class="dropdown about-menu">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-question-sign"></span>  {{ 'RADOME_About' | translate }} <span class="badge">Version : {{ ClientVersion }}</span><b class="caret"></b></a>
+				<ul class="dropdown-menu">
+
+					<p> {{ 'RADOME_ToolsUsed' | translate }} : 
+					<li> <a href="https://angularjs.org/"> <img class="RADOME_logo" ng-src="{{AngularLogo}}" /> Angular.js</a>  </li>
+					<li> <a href="http://twitter.github.com/bootstrap/"> <img class="RADOME_logo" ng-src="{{BSLogo}}" />Bootstrap </a> </li>
+					<li> <a href="https://github.com/warmcat/libwebsockets"> <img class="RADOME_logo" ng-src="{{libwebsocketsLogo}}" /> libwebsockets</a> </li>
+					<li> <a href="http://angular-ui.github.io/bootstrap/"> <img class="RADOME_logo" ng-src="{{UIBootstrapLogo}}" />UI Bootstrap</a>  </li>
+					<li> <a href="http://jquery.com/"> <img class="RADOME_logo" ng-src="{{jqueryLogo}}" /> jQuery</a>  </li>
+					</p>
+				</ul>
+			</li>
+			
+		</ul>
+				</div><!--/.nav-collapse -->
+				
+			</div><!-- container -->
+		</div><!--/.navbar-inner -->
+	</div><!--/navbar-inverse-->
+</div>	<!--/header-->				
+
+
+	<div class="row" id="global_panel">
+	
+          <div class="container" id="debug_header_panel">
+				
+			
+			<div class="row">
+			  <div class="col-lg-6">
+				<div class="input-group">
+				  <span class="input-group-addon">
+					<input type="checkbox" aria-label="..." id="Btn_lp" checked> {{'RADOME_CB_LP'|translate}}
+				  </span>
+
+				</div><!-- /input-group -->
+			  </div><!-- /.col-lg-6 -->
+			  <div class="col-lg-6">
+				<div class="input-group">
+				  <span class="input-group-addon">
+					<input type="checkbox" aria-label="..." id="Btn_rp" checked> {{'RADOME_CB_RP'|translate}}
+				  </span>
+
+				</div><!-- /input-group -->
+			  </div><!-- /.col-lg-6 -->
+			</div><!-- /.row -->
+			
+			
+			
+			
+			<div  class="container" id="RADOME_dbg">
+				<div class="row">
+					
+					<div class="col-lg-4">
+						<div class="input-group">
+						<span class="label" id="WS_debug_status_0"> ...</span>	
+						<span class="input-group-addon"> {{'RADOME_DEBUG_WS_URL'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_url_0">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon" > {{'RADOME_DEBUG_WS_Protocol'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_protocol_0">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">				
+						<button type="button" class="btn btn-default" id="WS_debug_connect_0"> 
+						{{'RADOME_DEBUG_BUTTON_WS_CONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+						<button type="button" class="btn btn-default" id="WS_debug_disconnect_0"> 
+						{{'RADOME_DEBUG_BUTTON_WS_DISCONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+					</div><!-- /.col-lg-4 -->	
+				</div><!-- /.row -->
+				<div class="row">
+					Status: <span class="label label-success" id="WS_debug_status_1"> ...</span>	
+					
+					<div class="col-lg-4">
+						<div class="input-group">
+						<span class="input-group-addon"> {{'RADOME_DEBUG_WS_URL'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_url_1">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon" > {{'RADOME_DEBUG_WS_Protocol'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_protocol_1">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">				
+						<button type="button" class="btn btn-default" id="WS_debug_connect_1"> 
+						{{'RADOME_DEBUG_BUTTON_WS_CONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+						<button type="button" class="btn btn-default" id="WS_debug_disconnect_1"> 
+						{{'RADOME_DEBUG_BUTTON_WS_DISCONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+					</div><!-- /.col-lg-4 -->	
+				</div><!-- /.row -->
+				<div class="row">
+					Status: <span class="label label-success" id="WS_debug_status_2"> ...</span>	
+					
+					<div class="col-lg-4">
+						<div class="input-group">
+						<span class="input-group-addon"> {{'RADOME_DEBUG_WS_URL'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_url_2">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon" > {{'RADOME_DEBUG_WS_Protocol'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_protocol_2">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">				
+						<button type="button" class="btn btn-default" id="WS_debug_connect_2"> 
+						{{'RADOME_DEBUG_BUTTON_WS_CONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+						<button type="button" class="btn btn-default" id="WS_debug_disconnect_2"> 
+						{{'RADOME_DEBUG_BUTTON_WS_DISCONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+					</div><!-- /.col-lg-4 -->	
+				</div><!-- /.row -->
+				<div class="row">
+					Status: <span class="label label-success" id="WS_debug_status_3"> ...</span>	
+					
+					<div class="col-lg-4">
+						<div class="input-group">
+						<span class="input-group-addon"> {{'RADOME_DEBUG_WS_URL'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_url_3">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon" > {{'RADOME_DEBUG_WS_Protocol'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_protocol_3">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">				
+						<button type="button" class="btn btn-default" id="WS_debug_connect_3"> 
+						{{'RADOME_DEBUG_BUTTON_WS_CONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+						<button type="button" class="btn btn-default" id="WS_debug_disconnect_3"> 
+						{{'RADOME_DEBUG_BUTTON_WS_DISCONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+					</div><!-- /.col-lg-4 -->	
+				</div><!-- /.row -->			
+				<div class="row">
+					Status: <span class="label label-success" id="WS_debug_status_4"> ...</span>	
+					
+					<div class="col-lg-4">
+						<div class="input-group">
+						<span class="input-group-addon"> {{'RADOME_DEBUG_WS_URL'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_url_4">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon" > {{'RADOME_DEBUG_WS_Protocol'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_protocol_4">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">				
+						<button type="button" class="btn btn-default" id="WS_debug_connect_4"> 
+						{{'RADOME_DEBUG_BUTTON_WS_CONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+						<button type="button" class="btn btn-default" id="WS_debug_disconnect_4"> 
+						{{'RADOME_DEBUG_BUTTON_WS_DISCONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+					</div><!-- /.col-lg-4 -->	
+				</div><!-- /.row -->
+				<div class="row">
+					Status: <span class="label label-success" id="WS_debug_status_5"> ...</span>	
+					
+					<div class="col-lg-4">
+						<div class="input-group">
+						<span class="input-group-addon"> {{'RADOME_DEBUG_WS_URL'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_url_5">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon" > {{'RADOME_DEBUG_WS_Protocol'|translate}}</span>
+						<input type="text" class="form-control" id="WS_debug_protocol_5">
+						</div><!-- /input-group -->
+					</div><!-- /.col-lg-4 -->
+					<div class="col-lg-4">				
+						<button type="button" class="btn btn-default" id="WS_debug_connect_5"> 
+						{{'RADOME_DEBUG_BUTTON_WS_CONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+						<button type="button" class="btn btn-default" id="WS_debug_disconnect_5"> 
+						{{'RADOME_DEBUG_BUTTON_WS_DISCONNECT'|translate}} 
+						<span class="glyphicon glyphicon-cog"></span></button>
+					</div><!-- /.col-lg-4 -->	
+				</div><!-- /.row -->
+
+				<div id="dbg_txt_plus_send" class="input-group">
+					<input type="text" id="WS_debug_text" class="form-control" >
+					<span class="input-group-btn">
+					<button type="button" class="btn" id="WS_debug_send"><span class="label label-danger"> {{'RADOME_DEBUG_BUTTON_WS_debug_send'|translate}}</span> <span class="glyphicon glyphicon-send"></span></button> 
+					</span>
+				</div>
+
+				{{'RADOME_DEBUG_BUTTON_WS_debug_msg'|translate}} : 
+				<textarea id="WS_debug_msg" class="form-control" cols="100" rows="5"> </textarea> 
+			</div>
+			
+			<div id="RADOME_CmdInterface" >
+				<button type="button" class="btn btn-default" id="STOP" > {{'RADOME_BUTTON_STOP'|translate}} <span class="glyphicon glyphicon-cog"></span></button> 
+			</div>
+			
+			
+		</div>
+
+		<div class="col-md-6 portfolio-item" id="left_panel">
+			<h3> {{ 'RADOME_TITLE_CMD_GUI' | translate }}</h3>
+
+		<select id="SelectRADOMECmds" title="{{ 'RADOME_SELECT_TITLE' | translate }}" ><option> {{ 'RADOME_SELECT_TITLE' | translate }}</option><option>list</option>   </select>
+		<span id="RADOME_Help_info_01">
+				<a id="pop1" 
+					class="label label-info"
+					data-toggle="popover" 
+					data-content="{{ 'RADOME_Help_msg' | translate }}"
+				><span class="glyphicon glyphicon-comment"> {{ 'RADOME_Help' | translate }}</span></a>
+			</span>
+
+			<div id="RADOME_CmdInterface">
+			<div class="col-lg-12">
+				<div id="txt_plus_send" class="input-group">
+					<input type="text" id="text_to_send" class="form-control" >
+					<span class="input-group-btn">
+					<button type="button" class="btn btn-success" id="Btn_send">
+					{{'RADOME_BUTTON_SEND'|translate}}
+					<span class="glyphicon glyphicon-send"></span></button> 
+					</span>
+				</div>
+			</div>
+				
+			<div id="RADOME_WEBSOCKET_LOG_MAIN">	
+				<button id="WS_Main_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span> {{ 'RADOME_WEBSOCKET_LOG_MAIN' | translate }}</button>
+				<button type="button" class="btn btn-default" id="Btn_WSLogMain_Clear"> {{ 'RADOME_ClearLog' | translate }}<span class="glyphicon glyphicon-remove"></span></button>
+				<div id="RADOME_LOG_WS_MAIN" class="RADOME_LOG_WS">
+				</div>
+			</div>
+			<div id="RADOME_WEBSOCKET_LOG_CAN">	
+				<button id="WS_CAN_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span> {{ 'RADOME_WEBSOCKET_LOG_CAN' | translate }}</button>
+				<button type="button" class="btn btn-default" id="Btn_WSLogCAN_Clear"> {{ 'RADOME_ClearLog' | translate }}<span class="glyphicon glyphicon-remove"></span></button>
+				<div id="RADOME_LOG_WS_CAN" class="RADOME_LOG_WS">
+				</div>
+			</div>	
+			<div id="RADOME_WEBSOCKET_LOG_VIDEO">					
+				<button id="WS_VIDEO_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span> {{ 'RADOME_WEBSOCKET_LOG_VIDEO' | translate }}</button>
+				<button type="button" class="btn btn-default" id="Btn_WSLogVIDEO_Clear"> {{ 'RADOME_ClearLog' | translate }}<span class="glyphicon glyphicon-remove"></span></button>
+				<div id="RADOME_LOG_WS_VIDEO" class="RADOME_LOG_WS">
+				</div>
+			</div>
+			<div id="RADOME_WEBSOCKET_LOG_AUDIO">	
+				<button id="WS_AUDIO_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span> {{ 'RADOME_WEBSOCKET_LOG_AUDIO' | translate }}</button>
+				<button type="button" class="btn btn-default" id="Btn_WSLogAUDIO_Clear"> {{ 'RADOME_ClearLog' | translate }}<span class="glyphicon glyphicon-remove"></span></button>
+				<div id="RADOME_LOG_WS_AUDIO" class="RADOME_LOG_WS">
+				</div>
+			</div>
+			<div id="RADOME_WEBSOCKET_LOG_NAV">	
+				<button id="WS_NAV_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span> {{ 'RADOME_WEBSOCKET_LOG_NAV' | translate }}</button>
+				<button type="button" class="btn btn-default" id="Btn_WSLogNAV_Clear"> {{ 'RADOME_ClearLog' | translate }}<span class="glyphicon glyphicon-remove"></span></button>				
+				<div id="RADOME_LOG_WS_NAV" class="RADOME_LOG_WS">
+				</div>
+			</div>
+
+			<div id="RADOME_SentCmdHistory">
+			<ul>
+				<li  ng-repeat="oCmdHist in RADOME_SentCmdHistory">
+				numCmd:<span class="badge"> {{oCmdHist.numCmd}}</span> 
+				| cmdText:<span class="badge"> {{oCmdHist.cmdText}}</span>
+				| source:<span class="badge"> {{oCmdHist.source}}</span>
+				</li>
+			</ul>
+			</div><!--id="RADOME_SentCmdHistory"-->
+			<div id="RADOME_demoCmdTest">
+			demoInfo.labels:	<span class="badge"> {{ demoInfo.labels }}</span>
+			demoInfo.values :	<span class="badge"> {{ demoInfo.values }}</span>
+			</div>
+			<div id="RADOME_DemoInfo">
+			<ul>
+				<li  ng-repeat="oDemoInfo in RADOME_DemoInfo">
+					idx:<span class="badge"> {{oDemoInfo.idx}}</span> | value:<span class="badge"> {{oDemoInfo.value}}</span> | 	label:<span class="badge"> {{oDemoInfo.label}}</span>
+					<div class="progress">
+					<div class="progress-bar {{oDemoInfo.pbclass}}" role="progressbar" aria-valuenow="{{oDemoInfo.value}}" aria-valuemin="0" aria-valuemax="100" style="width: {{oDemoInfo.value}}%;">
+					{{oDemoInfo.label}}
+					</div>
+					</div>
+				</li>
+			</ul>
+			</div>
+					
+			<div id = "RADOME_alert_placeholder">
+			</div>
+				
+			</div> <!--id="RADOME_CmdInterface"-->
+			
+	</div>
+
+		<div class="col-md-6 portfolio-item" id="right_panel">
+			<h3>	{{ 'RADOME_TITLE_VISU_GUI' | translate }}	</h3>
+				
+			<ul id="myMenuTab" class="nav nav-pills nav-justified">
+			  <li><a id="menu2" href="#MENU2"><img class="RADOME_ico" ng-src="{{IcoMenuTab[0]}}"/> {{ 'RADOME_MENU_TAB_2' | translate }}</a></li>
+			  <li><a id="menu3" href="#MENU3"><img class="RADOME_ico" ng-src="{{IcoMenuTab[1]}}"/> {{ 'RADOME_MENU_TAB_3' | translate }}</a></li>
+			  <li><a id="menu4" href="#MENU4"><img class="RADOME_ico" ng-src="{{IcoMenuTab[2]}}"/> {{ 'RADOME_MENU_TAB_4' | translate }}</a></li>
+			  <li><a id="menu5" href="#MENU5"><img class="RADOME_ico" ng-src="{{IcoMenuTab[3]}}"/> {{ 'RADOME_MENU_TAB_5' | translate }}</a></li>
+			  <li><a id="menu6" href="#MENU6"><img class="RADOME_ico" ng-src="{{IcoMenuTab[4]}}"/> {{ 'RADOME_MENU_TAB_6' | translate }}</a></li>
+			  <li><a id="menu7" href="#MENU7"><img class="RADOME_ico" ng-src="{{IcoMenuTab[5]}}"/> {{ 'RADOME_MENU_TAB_7' | translate }}</a></li>
+			  </ul>
+
+			<div class="tab-content responsive">
+
+				<div class="tab-pane active" id="MENU2">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{IcoMenuTab[1]}}" /> {{ 'RADOME_TITLE_DATA1' | translate }}</h3>
+							<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+						</div>
+						<div class="panel-body" style="display: block;">
+							<div id="cont_gauge">
+								<canvas id="gauge" style="width:100%;max-width:850px;min-width:300px;border:2px solid;border-radius:25px;"></canvas>
+								<div id="console"></div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{IcoMenuTab[1]}}" /> {{ 'RADOME_TITLE_DATA2' | translate }}</h3>
+							<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+						</div>
+						<div class="panel-body" style="display: block;">
+							<div id="chartContainer_1" style="height: 300px;border:2px solid;border-radius:25px;" >	</div>
+						</div>
+					</div>									
+				</div> <!-- <div class="tab-pane active" id="MENU2"> -->
+				
+				<div class="tab-pane" id="MENU3">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{IcoMenuTab[1]}}" />{{ 'RADOME_TITLE_VIDEO_STREAM' | translate }}</h3>
+							<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+							
+						</div>
+						<div class="panel-body" style="display: block;">
+							<div id="page">
+								<p>Flowplayer</p>
+								<center><a style="display:block;width:720px;min-width:320px;height:420px" id="player">
+								  <img ng-src="{{flowplayerBG}}" alt="Player" style="width:720px;height:420px">
+								</a></center>
+								<button type="button" class="btn btn-info" onclick="display_from_JSON()"> Display Flowplayer config </button>
+								<code>
+								<p id="conf_to_display" class="less">
+								</p>
+								</code>
+								<h2>Documentation</h2>
+								<p>
+									<a href="http://www.mediaserve.com/knowledgebase/70/How-do-I-configure-FlowPlayer-for-flash-streaming.html">Flowplayer tutorial</a>
+								</p>		
+							</div>
+							
+						</div>
+					</div>
+				</div> <!-- <div class="tab-pane active" id="MENU3"> -->
+				
+				<div class="tab-pane" id="MENU4">
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><img class="RADOME_logo"  ng-src="{{IcoMenuTab[2]}}" /> {{ 'RADOME_Audio' | translate }}</h3>
+							<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+						</div>
+						<div class="panel-body" style="display: block;">
+							<!--	<div data-lorem="1-1p"></div>
+								<select id="ListeMP3"  onchange="f_GUI_Update_AudioList();">
+									<option value="-1">--{{ 'RADOME_SELECT_AUDIO' | translate }}--</option>
+								</select>
+-->								
+								<select id="SelectRADOMEAudio" title="{{ 'RADOME_SELECT_AUDIO' | translate }}" >
+									<option value="-1">-{{ 'RADOME_SELECT_AUDIO' | translate }}-</option>
+									<option>RADOME_AudioPlayer list</option>  
+								</select>
+							<audio id="RADOME_AudioPlayer" src="" autoplay="autoplay" controls="controls">
+								Your browser does not support the audio element.
+							</audio>
+
+							<div class="media">
+								<a class="media-left" href="#">
+								<img id="RADOME_Audio_MetaInfo_img" data-src="holder.js/64x64" alt="64x64" 
+									src="http://www.freevector.com/site_media/thumbs/preview_images/FreeVector-Colorful-Nature-Vectors_jpg_646x0_max_q95.jpg" 
+									data-holder-rendered="true" style="width: 64px; height: 64px;">
+								</a>
+								<div id="RADOME_Audio_MetaInfo" class="media-body">
+								<h4 id="RADOME_Audio_MetaInfo_title" class="media-heading"> RADOME_Audio_MetaInfo_title</h4>
+								<p id="RADOME_Audio_MetaInfo_path"> RADOME_Audio_MetaInfo_path </p>
+								<p id="RADOME_Audio_MetaInfo_desc"> RADOME_Audio_MetaInfo_desc </p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div> <!-- <div class="tab-pane" id="MENU4"> -->
+
+				<div class="tab-pane" id="MENU5">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{ICO_navigation}}" /> {{ 'RADOME_Nav' | translate }}</h3>
+							<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+						</div>					
+						<div class="panel-body" style="display: block;">	
+
+							<section class="map_container" >
+									<h2>{{ 'RADOME_Nav_MapTitle' | translate }}</h2>
+									<p>{{ 'RADOME_Nav_MapDesc' | translate }}</p>
+									<button id="BtnClearMapMarkers" type="button" class="btn"><span class="glyphicon glyphicon-remove"></span> {{ 'RADOME_Nav_MapClearMarkers' | translate }} </button>
+									<button id="BtnDispMap" type="button" class="btn" > {{ 'RADOME_Nav_DispMap' | translate }} </button>
+									<div id="pointers_map" class="map" style="display:none;"></div>
+			
+							</section>
+							<div data-lorem="1-3p"></div>
+							</div>
+						</div>
+
+					</div><!-- <div class="tab-pane" id="MENU5"> -->
+				
+				
+				<div class="tab-pane" id="MENU6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{ICO_Game1}}" /> {{ 'RADOME_Game1' | translate }}</h3>
+							<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+						</div>
+						<div class="panel-body" style="display: block;">
+											<div data-lorem="1-3p"></div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{ICO_Game2}}" /> {{ 'RADOME_Game2' | translate }}</h3>
+							<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+						</div>
+						<div class="panel-body" style="display: block;">
+											<div data-lorem="1-3p"></div>
+						</div>
+					</div>
+				</div> <!-- <div class="tab-pane" id="MENU6"> -->
+				
+				<div class="tab-pane" id="MENU7">
+					<div id="RADOME_Conf">
+					
+					
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{ICO_settings2}}" /> {{ 'RADOME_Settings' | translate }}</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class="panel-body" style="display: block;">
+							<div>
+								<button class="btn btn-default" id="btnGetConf" type="button"> <span class="glyphicon glyphicon-eye-open" ></span> {{ 'RADOME_btnGetConf' | translate }} </button>
+								<button class="btn btn-warning" id="btnDefaultConf"  type="button" disabled="disabled"> <span class="glyphicon glyphicon-open" ></span> {{ 'RADOME_btnDefaultConf' | translate }} </button>
+								<button class="btn btn-danger" id="btnSaveConf"  type="button" disabled="disabled"> <span class="glyphicon glyphicon-save"></span> {{ 'RADOME_btnSaveConf' | translate }} </button>
+							</div>
+							  <form id="RADOME_Conf_form" role="form" style="display:none">
+							  	<div class="checkbox">
+								  <label><input type="checkbox" value="DebugMode"> DebugMode</label>
+								</div>
+								<div class="checkbox">
+								  <label><input type="checkbox" value="ConsoleLog"> ConsoleLog</label>
+								</div>
+								<div class="checkbox">
+								  <label><input type="checkbox" value="AddLog_Create"> AddLog_Create</label>
+								</div>
+								<div class="checkbox">
+								  <label><input type="checkbox" value="AddLog_OnOpen"> AddLog_OnOpen</label>
+								</div>
+								<div class="checkbox disabled">
+								 <label><input type="checkbox" value="AddLog_OnError"> AddLog_OnError</label>
+								</div>
+								<div class="checkbox">
+								  <label><input type="checkbox" value="AddLog_OnMessage"> AddLog_OnMessage</label>
+								</div>
+								<div class="checkbox">
+								  <label><input type="checkbox" value="AddLog_OnClose"> AddLog_OnClose</label>
+								</div>
+								<div class="checkbox disabled">
+								 <label><input type="checkbox" value="AddLog_Exception"> AddLog_Exception</label>
+								</div>
+								<div class="checkbox">
+								  <label><input type="checkbox" value="AddLog_Warning"> AddLog_Warning</label>
+								</div>
+								<div class="checkbox">
+								  <label><input type="checkbox" value="AddLog_Send"> AddLog_Send</label>
+								</div>
+								
+								</form>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{ICO_settings1}}" /> {{ 'RADOME_Menu_1' | translate }}</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class="panel-body" style="display: block;">
+									<div data-lorem="1-2p"></div>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><img class="RADOME_logo" ng-src="{{ICO_settings3}}" /> {{ 'RADOME_Settings2' | translate }}</h3>
+					<span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+				</div>
+				<div class="panel-body" style="display: block;">
+									<div data-lorem="1-3p"></div>
+				</div>
+			</div>						
+					
+				</div>
+
+			</div> <!-- <div class="tab-pane" id="MENU7"> -->
+			
+		</div> <!-- <div class="col-md-6 portfolio-item" id="right_panel"> -->
+		
+   </div> <!--/class="row" id="global_panel"-->
+   
+<footer class="footer">
+	<div class="container">
+		<p class="pull-right">
+			<a href="#"><i class="glyphicon glyphicon-home"></i> {{ 'RADOME_BackHome' | translate }}</a></p>
+		<img class="Matis_logo" ng-src="{{MatisLogo}}"/> {{ 'RADOME_Footer_TEXT' | translate }}
+	 </div>
+</footer>
+
+<!-- Loading required JavaScript Codes-->  
+<script src="js/lib/jquery/jquery-1.11.1.min.js"></script>
+<script src="js/lib/angular/angular.min.js"></script>
+<script src="js/lib/ui-bootstrap-tpls/ui-bootstrap-tpls-0.11.0.js"></script> 
+
+<script src="js/lib/bootstrap-select/bootstrap-select.js"></script>
+<script src="js/lib/bootstrap/bootstrap.min.js"></script>
+<script src="js/lib/canvasjs/canvasjs.js"></script>
+<script src="js/lib/gauge/gauge.min.js"></script>
+<script src="flowplayer/flowplayer-3.2.13.min.js"></script>	
+<script src="js/lib/lorem/lorem.js"></script>
+
+<script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script src="js/lib/gmaps/gmaps.js"></script>
+<script src="js/RADOME_Nav.js"></script>
+
+<script src="js/RADOME_Angular.js"></script>	
+<script src="js/RADOME_Inits.js"></script> 
+<script src="js/RADOME_GUI_elements.js"></script>
+
+<script src="js/RADOME_Audio.js"></script>
+<script src="js/RADOME_Main.js"></script>
+	
+</body>
+	
+</html>

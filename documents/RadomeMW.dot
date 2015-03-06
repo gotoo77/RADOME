@@ -1,0 +1,150 @@
+digraph g {
+	graph [
+		rankdir = LR
+		bgcolor= white
+	]
+	node [
+		fontsize = "10"
+		shape = box
+		style = "rounded,filled"
+	]
+	edge [
+		fontsize = "8"
+	]
+
+		my_RADOME_serv1 [
+		label = <<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+<TR><TD ALIGN="right" ><FONT COLOR="darkgreen">RADOME_functionName:</FONT></TD><TD ALIGN="left" >RADOME_SimulateCAN_SpeedData</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">sendFrequency:</FONT></TD><TD ALIGN="left" > 	1000ms	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="darkorchid4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+
+</TABLE>>
+		color = blue4
+		fillcolor = yellow
+	]
+	my_RADOME_serv2 [
+		label = <<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+<TR><TD ALIGN="right" ><FONT COLOR="darkgreen">RADOME_functionName:</FONT></TD><TD ALIGN="left" >RADOME_SimulateCAN_TempData</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">sendFrequency:</FONT></TD><TD ALIGN="left" > 	2500ms	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="darkorchid4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+
+</TABLE>>
+		color = blue4
+		fillcolor = yellow
+	]
+	
+	my_RADOME_Middleware2 [
+		label = <<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+<TR><TD ALIGN="right" ><FONT COLOR="darkgreen">inputName:</FONT></TD><TD ALIGN="left" >RM_Gauje</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">callbackToCall:</FONT></TD><TD ALIGN="left" > 	"SimulateCAN_SpeedData()"	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">dataToBind:</FONT></TD><TD ALIGN="left" > 	"speed[]"	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="darkorchid4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+
+</TABLE>>
+		color = blue4
+		fillcolor = red
+	]
+	my_RADOME_Middleware1 [
+		label = <<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+<TR><TD ALIGN="right" ><FONT COLOR="darkgreen">inputName:</FONT></TD><TD ALIGN="left" >RM_BarDiagram</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">callbackToCall:</FONT></TD><TD ALIGN="left" > 	"SimulateCAN_TempData"	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">dataToBind:</FONT></TD><TD ALIGN="left" > 	"temp[]"	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="darkorchid4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+
+</TABLE>>
+		color = blue4
+		fillcolor = red
+	]
+	my_HTMLElem1 [
+		label = <<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+<TR><TD ALIGN="right" ><FONT COLOR="darkgreen">HTML_elem:</FONT></TD><TD ALIGN="left" >HTML_BarDiagram</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">type:</FONT></TD><TD ALIGN="left" > 	canvas	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">x:</FONT></TD><TD ALIGN="left" > 	x_val px	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">y:</FONT></TD><TD ALIGN="left" >	y_val px	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">width:</FONT></TD><TD ALIGN="left" >	width_val px</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">height:</FONT></TD><TD ALIGN="left" > height_val px</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="darkorchid4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+</TABLE>>
+		color = violetred3
+		fillcolor = coral
+	]
+	
+	my_HTMLElem2 [
+		label = <<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+<TR><TD ALIGN="right" ><FONT COLOR="darkgreen">HTML_elemName:</FONT></TD><TD ALIGN="left" >HTML_Gauje</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">type:</FONT></TD><TD ALIGN="left" > 	canvas	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">x:</FONT></TD><TD ALIGN="left" > 	x_val px	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">y:</FONT></TD><TD ALIGN="left" >	y_val px	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">width:</FONT></TD><TD ALIGN="left" >	width_val px</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">height:</FONT></TD><TD ALIGN="left" > height_val px</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="darkorchid4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+</TABLE>>
+		color = violetred3
+		fillcolor = coral
+	]
+	
+	my_PSDModel2 [
+		label = <<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+<TR><TD ALIGN="right" ><FONT COLOR="darkgreen">PSD_StructName:</FONT></TD><TD ALIGN="left" >PSD_Gauje</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">layer1:</FONT></TD><TD ALIGN="left" > 	LBL_Digital_NotSelectedChecked_ClC	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">layer2:</FONT></TD><TD ALIGN="left" > 	ROT_Digitalrpm	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">layer3:</FONT></TD><TD ALIGN="left" >	CENTER_RPMForeground	</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">layer4:</FONT></TD><TD ALIGN="left" >	PICTO_ActiveRPMForeground</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">layer5:</FONT></TD><TD ALIGN="left" > ROT_DigitalSpeed</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="darkorchid4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+</TABLE>>
+		color = darkgreen
+		fillcolor = darkolivegreen4
+	]
+	my_PSDModel1 [
+		label = <<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+<TR><TD ALIGN="right" ><FONT COLOR="darkgreen">Name:</FONT></TD><TD ALIGN="left" >PSD_BarDiagram</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="blue4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+<TR><TD ALIGN="right" ><FONT COLOR="darkorchid4">...:</FONT></TD><TD ALIGN="left" > ...</TD></TR>
+</TABLE>>
+		color = darkgreen
+		fillcolor = darkolivegreen4
+	]	
+ 
+	my_PSDModel1 -> my_HTMLElem1 [label = "produit le composant"]
+	my_PSDModel2 -> my_HTMLElem2 [label = "produit le composant"]
+	my_HTMLElem1 -> my_RADOME_Middleware1 [label = "interface avec"]
+	my_HTMLElem2 -> my_RADOME_Middleware2 [label = "interface avec"]
+	my_RADOME_Middleware1 -> my_RADOME_serv1 [label = "utilise"]
+	my_RADOME_Middleware2 -> my_RADOME_serv2 [label = "utilise"]
+ 
+	subgraph cluster_PSD {
+		label = "Modele PSD"
+		style = "rounded, filled"
+		color = darkgreen
+		fillcolor = darkolivegreen3
+		my_PSDModel1
+		my_PSDModel2
+	}
+ 
+	subgraph cluster_HTML_elem {
+		label = "Composants HTML"
+		style = "rounded, filled"
+		color = violetred3
+		fillcolor = darksalmon
+		my_HTMLElem1
+		my_HTMLElem2
+	}
+	subgraph cluster_RM {
+		label = "RADOME MW"
+		style = "rounded, filled"
+		color = red
+		fillcolor = brown
+		my_RADOME_Middleware1
+		my_RADOME_Middleware2
+	}
+	
+		subgraph cluster_RS {
+		label = "RADOME Server"
+		style = "rounded, filled"
+		color = orange
+		fillcolor = orange
+		my_RADOME_serv1
+		my_RADOME_serv2
+	}
+}

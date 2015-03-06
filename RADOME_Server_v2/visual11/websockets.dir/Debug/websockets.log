@@ -1,0 +1,63 @@
+﻿La génération a démarré 23/02/2015 17:25:46.
+     1>Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\websockets.vcxproj" sur le nœud 2 (Rebuild cible(s)).
+     1>CustomBuild:
+         Building Custom Rule C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/CMakeLists.txt
+         CMake does not need to re-run because C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\generate.stamp is up-to-date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\lib" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\win32port\win32helpers" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\win32port\zlib" /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D CMAKE_BUILD /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D HAVE_DECL__ISNAN /D HAVE_DECL__FINITE /D HAVE_DECL_NAN /D HAVE_DECL_INFINITY /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"websockets.dir\Debug\\" /Fd"websockets.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt "..\lib\base64-decode.c" ..\lib\handshake.c ..\lib\libwebsockets.c ..\lib\service.c ..\lib\pollfd.c ..\lib\output.c ..\lib\parsers.c ..\lib\context.c "..\lib\sha-1.c" ..\lib\client.c "..\lib\client-handshake.c" "..\lib\client-parser.c" "..\lib\lws-plat-win.c" ..\lib\server.c "..\lib\server-handshake.c" ..\lib\extension.c "..\lib\extension-deflate-frame.c" "..\lib\extension-deflate-stream.c"
+         base64-decode.c
+         handshake.c
+     1>..\lib\handshake.c(112): warning C4018: '<' : incompatibilité signed/unsigned
+         libwebsockets.c
+         service.c
+     1>..\lib\service.c(260): warning C4244: 'fonction' : conversion de 'time_t' en 'unsigned int', perte possible de données
+         pollfd.c
+         output.c
+     1>..\lib\output.c(58): warning C4018: '<' : incompatibilité signed/unsigned
+     1>..\lib\output.c(64): warning C4018: '<' : incompatibilité signed/unsigned
+     1>..\lib\output.c(71): warning C4018: '<' : incompatibilité signed/unsigned
+     1>..\lib\output.c(346): warning C4244: '=' : conversion de 'short' en 'unsigned char', perte possible de données
+         parsers.c
+     1>..\lib\parsers.c(132): warning C4244: '=' : conversion de 'unsigned short' en 'unsigned char', perte possible de données
+     1>..\lib\parsers.c(393): warning C4244: '=' : conversion de 'unsigned short' en 'unsigned char', perte possible de données
+     1>..\lib\parsers.c(508): warning C4244: '=' : conversion de 'unsigned short' en 'unsigned char', perte possible de données
+     1>..\lib\parsers.c(515): warning C4244: '=' : conversion de 'unsigned short' en 'unsigned char', perte possible de données
+         context.c
+         sha-1.c
+         client.c
+     1>..\lib\client.c(34): warning C4018: '<' : incompatibilité signed/unsigned
+         client-handshake.c
+         client-parser.c
+         lws-plat-win.c
+     1>..\lib\lws-plat-win.c(143): warning C4244: '=' : conversion de 'long' en 'SHORT', perte possible de données
+         server.c
+         server-handshake.c
+         extension.c
+         extension-deflate-frame.c
+         extension-deflate-stream.c
+         Génération de code en cours...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\lib\Debug\websockets_static.lib" /NOLOGO "websockets.dir\Debug\base64-decode.obj"
+         websockets.dir\Debug\handshake.obj
+         websockets.dir\Debug\libwebsockets.obj
+         websockets.dir\Debug\service.obj
+         websockets.dir\Debug\pollfd.obj
+         websockets.dir\Debug\output.obj
+         websockets.dir\Debug\parsers.obj
+         websockets.dir\Debug\context.obj
+         "websockets.dir\Debug\sha-1.obj"
+         websockets.dir\Debug\client.obj
+         "websockets.dir\Debug\client-handshake.obj"
+         "websockets.dir\Debug\client-parser.obj"
+         "websockets.dir\Debug\lws-plat-win.obj"
+         websockets.dir\Debug\server.obj
+         "websockets.dir\Debug\server-handshake.obj"
+         websockets.dir\Debug\extension.obj
+         "websockets.dir\Debug\extension-deflate-frame.obj"
+         "websockets.dir\Debug\extension-deflate-stream.obj"
+         websockets.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\lib\Debug\websockets_static.lib
+     1>Génération du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\websockets.vcxproj" terminée (Rebuild cible(s)).
+
+La génération a réussi.
+
+Temps écoulé 00:00:10.84

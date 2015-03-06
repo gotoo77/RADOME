@@ -1,0 +1,798 @@
+Performing C SOURCE FILE Test HAVE_inline failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3262053917.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:24.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3262053917.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3262053917.dir\Debug\cmTryCompileExec3262053917.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D HAVE_inline /D _DEBUG /D KEYWORD=inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3262053917.dir\Debug\\" /Fd"cmTryCompileExec3262053917.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue src.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D HAVE_inline /D _DEBUG /D KEYWORD=inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3262053917.dir\Debug\\" /Fd"cmTryCompileExec3262053917.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue src.c
+  
+  src.c
+src.c(3): error C2054: '(' attendu aprŠs 'inline' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj]
+src.c(3): error C2085: 'a'ÿ: ne figure pas dans la liste de paramŠtres formels [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj]
+src.c(3): error C2143: erreur de syntaxeÿ: absence de ';' avant '{' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj]
+src.c(4): warning C4013: 'a' non d‚fini(e)ÿ; extern retournant int pris par d‚faut [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  src.c(4): warning C4013: 'a' non d‚fini(e)ÿ; extern retournant int pris par d‚faut [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj]
+
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  src.c(3): error C2054: '(' attendu aprŠs 'inline' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj]
+  src.c(3): error C2085: 'a'ÿ: ne figure pas dans la liste de paramŠtres formels [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj]
+  src.c(3): error C2143: erreur de syntaxeÿ: absence de ';' avant '{' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3262053917.vcxproj]
+
+    1 Avertissement(s)
+    3 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.38
+
+Source file was:
+
+		#include <stdio.h>
+		KEYWORD void a() {}
+		int main(int argc, char **argv) { a(); return 0; }
+		
+Performing C SOURCE FILE Test HAVE___inline__ failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1198839589.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:25.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1198839589.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1198839589.dir\Debug\cmTryCompileExec1198839589.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D HAVE___inline__ /D _DEBUG /D KEYWORD=__inline__ /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1198839589.dir\Debug\\" /Fd"cmTryCompileExec1198839589.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue src.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D HAVE___inline__ /D _DEBUG /D KEYWORD=__inline__ /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1198839589.dir\Debug\\" /Fd"cmTryCompileExec1198839589.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue src.c
+  
+  src.c
+src.c(3): error C2054: '(' attendu aprŠs '__inline__' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj]
+src.c(3): error C2085: 'a'ÿ: ne figure pas dans la liste de paramŠtres formels [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj]
+src.c(3): error C2143: erreur de syntaxeÿ: absence de ';' avant '{' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj]
+src.c(4): warning C4013: 'a' non d‚fini(e)ÿ; extern retournant int pris par d‚faut [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  src.c(4): warning C4013: 'a' non d‚fini(e)ÿ; extern retournant int pris par d‚faut [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj]
+
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  src.c(3): error C2054: '(' attendu aprŠs '__inline__' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj]
+  src.c(3): error C2085: 'a'ÿ: ne figure pas dans la liste de paramŠtres formels [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj]
+  src.c(3): error C2143: erreur de syntaxeÿ: absence de ';' avant '{' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1198839589.vcxproj]
+
+    1 Avertissement(s)
+    3 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.24
+
+Source file was:
+
+		#include <stdio.h>
+		KEYWORD void a() {}
+		int main(int argc, char **argv) { a(); return 0; }
+		
+Determining if the function bzero exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1543177475.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:26.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1543177475.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1543177475.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1543177475.dir\Debug\cmTryCompileExec1543177475.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=bzero /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1543177475.dir\Debug\\" /Fd"cmTryCompileExec1543177475.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=bzero /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1543177475.dir\Debug\\" /Fd"cmTryCompileExec1543177475.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1543177475.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1543177475.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1543177475.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec1543177475.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _bzero référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1543177475.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1543177475.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1543177475.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1543177475.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1543177475.vcxproj" (cible par d‚faut) (1) ->
+(Link cible) -> 
+  CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _bzero référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1543177475.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1543177475.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1543177475.vcxproj]
+
+    0 Avertissement(s)
+    2 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.44
+
+
+Determining if the function fork exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec504893110.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:27.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec504893110.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec504893110.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec504893110.dir\Debug\cmTryCompileExec504893110.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=fork /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec504893110.dir\Debug\\" /Fd"cmTryCompileExec504893110.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=fork /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec504893110.dir\Debug\\" /Fd"cmTryCompileExec504893110.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec504893110.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec504893110.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec504893110.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec504893110.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _fork référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec504893110.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec504893110.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec504893110.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec504893110.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec504893110.vcxproj" (cible par d‚faut) (1) ->
+(Link cible) -> 
+  CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _fork référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec504893110.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec504893110.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec504893110.vcxproj]
+
+    0 Avertissement(s)
+    2 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.40
+
+
+Determining if the function socket exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1643901598.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:30.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1643901598.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1643901598.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1643901598.dir\Debug\cmTryCompileExec1643901598.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=socket /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1643901598.dir\Debug\\" /Fd"cmTryCompileExec1643901598.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=socket /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1643901598.dir\Debug\\" /Fd"cmTryCompileExec1643901598.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1643901598.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1643901598.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1643901598.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec1643901598.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _socket référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1643901598.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1643901598.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1643901598.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1643901598.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1643901598.vcxproj" (cible par d‚faut) (1) ->
+(Link cible) -> 
+  CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _socket référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1643901598.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1643901598.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1643901598.vcxproj]
+
+    0 Avertissement(s)
+    2 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.37
+
+
+Determining if the function vfork exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec2768881752.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:32.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2768881752.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec2768881752.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec2768881752.dir\Debug\cmTryCompileExec2768881752.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=vfork /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2768881752.dir\Debug\\" /Fd"cmTryCompileExec2768881752.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=vfork /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2768881752.dir\Debug\\" /Fd"cmTryCompileExec2768881752.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2768881752.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2768881752.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2768881752.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec2768881752.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _vfork référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2768881752.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2768881752.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2768881752.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2768881752.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2768881752.vcxproj" (cible par d‚faut) (1) ->
+(Link cible) -> 
+  CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _vfork référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2768881752.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2768881752.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2768881752.vcxproj]
+
+    0 Avertissement(s)
+    2 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.36
+
+
+Determining if the function getifaddrs exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec2405544113.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:32.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2405544113.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec2405544113.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec2405544113.dir\Debug\cmTryCompileExec2405544113.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=getifaddrs /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2405544113.dir\Debug\\" /Fd"cmTryCompileExec2405544113.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=getifaddrs /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2405544113.dir\Debug\\" /Fd"cmTryCompileExec2405544113.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2405544113.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2405544113.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2405544113.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec2405544113.dir\Debug\CheckFunctionExists.obj
+CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _getifaddrs référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2405544113.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2405544113.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2405544113.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2405544113.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2405544113.vcxproj" (cible par d‚faut) (1) ->
+(Link cible) -> 
+  CheckFunctionExists.obj : error LNK2019: symbole externe non résolu _getifaddrs référencé dans la fonction _main [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2405544113.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2405544113.exe : fatal error LNK1120: 1 externes non résolus [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2405544113.vcxproj]
+
+    0 Avertissement(s)
+    2 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.41
+
+
+Determining if the include file dlfcn.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3490098652.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:33.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3490098652.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3490098652.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3490098652.dir\Debug\cmTryCompileExec3490098652.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3490098652.dir\Debug\\" /Fd"cmTryCompileExec3490098652.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3490098652.dir\Debug\\" /Fd"cmTryCompileExec3490098652.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'dlfcn.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3490098652.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3490098652.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3490098652.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'dlfcn.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3490098652.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.28
+
+
+Determining if the include file in6addr.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3969488793.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:34.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3969488793.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3969488793.dir\Debug\cmTryCompileExec3969488793.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3969488793.dir\Debug\\" /Fd"cmTryCompileExec3969488793.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3969488793.dir\Debug\\" /Fd"cmTryCompileExec3969488793.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(29): error C2016: C requiert qu'un struct ou une union possŠde au moins un membre [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(29): error C2061: erreur de syntaxeÿ: identificateur 'UCHAR' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(30): error C2061: erreur de syntaxeÿ: identificateur 'Word' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(30): error C2059: erreur de syntaxeÿ: ';' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(30): error C3409: bloc d'attributs vide non autoris‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(30): error C2143: erreur de syntaxeÿ: absence de ']' avant 'constant' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(31): error C2059: erreur de syntaxeÿ: '}' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(32): error C2059: erreur de syntaxeÿ: '}' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(29): error C2016: C requiert qu'un struct ou une union possŠde au moins un membre [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(29): error C2061: erreur de syntaxeÿ: identificateur 'UCHAR' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(30): error C2061: erreur de syntaxeÿ: identificateur 'Word' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(30): error C2059: erreur de syntaxeÿ: ';' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(30): error C3409: bloc d'attributs vide non autoris‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(30): error C2143: erreur de syntaxeÿ: absence de ']' avant 'constant' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(31): error C2059: erreur de syntaxeÿ: '}' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+  C:\Program Files (x86)\Windows Kits\8.0\Include\shared\in6addr.h(32): error C2059: erreur de syntaxeÿ: '}' [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3969488793.vcxproj]
+
+    0 Avertissement(s)
+    8 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.25
+
+
+Determining if the include file inttypes.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1697088201.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:34.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1697088201.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1697088201.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1697088201.dir\Debug\cmTryCompileExec1697088201.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1697088201.dir\Debug\\" /Fd"cmTryCompileExec1697088201.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1697088201.dir\Debug\\" /Fd"cmTryCompileExec1697088201.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'inttypes.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1697088201.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1697088201.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1697088201.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'inttypes.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1697088201.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.22
+
+
+Determining if the include file netinet/in.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3409090686.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:36.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3409090686.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3409090686.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3409090686.dir\Debug\cmTryCompileExec3409090686.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3409090686.dir\Debug\\" /Fd"cmTryCompileExec3409090686.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3409090686.dir\Debug\\" /Fd"cmTryCompileExec3409090686.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'netinet/in.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3409090686.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3409090686.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3409090686.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'netinet/in.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3409090686.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.23
+
+
+Determining if the include file strings.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec821719580.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:37.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec821719580.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec821719580.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec821719580.dir\Debug\cmTryCompileExec821719580.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec821719580.dir\Debug\\" /Fd"cmTryCompileExec821719580.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec821719580.dir\Debug\\" /Fd"cmTryCompileExec821719580.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'strings.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec821719580.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec821719580.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec821719580.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'strings.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec821719580.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.22
+
+
+Determining if the include file sys/prctl.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3118500755.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:39.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3118500755.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3118500755.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3118500755.dir\Debug\cmTryCompileExec3118500755.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3118500755.dir\Debug\\" /Fd"cmTryCompileExec3118500755.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3118500755.dir\Debug\\" /Fd"cmTryCompileExec3118500755.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'sys/prctl.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3118500755.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3118500755.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3118500755.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'sys/prctl.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3118500755.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.25
+
+
+Determining if the include file sys/socket.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec202887844.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:39.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec202887844.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec202887844.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec202887844.dir\Debug\cmTryCompileExec202887844.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec202887844.dir\Debug\\" /Fd"cmTryCompileExec202887844.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec202887844.dir\Debug\\" /Fd"cmTryCompileExec202887844.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'sys/socket.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec202887844.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec202887844.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec202887844.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'sys/socket.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec202887844.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.23
+
+
+Determining if the include file unistd.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1224891856.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:41.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1224891856.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1224891856.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1224891856.dir\Debug\cmTryCompileExec1224891856.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1224891856.dir\Debug\\" /Fd"cmTryCompileExec1224891856.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1224891856.dir\Debug\\" /Fd"cmTryCompileExec1224891856.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'unistd.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1224891856.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1224891856.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1224891856.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'unistd.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1224891856.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.25
+
+
+Determining if the include file vfork.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec627513999.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:41.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec627513999.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec627513999.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec627513999.dir\Debug\cmTryCompileExec627513999.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec627513999.dir\Debug\\" /Fd"cmTryCompileExec627513999.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec627513999.dir\Debug\\" /Fd"cmTryCompileExec627513999.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'vfork.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec627513999.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec627513999.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec627513999.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'vfork.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec627513999.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.23
+
+
+Determining if the include file zlib.h exists failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3590683805.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:42.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3590683805.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3590683805.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3590683805.dir\Debug\cmTryCompileExec3590683805.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3590683805.dir\Debug\\" /Fd"cmTryCompileExec3590683805.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3590683805.dir\Debug\\" /Fd"cmTryCompileExec3590683805.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'zlib.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3590683805.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3590683805.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3590683805.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  CheckIncludeFile.c(1): fatal error C1083: Impossible d'ouvrir le fichier includeÿ: 'zlib.h'ÿ: No such file or directory [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3590683805.vcxproj]
+
+    0 Avertissement(s)
+    1 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.24
+
+
+Determining size of pid_t failed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1793984922.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:44.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1793984922.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1793984922.dir\Debug\cmTryCompileExec1793984922.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1793984922.dir\Debug\\" /Fd"cmTryCompileExec1793984922.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1793984922.dir\Debug\\" /Fd"cmTryCompileExec1793984922.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c"
+  
+  PID_T_SIZE.c
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(19): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(20): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(21): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(22): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(23): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj" termin‚e (cibles par d‚faut) -- CHEC.
+
+CHEC de la build.
+
+"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj" (cible par d‚faut) (1) ->
+(ClCompile cible) -> 
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(19): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(20): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(21): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(22): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+  C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\PID_T_SIZE.c(23): error C2065: 'pid_t'ÿ: identificateur non d‚clar‚ [C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1793984922.vcxproj]
+
+    0 Avertissement(s)
+    5 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.26
+
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CheckTypeSize/PID_T_SIZE.c:
+#include <sys/types.h>
+#include <stdint.h>
+#include <stddef.h>
+
+
+#undef KEY
+#if defined(__i386)
+# define KEY '_','_','i','3','8','6'
+#elif defined(__x86_64)
+# define KEY '_','_','x','8','6','_','6','4'
+#elif defined(__ppc__)
+# define KEY '_','_','p','p','c','_','_'
+#elif defined(__ppc64__)
+# define KEY '_','_','p','p','c','6','4','_','_'
+#endif
+
+#define SIZE (sizeof(pid_t))
+char info_size[] =  {'I', 'N', 'F', 'O', ':', 's','i','z','e','[',
+  ('0' + ((SIZE / 10000)%10)),
+  ('0' + ((SIZE / 1000)%10)),
+  ('0' + ((SIZE / 100)%10)),
+  ('0' + ((SIZE / 10)%10)),
+  ('0' +  (SIZE    % 10)),
+  ']',
+#ifdef KEY
+  ' ','k','e','y','[', KEY, ']',
+#endif
+  '\0'};
+
+#ifdef __CLASSIC_C__
+int main(argc, argv) int argc; char *argv[];
+#else
+int main(int argc, char *argv[])
+#endif
+{
+  int require = 0;
+  require += info_size[argc];
+  (void)argv;
+  return require;
+}
+
+

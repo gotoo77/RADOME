@@ -1,0 +1,17 @@
+{
+  "app": {
+    "name": "RADOME",
+    "param2": "version logicielle",
+	"language": "Langue"
+  },
+  "nav": {
+    "home": "Accueil",
+    "page1": "Page 1",
+	"page2": "Page 2"
+  },	
+  "menu": {
+    "surname": "Nom:",
+    "firstName": "Prenom:",
+	"title":	"Mon titre!"
+  }
+}

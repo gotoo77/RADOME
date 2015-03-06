@@ -1,0 +1,856 @@
+The system is: Windows - 6.1 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler:  
+Build flags: 
+Id flags: 
+
+The output was:
+0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:14.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\2.8.12.2\CompilerIdC\CompilerIdC.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "Debug\CompilerIdC.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /nologo /W0 /WX- /Od /Oy- /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CMakeCCompilerId.c
+  CMakeCCompilerId.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdC.lib" /MACHINE:X86 /SAFESEH Debug\CMakeCCompilerId.obj
+  CompilerIdC.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\2.8.12.2\CompilerIdC\.\CompilerIdC.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_C_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\cl.exe
+FinalizeBuildStatus:
+  Suppression du fichier "Debug\CompilerIdC.unsuccessfulbuild".
+  Mise … jour de l'horodatage "Debug\CompilerIdC.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\2.8.12.2\CompilerIdC\CompilerIdC.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:03.84
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+
+The C compiler identification is MSVC, found in "C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/2.8.12.2/CompilerIdC/CompilerIdC.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler:  
+Build flags: 
+Id flags: 
+
+The output was:
+0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:18.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\2.8.12.2\CompilerIdCXX\CompilerIdCXX.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "Debug\CompilerIdCXX.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /nologo /W0 /WX- /Od /Oy- /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:queue CMakeCXXCompilerId.cpp
+  CMakeCXXCompilerId.cpp
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X86 /SAFESEH Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\2.8.12.2\CompilerIdCXX\.\CompilerIdCXX.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_CXX_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\cl.exe
+FinalizeBuildStatus:
+  Suppression du fichier "Debug\CompilerIdCXX.unsuccessfulbuild".
+  Mise … jour de l'horodatage "Debug\CompilerIdCXX.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\2.8.12.2\CompilerIdCXX\CompilerIdCXX.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.78
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+
+The CXX compiler identification is MSVC, found in "C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/2.8.12.2/CompilerIdCXX/CompilerIdCXX.exe"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1505695403.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:20.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1505695403.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1505695403.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1505695403.dir\Debug\cmTryCompileExec1505695403.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1505695403.dir\Debug\\" /Fd"cmTryCompileExec1505695403.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue testCCompiler.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1505695403.dir\Debug\\" /Fd"cmTryCompileExec1505695403.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue testCCompiler.c
+  testCCompiler.c
+  
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1505695403.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1505695403.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1505695403.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec1505695403.dir\Debug\testCCompiler.obj
+  cmTryCompileExec1505695403.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1505695403.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec1505695403.dir\Debug\cmTryCompileExec1505695403.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec1505695403.dir\Debug\cmTryCompileExec1505695403.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1505695403.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:01.60
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3314282092.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:22.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3314282092.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3314282092.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3314282092.dir\Debug\cmTryCompileExec3314282092.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3314282092.dir\Debug\\" /Fd"cmTryCompileExec3314282092.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3314282092.dir\Debug\\" /Fd"cmTryCompileExec3314282092.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCCompilerABI.c"
+  
+  CMakeCCompilerABI.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec3314282092.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec3314282092.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec3314282092.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec3314282092.dir\Debug\CMakeCCompilerABI.obj
+  cmTryCompileExec3314282092.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec3314282092.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec3314282092.dir\Debug\cmTryCompileExec3314282092.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec3314282092.dir\Debug\cmTryCompileExec3314282092.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3314282092.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.49
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec4243020911.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:22.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4243020911.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec4243020911.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec4243020911.dir\Debug\cmTryCompileExec4243020911.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTryCompileExec4243020911.dir\Debug\\" /Fd"cmTryCompileExec4243020911.dir\Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:queue testCXXCompiler.cxx
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTryCompileExec4243020911.dir\Debug\\" /Fd"cmTryCompileExec4243020911.dir\Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:queue testCXXCompiler.cxx
+  
+  testCXXCompiler.cxx
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4243020911.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4243020911.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4243020911.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec4243020911.dir\Debug\testCXXCompiler.obj
+  cmTryCompileExec4243020911.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4243020911.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec4243020911.dir\Debug\cmTryCompileExec4243020911.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec4243020911.dir\Debug\cmTryCompileExec4243020911.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4243020911.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.45
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1128891738.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:23.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1128891738.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1128891738.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1128891738.dir\Debug\cmTryCompileExec1128891738.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTryCompileExec1128891738.dir\Debug\\" /Fd"cmTryCompileExec1128891738.dir\Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"cmTryCompileExec1128891738.dir\Debug\\" /Fd"cmTryCompileExec1128891738.dir\Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXCompilerABI.cpp"
+  
+  CMakeCXXCompilerABI.cpp
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1128891738.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1128891738.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1128891738.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec1128891738.dir\Debug\CMakeCXXCompilerABI.obj
+  cmTryCompileExec1128891738.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1128891738.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec1128891738.dir\Debug\cmTryCompileExec1128891738.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec1128891738.dir\Debug\cmTryCompileExec1128891738.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1128891738.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.56
+
+
+Performing C SOURCE FILE Test HAVE___inline succeded with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3105772848.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:25.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3105772848.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3105772848.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3105772848.dir\Debug\cmTryCompileExec3105772848.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D HAVE___inline /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3105772848.dir\Debug\\" /Fd"cmTryCompileExec3105772848.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue src.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D HAVE___inline /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3105772848.dir\Debug\\" /Fd"cmTryCompileExec3105772848.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue src.c
+  
+  src.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec3105772848.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec3105772848.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec3105772848.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec3105772848.dir\Debug\src.obj
+  cmTryCompileExec3105772848.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec3105772848.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec3105772848.dir\Debug\cmTryCompileExec3105772848.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec3105772848.dir\Debug\cmTryCompileExec3105772848.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3105772848.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.47
+
+Source file was:
+
+		#include <stdio.h>
+		KEYWORD void a() {}
+		int main(int argc, char **argv) { a(); return 0; }
+		
+Determining if the function getenv exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1571320451.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:27.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1571320451.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1571320451.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1571320451.dir\Debug\cmTryCompileExec1571320451.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=getenv /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1571320451.dir\Debug\\" /Fd"cmTryCompileExec1571320451.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=getenv /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1571320451.dir\Debug\\" /Fd"cmTryCompileExec1571320451.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1571320451.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1571320451.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1571320451.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec1571320451.dir\Debug\CheckFunctionExists.obj
+  cmTryCompileExec1571320451.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1571320451.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec1571320451.dir\Debug\cmTryCompileExec1571320451.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec1571320451.dir\Debug\cmTryCompileExec1571320451.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1571320451.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.46
+
+
+Determining if the function malloc exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec4252527962.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:28.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4252527962.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec4252527962.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec4252527962.dir\Debug\cmTryCompileExec4252527962.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=malloc /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4252527962.dir\Debug\\" /Fd"cmTryCompileExec4252527962.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=malloc /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4252527962.dir\Debug\\" /Fd"cmTryCompileExec4252527962.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4252527962.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4252527962.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4252527962.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec4252527962.dir\Debug\CheckFunctionExists.obj
+  cmTryCompileExec4252527962.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4252527962.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec4252527962.dir\Debug\cmTryCompileExec4252527962.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec4252527962.dir\Debug\cmTryCompileExec4252527962.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4252527962.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.50
+
+
+Determining if the function memset exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3485627526.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:29.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3485627526.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3485627526.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3485627526.dir\Debug\cmTryCompileExec3485627526.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=memset /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3485627526.dir\Debug\\" /Fd"cmTryCompileExec3485627526.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=memset /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3485627526.dir\Debug\\" /Fd"cmTryCompileExec3485627526.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec3485627526.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec3485627526.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec3485627526.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec3485627526.dir\Debug\CheckFunctionExists.obj
+  cmTryCompileExec3485627526.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec3485627526.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec3485627526.dir\Debug\cmTryCompileExec3485627526.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec3485627526.dir\Debug\cmTryCompileExec3485627526.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3485627526.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.47
+
+
+Determining if the function realloc exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec2377013432.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:30.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2377013432.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec2377013432.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec2377013432.dir\Debug\cmTryCompileExec2377013432.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=realloc /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2377013432.dir\Debug\\" /Fd"cmTryCompileExec2377013432.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=realloc /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2377013432.dir\Debug\\" /Fd"cmTryCompileExec2377013432.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2377013432.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2377013432.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2377013432.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec2377013432.dir\Debug\CheckFunctionExists.obj
+  cmTryCompileExec2377013432.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2377013432.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec2377013432.dir\Debug\cmTryCompileExec2377013432.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec2377013432.dir\Debug\cmTryCompileExec2377013432.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2377013432.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.45
+
+
+Determining if the function strerror exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec3891953913.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:31.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3891953913.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec3891953913.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec3891953913.dir\Debug\cmTryCompileExec3891953913.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=strerror /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3891953913.dir\Debug\\" /Fd"cmTryCompileExec3891953913.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D CHECK_FUNCTION_EXISTS=strerror /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec3891953913.dir\Debug\\" /Fd"cmTryCompileExec3891953913.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CheckFunctionExists.c"
+  
+  CheckFunctionExists.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec3891953913.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec3891953913.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec3891953913.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec3891953913.dir\Debug\CheckFunctionExists.obj
+  cmTryCompileExec3891953913.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec3891953913.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec3891953913.dir\Debug\cmTryCompileExec3891953913.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec3891953913.dir\Debug\cmTryCompileExec3891953913.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec3891953913.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.48
+
+
+Determining if the include file fcntl.h exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec4173202622.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:33.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4173202622.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec4173202622.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec4173202622.dir\Debug\cmTryCompileExec4173202622.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4173202622.dir\Debug\\" /Fd"cmTryCompileExec4173202622.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4173202622.dir\Debug\\" /Fd"cmTryCompileExec4173202622.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4173202622.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4173202622.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4173202622.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec4173202622.dir\Debug\CheckIncludeFile.obj
+  cmTryCompileExec4173202622.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4173202622.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec4173202622.dir\Debug\cmTryCompileExec4173202622.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec4173202622.dir\Debug\cmTryCompileExec4173202622.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4173202622.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.45
+
+
+Determining if the include file memory.h exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec20614197.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:35.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec20614197.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec20614197.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec20614197.dir\Debug\cmTryCompileExec20614197.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec20614197.dir\Debug\\" /Fd"cmTryCompileExec20614197.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec20614197.dir\Debug\\" /Fd"cmTryCompileExec20614197.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec20614197.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec20614197.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec20614197.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec20614197.dir\Debug\CheckIncludeFile.obj
+  cmTryCompileExec20614197.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec20614197.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec20614197.dir\Debug\cmTryCompileExec20614197.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec20614197.dir\Debug\cmTryCompileExec20614197.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec20614197.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.44
+
+
+Determining if the include file stdint.h exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec2674656448.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:36.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2674656448.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec2674656448.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec2674656448.dir\Debug\cmTryCompileExec2674656448.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2674656448.dir\Debug\\" /Fd"cmTryCompileExec2674656448.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2674656448.dir\Debug\\" /Fd"cmTryCompileExec2674656448.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2674656448.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2674656448.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2674656448.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec2674656448.dir\Debug\CheckIncludeFile.obj
+  cmTryCompileExec2674656448.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2674656448.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec2674656448.dir\Debug\cmTryCompileExec2674656448.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec2674656448.dir\Debug\cmTryCompileExec2674656448.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2674656448.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.50
+
+
+Determining if the include file stdlib.h exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec1853183472.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:37.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1853183472.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec1853183472.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec1853183472.dir\Debug\cmTryCompileExec1853183472.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1853183472.dir\Debug\\" /Fd"cmTryCompileExec1853183472.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec1853183472.dir\Debug\\" /Fd"cmTryCompileExec1853183472.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1853183472.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1853183472.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec1853183472.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec1853183472.dir\Debug\CheckIncludeFile.obj
+  cmTryCompileExec1853183472.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec1853183472.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec1853183472.dir\Debug\cmTryCompileExec1853183472.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec1853183472.dir\Debug\cmTryCompileExec1853183472.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec1853183472.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.44
+
+
+Determining if the include file string.h exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec2034379095.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:38.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2034379095.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec2034379095.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec2034379095.dir\Debug\cmTryCompileExec2034379095.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2034379095.dir\Debug\\" /Fd"cmTryCompileExec2034379095.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2034379095.dir\Debug\\" /Fd"cmTryCompileExec2034379095.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2034379095.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2034379095.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2034379095.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec2034379095.dir\Debug\CheckIncludeFile.obj
+  cmTryCompileExec2034379095.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2034379095.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec2034379095.dir\Debug\cmTryCompileExec2034379095.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec2034379095.dir\Debug\cmTryCompileExec2034379095.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2034379095.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.43
+
+
+Determining if the include file sys/stat.h exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec4166887501.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:40.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4166887501.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec4166887501.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec4166887501.dir\Debug\cmTryCompileExec4166887501.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4166887501.dir\Debug\\" /Fd"cmTryCompileExec4166887501.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4166887501.dir\Debug\\" /Fd"cmTryCompileExec4166887501.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4166887501.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4166887501.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4166887501.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec4166887501.dir\Debug\CheckIncludeFile.obj
+  cmTryCompileExec4166887501.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4166887501.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec4166887501.dir\Debug\cmTryCompileExec4166887501.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec4166887501.dir\Debug\cmTryCompileExec4166887501.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4166887501.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.45
+
+
+Determining if the include file sys/types.h exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec148779652.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:40.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec148779652.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec148779652.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec148779652.dir\Debug\cmTryCompileExec148779652.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec148779652.dir\Debug\\" /Fd"cmTryCompileExec148779652.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec148779652.dir\Debug\\" /Fd"cmTryCompileExec148779652.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec148779652.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec148779652.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec148779652.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec148779652.dir\Debug\CheckIncludeFile.obj
+  cmTryCompileExec148779652.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec148779652.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec148779652.dir\Debug\cmTryCompileExec148779652.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec148779652.dir\Debug\cmTryCompileExec148779652.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec148779652.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.41
+
+
+Determining if files stdlib.h;stdarg.h;string.h;float.h exist passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec4202112120.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:42.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4202112120.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec4202112120.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec4202112120.dir\Debug\cmTryCompileExec4202112120.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4202112120.dir\Debug\\" /Fd"cmTryCompileExec4202112120.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFiles.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec4202112120.dir\Debug\\" /Fd"cmTryCompileExec4202112120.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFiles.c
+  
+  CheckIncludeFiles.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4202112120.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4202112120.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec4202112120.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec4202112120.dir\Debug\CheckIncludeFiles.obj
+  cmTryCompileExec4202112120.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec4202112120.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec4202112120.dir\Debug\cmTryCompileExec4202112120.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec4202112120.dir\Debug\cmTryCompileExec4202112120.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec4202112120.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.48
+
+
+Determining if the include file stddef.h exists passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec642538951.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:43.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec642538951.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec642538951.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec642538951.dir\Debug\cmTryCompileExec642538951.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec642538951.dir\Debug\\" /Fd"cmTryCompileExec642538951.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec642538951.dir\Debug\\" /Fd"cmTryCompileExec642538951.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue CheckIncludeFile.c
+  
+  CheckIncludeFile.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec642538951.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec642538951.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec642538951.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec642538951.dir\Debug\CheckIncludeFile.obj
+  cmTryCompileExec642538951.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec642538951.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec642538951.dir\Debug\cmTryCompileExec642538951.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec642538951.dir\Debug\cmTryCompileExec642538951.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec642538951.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.45
+
+
+Determining size of size_t passed with the following output:
+Change Dir: C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp
+
+Run Build Command:C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe cmTryCompileExec2785556692.vcxproj /p:Configuration=Debug /p:VisualStudioVersion=11.0
+Microsoft (R) Build Engine, version 4.0.30319.17929
+[Microsoft .NET Framework, Version 4.0.30319.18063]
+Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+
+La g‚n‚ration a d‚marr‚ 18/02/2015 11:42:44.
+Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2785556692.vcxproj" sur le noud 1 (cibles par d‚faut).
+PrepareForBuild:
+  Cr‚ation du r‚pertoire "cmTryCompileExec2785556692.dir\Debug\".
+  Cr‚ation du r‚pertoire "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\".
+InitializeBuildStatus:
+  Cr‚ation de "cmTryCompileExec2785556692.dir\Debug\cmTryCompileExec2785556692.unsuccessfulbuild", car "AlwaysCreate" a ‚t‚ sp‚cifi‚.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2785556692.dir\Debug\\" /Fd"cmTryCompileExec2785556692.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\SIZE_T_SIZE.c"
+  Compilateur d'optimisation Microsoft (R) C/C++ versionÿ17.00.50727.1 pour x86
+  Copyright (C) Microsoft Corporation. Tous droits r‚serv‚s.
+  
+  cl /c /Zi /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D KEYWORD=__inline /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"cmTryCompileExec2785556692.dir\Debug\\" /Fd"cmTryCompileExec2785556692.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:queue "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CheckTypeSize\SIZE_T_SIZE.c"
+  
+  SIZE_T_SIZE.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:QUEUE /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2785556692.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2785556692.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/CMakeTmp/Debug/cmTryCompileExec2785556692.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug cmTryCompileExec2785556692.dir\Debug\SIZE_T_SIZE.obj
+  cmTryCompileExec2785556692.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\Debug\cmTryCompileExec2785556692.exe
+FinalizeBuildStatus:
+  Suppression du fichier "cmTryCompileExec2785556692.dir\Debug\cmTryCompileExec2785556692.unsuccessfulbuild".
+  Mise … jour de l'horodatage "cmTryCompileExec2785556692.dir\Debug\cmTryCompileExec2785556692.lastbuildstate".
+G‚n‚ration du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\CMakeTmp\cmTryCompileExec2785556692.vcxproj" termin‚e (cibles par d‚faut).
+
+La g‚n‚ration a r‚ussi.
+    0 Avertissement(s)
+    0 Erreur(s)
+
+Temps ‚coul‚ 00:00:00.42
+
+

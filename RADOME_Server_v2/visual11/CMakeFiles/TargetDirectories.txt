@@ -1,0 +1,10 @@
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/ALL_BUILD.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/RADOMEWebSocket.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/ZERO_CHECK.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/ZLIB.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/dist.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/json-c.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/test-client.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/test-echo.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/websockets.dir
+C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/CMakeFiles/websockets_shared.dir

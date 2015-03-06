@@ -1,0 +1,23 @@
+﻿La génération a démarré 23/02/2015 16:59:51.
+     1>Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\test-client.vcxproj" sur le nœud 2 (Build cible(s)).
+     1>CustomBuild:
+         Building Custom Rule C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/CMakeLists.txt
+         CMake does not need to re-run because C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\generate.stamp is up-to-date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\lib" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\win32port\win32helpers" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\win32port\zlib" /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "INSTALL_DATADIR=\"C:/Program Files (x86)/libwebsockets/share\"" /D CMAKE_BUILD /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D HAVE_DECL__ISNAN /D HAVE_DECL__FINITE /D HAVE_DECL_NAN /D HAVE_DECL_INFINITY /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"test-client.dir\Debug\\" /Fd"test-client.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt "..\test-server\test-client.c" ..\win32port\win32helpers\getopt.c ..\win32port\win32helpers\getopt_long.c ..\win32port\win32helpers\gettimeofday.c
+         test-client.c
+         getopt.c
+         getopt_long.c
+         gettimeofday.c
+         Génération de code en cours...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\bin\Debug\libwebsockets-test-client.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib lib\Debug\websockets_static.lib lib\Debug\ZLIB.lib ws2_32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/bin/Debug/libwebsockets-test-client.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/visual11/lib/Debug/libwebsockets-test-client.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug "test-client.dir\Debug\test-client.obj"
+         "test-client.dir\Debug\getopt.obj"
+         "test-client.dir\Debug\getopt_long.obj"
+         "test-client.dir\Debug\gettimeofday.obj"
+         test-client.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\bin\Debug\libwebsockets-test-client.exe
+     1>Génération du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\test-client.vcxproj" terminée (Build cible(s)).
+
+La génération a réussi.
+
+Temps écoulé 00:00:09.36

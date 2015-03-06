@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\lib\base64-decode.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\handshake.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\libwebsockets.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\service.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\pollfd.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\output.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\parsers.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\context.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\sha-1.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\client.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\client-handshake.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\client-parser.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\lws-plat-win.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\server.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\server-handshake.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\extension.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\extension-deflate-frame.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\lib\extension-deflate-stream.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\lib\private-libwebsockets.h">
+      <Filter>Headers Private</Filter>
+    </ClInclude>
+    <ClInclude Include="lws_config.h">
+      <Filter>Headers Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\extension-deflate-frame.h">
+      <Filter>Headers Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\extension-deflate-stream.h">
+      <Filter>Headers Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lib\libwebsockets.h">
+      <Filter>Headers Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers Private">
+      <UniqueIdentifier>{A03021FA-7A4B-4D5E-A73E-6048D52305F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers Public">
+      <UniqueIdentifier>{857BD640-5E87-4D41-816E-035097FB5C7B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{19435C61-6E4C-4151-A7C5-1769BA707B9A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

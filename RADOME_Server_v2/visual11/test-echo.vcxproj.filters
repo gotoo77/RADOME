@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\win32port\win32helpers\getopt.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\win32port\win32helpers\getopt_long.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\win32port\win32helpers\gettimeofday.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test-server\test-server.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\win32port\win32helpers\getopt.h">
+      <Filter>Headers Private</Filter>
+    </ClInclude>
+    <ClInclude Include="..\win32port\win32helpers\gettimeofday.h">
+      <Filter>Headers Private</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers Private">
+      <UniqueIdentifier>{A03021FA-7A4B-4D5E-A73E-6048D52305F1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{19435C61-6E4C-4151-A7C5-1769BA707B9A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

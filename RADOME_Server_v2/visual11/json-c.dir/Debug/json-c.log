@@ -1,0 +1,46 @@
+﻿La génération a démarré 18/02/2015 11:44:12.
+     1>Projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\json-c.vcxproj" sur le nœud 3 (Build cible(s)).
+     1>CustomBuild:
+         Building Custom Rule C:/Users/epr_consultant18.MATIS-GROUP/Desktop/RADOME/RADOME_Server_v2/CMakeLists.txt
+         CMake does not need to re-run because C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\CMakeFiles\generate.stamp is up-to-date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\lib" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\win32port\win32helpers" /I"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\win32port\zlib" /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D CMAKE_BUILD /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D HAVE_DECL__ISNAN /D HAVE_DECL__FINITE /D HAVE_DECL_NAN /D HAVE_DECL_INFINITY /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"json-c.dir\Debug\\" /Fd"json-c.dir\Debug\vc110.pdb" /Gd /TC /analyze- /errorReport:prompt "..\json-c\arraylist.c" "..\json-c\debug.c" "..\json-c\json_c_version.c" "..\json-c\json_object.c" "..\json-c\json_object_iterator.c" "..\json-c\json_tokener.c" "..\json-c\json_util.c" "..\json-c\libjson.c" "..\json-c\linkhash.c" "..\json-c\printbuf.c" "..\json-c\random_seed.c"
+         arraylist.c
+         debug.c
+         json_c_version.c
+         json_object.c
+     1>..\json-c\json_object.c(691): warning C4244: 'return' : conversion de 'int64_t' en 'double', perte possible de données
+         json_object_iterator.c
+         json_tokener.c
+         json_util.c
+         libjson.c
+         linkhash.c
+     1>c:\users\epr_consultant18.matis-group\desktop\radome\radome_server_v2\json-c\json_inttypes.h(11): warning C4005: 'INT32_MIN' : redéfinition de macro
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdint.h(59) : voir la définition précédente de 'INT32_MIN'
+     1>c:\users\epr_consultant18.matis-group\desktop\radome\radome_server_v2\json-c\json_inttypes.h(12): warning C4005: 'INT32_MAX' : redéfinition de macro
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdint.h(63) : voir la définition précédente de 'INT32_MAX'
+     1>c:\users\epr_consultant18.matis-group\desktop\radome\radome_server_v2\json-c\json_inttypes.h(14): warning C4005: 'INT64_MIN' : redéfinition de macro
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdint.h(60) : voir la définition précédente de 'INT64_MIN'
+     1>c:\users\epr_consultant18.matis-group\desktop\radome\radome_server_v2\json-c\json_inttypes.h(15): warning C4005: 'INT64_MAX' : redéfinition de macro
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdint.h(64) : voir la définition précédente de 'INT64_MAX'
+         printbuf.c
+         random_seed.c
+         Génération de code en cours...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\lib\Debug\json-c.lib" /NOLOGO "json-c.dir\Debug\arraylist.obj"
+         "json-c.dir\Debug\debug.obj"
+         "json-c.dir\Debug\json_c_version.obj"
+         "json-c.dir\Debug\json_object.obj"
+         "json-c.dir\Debug\json_object_iterator.obj"
+         "json-c.dir\Debug\json_tokener.obj"
+         "json-c.dir\Debug\json_util.obj"
+         "json-c.dir\Debug\libjson.obj"
+         "json-c.dir\Debug\linkhash.obj"
+         "json-c.dir\Debug\printbuf.obj"
+         "json-c.dir\Debug\random_seed.obj"
+         json-c.vcxproj -> C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\lib\Debug\json-c.lib
+     1>Génération du projet "C:\Users\epr_consultant18.MATIS-GROUP\Desktop\RADOME\RADOME_Server_v2\visual11\json-c.vcxproj" terminée (Build cible(s)).
+
+La génération a réussi.
+
+Temps écoulé 00:00:12.33

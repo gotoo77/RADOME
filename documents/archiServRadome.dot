@@ -1,0 +1,53 @@
+ digraph U {
+
+"RADOME Server" [shape=box,color=orange]; /* this is a comment */
+"CarInfotainment"[shape=box,color=green]; /* this is a comment */
+"Car Sensors"[shape=box,color=red];
+
+subgraph cluster_0 {
+
+		node [style=filled,color=white];
+		"RADOME Server" -> "CarInfotainment";
+		"CarInfotainment" -> "RADOME Server";
+		"RADOME Server" -> "Car Sensors";
+		"Car Sensors" -> "RADOME Server";
+		label = "server side";
+
+	}
+
+	subgraph cluster_1 {
+
+		"RADOME client n" -> "RADOME Server";
+		"RADOME Server" -> "RADOME client n";
+            "client ..." -> "RADOME Server";
+"RADOME Server" -> "client ...";
+		"RADOME client 2" -> "RADOME Server";
+"RADOME Server" -> "RADOME client 2";
+		"RADOME client 1" -> "RADOME Server";
+"RADOME Server" -> "RADOME client 1";
+		label = "clients";
+		color=blue;
+	}
+
+	subgraph cluster_2 {
+		node [style=filled];
+		"CarInfotainment" -> "Audio";
+		"CarInfotainment" -> "Video";
+		"CarInfotainment" -> "Navigation";
+		"CarInfotainment" -> "Phone";
+		label = "CarInfotainment";
+		color=green;
+	}
+
+	subgraph cluster_3 {
+		node [style=filled];
+		"Car Sensors" -> "HVAC";
+		"Car Sensors" -> "Speed";
+		"Car Sensors" -> "Lights";
+		"Car Sensors" -> "Brakes";
+		"Car Sensors" -> "Engine";
+		label = "Car Sensors";
+		color=red;
+	}
+}
+
