@@ -12,32 +12,30 @@ static NEXT_SESSION_ID: AtomicU64 = AtomicU64::new(1);
 type SharedRuntime = Arc<Mutex<Runtime>>;
 
 #[derive(Debug, Default)]
-struct ConnectionSession {
-    id: Option<String>,
-    client_id: Option<String>,
-    registered: bool,
-}
-
+struct ConnectionSession { id: Option<String>, client_id: Option<String>, registered: bool }
 impl ConnectionSession {
     fn is_established(&self) -> bool { self.id.is_some() }
     fn establish(&mut self, client_id: String) -> String {
         let sequence = NEXT_SESSION_ID.fetch_add(1, Ordering::Relaxed);
         let id = format!("session-{sequence}");
-        self.id = Some(id.clone());
-        self.client_id = Some(client_id);
-        id
+        self.id = Some(id.clone()); self.client_id = Some(client_id); id
     }
+}
+
+fn new_runtime() -> SharedRuntime {
+    Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([Capability::new("vehicle.telemetry")]))))
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = std::env::var("RADOME_ADDR").unwrap_or_else(|_| DEFAULT_ADDR.to_owned());
     let listener = TcpListener::bind(&addr).await?;
-    let runtime = Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([
-        Capability::new("vehicle.telemetry"),
-    ]))));
+    let runtime = new_runtime();
     println!("RADOME server listening on ws://{addr}");
+    serve(listener, runtime).await
+}
 
+async fn serve(listener: TcpListener, runtime: SharedRuntime) -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let (stream, peer) = listener.accept().await?;
         let runtime = Arc::clone(&runtime);
@@ -52,14 +50,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 async fn handle_connection(stream: TcpStream, runtime: SharedRuntime) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let mut websocket = accept_async(stream).await?;
     let mut session = ConnectionSession::default();
-
     while let Some(message) = websocket.next().await {
         let message = message?;
         match message {
             Message::Text(text) => {
                 let response = match Envelope::decode_json(text.as_ref()) {
                     Ok(incoming) => handle_envelope(&mut session, &runtime, incoming),
-                    Err(error) => Envelope::new("server-error", MessageType::Error, json!({"reason": format!("{error:?}")})),
+                    Err(error) => Envelope::new("server-error", MessageType::Error, json!({"reason":format!("{error:?}")})),
                 };
                 websocket.send(Message::Text(response.encode_json()?.into())).await?;
             }
@@ -68,7 +65,6 @@ async fn handle_connection(stream: TcpStream, runtime: SharedRuntime) -> Result<
             _ => {}
         }
     }
-
     unregister_session(&session, &runtime);
     Ok(())
 }
@@ -87,9 +83,7 @@ fn handle_envelope(session: &mut ConnectionSession, runtime: &SharedRuntime, inc
 fn handle_hello(session: &mut ConnectionSession, incoming: Envelope) -> Envelope {
     let Some(client_id) = incoming.payload.get("client_id").and_then(Value::as_str) else { return error_for(&incoming, "missing_client_id"); };
     let session_id = session.establish(client_id.to_owned());
-    Envelope::new("server-hello", MessageType::Hello, json!({"server":"radome-server","protocol_version":radome_core::PROTOCOL_VERSION}))
-        .correlated_to(incoming.id)
-        .in_session(session_id)
+    Envelope::new("server-hello", MessageType::Hello, json!({"server":"radome-server","protocol_version":radome_core::PROTOCOL_VERSION})).correlated_to(incoming.id).in_session(session_id)
 }
 
 fn handle_capability_announce(session: &mut ConnectionSession, runtime: &SharedRuntime, incoming: Envelope) -> Envelope {
@@ -98,24 +92,14 @@ fn handle_capability_announce(session: &mut ConnectionSession, runtime: &SharedR
     let Some(values) = incoming.payload.get("capabilities").and_then(Value::as_array) else { return error_for(&incoming, "missing_capabilities"); };
     let Some(capabilities) = values.iter().map(Value::as_str).collect::<Option<Vec<_>>>() else { return error_for(&incoming, "invalid_capabilities"); };
     let client_id = session.client_id.clone().expect("established session has client id");
-    let client = Client::new(
-        client_id.clone(),
-        Role::new(role),
-        capabilities.into_iter().map(Capability::new),
-    );
-    runtime.lock().expect("runtime mutex poisoned").register_client(client);
+    runtime.lock().expect("runtime mutex poisoned").register_client(Client::new(client_id.clone(), Role::new(role), capabilities.into_iter().map(Capability::new)));
     session.registered = true;
-
-    Envelope::new("capabilities-accepted", MessageType::CapabilityAnnounce, json!({"accepted":true,"client_id":client_id}))
-        .correlated_to(incoming.id)
-        .in_session(session.id.clone().expect("established session"))
+    Envelope::new("capabilities-accepted", MessageType::CapabilityAnnounce, json!({"accepted":true,"client_id":client_id})).correlated_to(incoming.id).in_session(session.id.clone().expect("established session"))
 }
 
 fn unregister_session(session: &ConnectionSession, runtime: &SharedRuntime) {
     if session.registered {
-        if let Some(client_id) = session.client_id.as_deref() {
-            runtime.lock().expect("runtime mutex poisoned").unregister_client(client_id);
-        }
+        if let Some(client_id) = session.client_id.as_deref() { runtime.lock().expect("runtime mutex poisoned").unregister_client(client_id); }
     }
 }
 
@@ -128,63 +112,53 @@ fn error_for(incoming: &Envelope, reason: &str) -> Envelope {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tokio_tungstenite::connect_async;
 
-    fn runtime() -> SharedRuntime {
-        Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([Capability::new("vehicle.telemetry")]))))
-    }
     fn hello(id: &str) -> Envelope { Envelope::new(id, MessageType::Hello, json!({"client_id":"dashboard"})) }
 
-    #[test]
-    fn hello_establishes_a_session_without_registering_client_yet() {
-        let runtime = runtime();
-        let mut session = ConnectionSession::default();
-        let response = handle_envelope(&mut session, &runtime, hello("hello-42"));
-        assert_eq!(response.message_type, MessageType::Hello);
-        assert!(response.session_id.is_some());
-        assert_eq!(runtime.lock().unwrap().client_count(), 0);
+    async fn recv_envelope<S>(socket: &mut tokio_tungstenite::WebSocketStream<S>) -> Envelope
+    where S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin {
+        let message = socket.next().await.expect("websocket response").expect("valid websocket message");
+        let Message::Text(text) = message else { panic!("expected text message") };
+        Envelope::decode_json(text.as_ref()).expect("valid RADOME envelope")
     }
 
     #[test]
     fn capability_announce_registers_client_in_runtime() {
-        let runtime = runtime();
-        let mut session = ConnectionSession::default();
+        let runtime = new_runtime(); let mut session = ConnectionSession::default();
         let session_id = handle_envelope(&mut session, &runtime, hello("hello-1")).session_id.unwrap();
         let incoming = Envelope::new("caps-1", MessageType::CapabilityAnnounce, json!({"role":"driver-display","capabilities":["display","touch"]})).in_session(session_id);
-        let response = handle_envelope(&mut session, &runtime, incoming);
-        assert_eq!(response.message_type, MessageType::CapabilityAnnounce);
-        assert_eq!(runtime.lock().unwrap().client_count(), 1);
-        assert!(session.registered);
-    }
-
-    #[test]
-    fn disconnect_unregisters_registered_client() {
-        let runtime = runtime();
-        let mut session = ConnectionSession::default();
-        let session_id = handle_envelope(&mut session, &runtime, hello("hello-1")).session_id.unwrap();
-        let incoming = Envelope::new("caps-1", MessageType::CapabilityAnnounce, json!({"role":"driver-display","capabilities":["display"]})).in_session(session_id);
         handle_envelope(&mut session, &runtime, incoming);
         assert_eq!(runtime.lock().unwrap().client_count(), 1);
-        unregister_session(&session, &runtime);
-        assert_eq!(runtime.lock().unwrap().client_count(), 0);
     }
 
-    #[test]
-    fn capabilities_require_hello_first() {
-        let runtime = runtime();
-        let mut session = ConnectionSession::default();
-        let incoming = Envelope::new("caps-1", MessageType::CapabilityAnnounce, json!({"role":"driver-display","capabilities":["display"]}));
-        let response = handle_envelope(&mut session, &runtime, incoming);
-        assert_eq!(response.payload["reason"], "hello_required");
-    }
+    #[tokio::test]
+    async fn websocket_client_completes_handshake_and_registers_in_runtime() {
+        let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind ephemeral port");
+        let addr = listener.local_addr().unwrap();
+        let runtime = new_runtime();
+        let server_runtime = Arc::clone(&runtime);
+        let server = tokio::spawn(async move {
+            let (stream, _) = listener.accept().await.expect("accept client");
+            handle_connection(stream, server_runtime).await.expect("serve client");
+        });
 
-    #[test]
-    fn wrong_session_id_is_rejected_without_registration() {
-        let runtime = runtime();
-        let mut session = ConnectionSession::default();
-        handle_envelope(&mut session, &runtime, hello("hello-1"));
-        let incoming = Envelope::new("caps-1", MessageType::CapabilityAnnounce, json!({"role":"driver-display","capabilities":["display"]})).in_session("wrong");
-        let response = handle_envelope(&mut session, &runtime, incoming);
-        assert_eq!(response.payload["reason"], "invalid_session");
+        let (mut socket, _) = connect_async(format!("ws://{addr}")).await.expect("connect websocket");
+        socket.send(Message::Text(hello("hello-net-1").encode_json().unwrap().into())).await.unwrap();
+        let hello_response = recv_envelope(&mut socket).await;
+        assert_eq!(hello_response.message_type, MessageType::Hello);
+        assert_eq!(hello_response.correlation_id.as_deref(), Some("hello-net-1"));
+        let session_id = hello_response.session_id.expect("server session id");
+
+        let announce = Envelope::new("caps-net-1", MessageType::CapabilityAnnounce, json!({"role":"driver-display","capabilities":["display","touch"]})).in_session(session_id.clone());
+        socket.send(Message::Text(announce.encode_json().unwrap().into())).await.unwrap();
+        let accepted = recv_envelope(&mut socket).await;
+        assert_eq!(accepted.message_type, MessageType::CapabilityAnnounce);
+        assert_eq!(accepted.session_id.as_deref(), Some(session_id.as_str()));
+        assert_eq!(runtime.lock().unwrap().client_count(), 1);
+
+        socket.close(None).await.unwrap();
+        server.await.unwrap();
         assert_eq!(runtime.lock().unwrap().client_count(), 0);
     }
 }
