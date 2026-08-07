@@ -1,39 +1,46 @@
 # Audit RADOME — restauration 2026
 
-> Statut : audit initial. Ce document distingue volontairement les faits observés dans le dépôt des orientations proposées pour RADOME 2026.
+> Statut : audit initial terminé. Ce document distingue les faits observés dans le dépôt des orientations retenues pour RADOME 2026.
 
 ## 1. Intention
 
 RADOME est un prototype historique d'interface distribuée pour systèmes embarqués et multi-écrans. Le dépôt contient un client Web et un serveur C communiquant par WebSocket et JSON.
 
-L'objectif de la restauration n'est pas de réécrire immédiatement le projet avec une pile moderne. Il est d'abord de :
+Le chantier 2026 vise à :
 
-1. comprendre le comportement de RADOME 2015 ;
-2. isoler son protocole et ses concepts métier de ses choix techniques historiques ;
-3. identifier les risques, bugs et dettes ;
-4. définir une cible moderne permettant plusieurs implémentations (C++, Rust, Python, etc.) ;
-5. préserver autant que possible un chemin de compatibilité et une implémentation legacy vérifiable.
+1. comprendre suffisamment RADOME 2015 pour préserver ses idées utiles ;
+2. documenter son protocole et ses défauts ;
+3. séparer les concepts métier de ses choix techniques historiques ;
+4. concevoir un RADOME moderne, portable et testable ;
+5. conserver le legacy comme archive de référence, sans obligation de maintenance.
 
-## 2. Photographie du dépôt historique
+## 2. Décision sur le legacy C
+
+Le serveur C 2015 est désormais considéré comme une **archive documentaire et comportementale**, pas comme une implémentation à maintenir.
+
+Il n'existe aucune exigence de :
+
+- le porter vers Linux/macOS ;
+- maintenir ses anciennes dépendances ;
+- corriger tous ses bugs ;
+- conserver sa compatibilité binaire ;
+- l'intégrer au runtime RADOME 2026.
+
+Une tentative ponctuelle de compilation/exécution reste acceptable uniquement si elle apporte rapidement une information utile ou une trace de protocole. Elle doit être abandonnée dès que son coût devient disproportionné.
+
+Le code C reste précieux pour comprendre le prototype ; il ne doit pas dicter l'architecture moderne.
+
+## 3. Photographie du dépôt historique
 
 ### Client
 
-Le client historique est une application Web statique relativement riche. Il contient notamment :
+Le client historique est une application Web statique utilisant notamment JavaScript, AngularJS, jQuery, Bootstrap, WebSocket, des fonctions multimédia et une interface bilingue français/anglais.
 
-- HTML/CSS ;
-- JavaScript ;
-- AngularJS ;
-- jQuery ;
-- Bootstrap et plusieurs plugins ;
-- une connexion WebSocket ;
-- des fonctions de présentation de données et de médias ;
-- une interface bilingue français/anglais.
-
-Le fichier `RADOME_Main.js` concentre une quantité importante de responsabilités et devra faire l'objet d'une cartographie fonctionnelle détaillée.
+`RADOME_Main.js` concentre une grande quantité de responsabilités et plusieurs états globaux.
 
 ### Serveur
 
-Le serveur historique est écrit en C. Le code propre à RADOME est principalement regroupé dans `RADOME_Server_v2/RADOME_WebSocket/` :
+Le serveur historique est écrit en C. Le code RADOME principal se trouve dans `RADOME_Server_v2/RADOME_WebSocket/`, notamment :
 
 - `RADOME_WebSocket.c` ;
 - `RADOME_JSON.c` ;
@@ -42,223 +49,169 @@ Le serveur historique est écrit en C. Le code propre à RADOME est principaleme
 - `RADOME_pthread.c` ;
 - `RADOME_export.h`.
 
-Le dépôt contient également les sources de dépendances tierces, notamment `json-c` et une version historique de `libwebsockets`, ainsi que du support pthread pour Windows.
+Le dépôt contient également `json-c`, une version historique de `libwebsockets`, du support pthread Windows et leurs artefacts/outils de build.
 
 ### Build et artefacts
 
-Le dépôt mélange actuellement :
+Le dépôt mélange code RADOME, dépendances vendored, CMake, projets Visual Studio, sorties de build, binaires/bibliothèques Windows et tests de dépendances tierces.
 
-- code RADOME ;
-- dépendances vendored ;
-- scripts et fichiers CMake ;
-- projets Visual Studio ;
-- sorties de build CMake/Visual Studio ;
-- binaires et bibliothèques Windows ;
-- code de test provenant des dépendances tierces.
+Ce mélange sera conservé comme archive tant qu'une réorganisation du dépôt moderne n'aura pas clairement isolé le legacy.
 
-Cette organisation rend difficile l'identification de la surface réellement maintenue par RADOME.
+## 4. Résultats principaux de l'archéologie
 
-## 3. Dette immédiatement visible
+Le protocole legacy est documenté dans `LEGACY-PROTOCOL.md`.
 
-### P0 — établir une base reproductible
+Les principaux défauts observés sont recensés dans `LEGACY-DEFECTS.md`.
 
-Avant toute évolution fonctionnelle :
+Points structurants :
 
-- déterminer si le serveur historique compile encore sur un environnement Linux moderne ;
-- documenter précisément les dépendances et versions attendues ;
-- identifier le point d'entrée et le cycle de vie du serveur ;
-- reconstruire un scénario minimal serveur + client ;
-- capturer les messages WebSocket réellement échangés.
+- neuf WebSockets spécialisés (MAIN, CAN1…CAN5, VIDEO, AUDIO, NAV) ;
+- commandes client → serveur principalement en texte brut ;
+- réponses/flux serveur → client en JSON routé par `AppID` ;
+- absence observée de versionnement protocolaire formel, corrélation générique, sessions et reconnexion ;
+- état serveur global fortement couplé ;
+- client Web fortement couplé à son UI et à ses WebSockets ;
+- `CAN1`…`CAN5` sont des simulateurs de flux, pas une intégration CAN automobile validée.
 
-### P1 — séparer code produit, dépendances et artefacts
+## 5. Ce qui mérite d'être conservé
 
-Le dépôt embarque des arbres complets de dépendances et des sorties de compilation. À terme, il faudra :
+L'intérêt du prototype n'est pas son implémentation C/AngularJS mais plusieurs intuitions :
 
-- conserver l'état historique tant que la restauration n'est pas validée ;
-- sortir les artefacts générés du suivi Git ;
-- remplacer progressivement les copies de dépendances par une gestion explicite des dépendances ;
-- distinguer clairement `legacy`, code maintenu, tests et documentation.
+- UI/expérience distribuée sur plusieurs terminaux ;
+- communication événementielle locale ;
+- adaptation à plusieurs écrans ;
+- séparation possible entre sources de données et présentation ;
+- développement avec des sources matérielles simulées ;
+- cible infotainment/embarqué local-first.
 
-Cette opération ne doit pas précéder la reconstruction du build historique : supprimer les dépendances vendored trop tôt ferait perdre une partie de la reproductibilité du prototype.
+Ces idées sont reformulées dans `ARCHITECTURE-2026.md` et `CAPABILITIES.md`.
 
-### P1 — protocole implicite
+## 6. Cible RADOME 2026
 
-Le protocole RADOME semble actuellement défini par l'implémentation C et JavaScript elle-même. Il manque une spécification indépendante décrivant :
+RADOME 2026 est proposé comme un **runtime local-first d'expériences distribuées pour terminaux embarqués et multi-écrans**.
 
-- connexion et déconnexion ;
-- structure des messages JSON ;
-- commandes ;
-- événements serveur ;
-- erreurs ;
-- identification éventuelle des clients ;
-- règles de diffusion à plusieurs clients ;
-- comportement en reconnexion ;
-- compatibilité de versions.
+Les concepts minimaux sont :
 
-L'extraction de cette spécification est un chantier prioritaire.
+- `Node` ;
+- `Client` ;
+- `Capability` ;
+- `Adapter` ;
+- `Experience` ;
+- `Role` ;
+- `Permission` ;
+- `Session` ;
+- `State` ;
+- `Command` ;
+- `Event`.
 
-### P1 — responsabilités fortement couplées
+Le protocole, le core et les modèles ne doivent dépendre ni d'un OS, ni d'un framework UI, ni du matériel CAN, ni d'une bibliothèque WebSocket précise.
 
-Les premières observations indiquent que transport WebSocket, sérialisation JSON, logique RADOME et présentation Web sont étroitement liés. La restauration devra identifier les frontières permettant de séparer :
+## 7. Langages et implémentations
 
-- modèle/protocole RADOME ;
-- transport ;
-- runtime serveur ;
-- adaptateurs de plateformes ;
-- clients et UI.
+Aucun langage ne fait partie de l'identité de RADOME.
 
-## 4. Hypothèse de cible RADOME 2026
+Orientation actuelle :
 
-Cette section est une proposition, pas une description du système historique.
+- **Rust** : candidat privilégié pour le premier runtime moderne ;
+- **Python** : simulateurs, outils, tests de conformité et prototypes ;
+- **C++** : SDK/runtime uniquement lorsqu'un cas d'intégration réel le justifie ;
+- **C legacy** : archive non maintenue.
 
-RADOME pourrait devenir un runtime local-first pour expériences utilisateur distribuées sur plusieurs terminaux embarqués : véhicule, avion, tablette, écran intégré, navigateur ou application native.
+Cette orientation reste falsifiable par le prototype : Rust n'est pas retenu parce qu'il est moderne, mais parce qu'il correspond bien aux contraintes réseau, concurrence, portabilité, embarqué Linux et binaire autonome.
 
-Le noyau ne devrait pas dépendre d'un langage particulier.
+## 8. Portabilité
 
-Concepts candidats :
+La stratégie est détaillée dans `PORTABILITY-PLAN.md`.
 
-- `Node` : instance RADOME ;
-- `Client` : terminal connecté ;
-- `Capability` : capacités du terminal (affichage, tactile, audio, vidéo, etc.) ;
-- `Role` : fonction du terminal dans une installation ;
-- `Session` : contexte utilisateur ou applicatif ;
-- `State` : état partagé ;
-- `Command` : intention adressée au système ;
-- `Event` : fait produit par le système ;
-- `Resource` : média ou ressource disponible ;
-- `Permission` : droits associés au client/rôle ;
-- `Transport` : WebSocket en premier lieu, sans en faire nécessairement l'identité de RADOME.
+Cibles modernes : Linux x86_64, Linux ARM64, Windows x64 et macOS ARM64.
 
-## 5. Principe d'interopérabilité
+Une plateforme n'est supportée que si elle compile et passe les tests/scénarios de conformité correspondants. La présence de branches `#ifdef` n'est pas une preuve de portabilité.
 
-À terme, RADOME devrait pouvoir disposer de plusieurs implémentations du même protocole :
+Cette exigence concerne RADOME 2026, **pas le serveur C legacy**.
 
-- implémentation C historique ;
-- implémentation C++ ;
-- implémentation Rust ;
-- implémentation Python de référence/prototypage ;
-- client Web moderne.
+## 9. Roadmap révisée
 
-La compatibilité doit être mesurée par une suite de conformité indépendante des implémentations.
+### R0 — Archéologie — terminée pour démarrer la suite
 
-Exemples de scénarios futurs :
+- architecture historique comprise à un niveau suffisant ;
+- protocole legacy reconstruit statiquement ;
+- défauts concrets recensés ;
+- rôle des simulations CAN clarifié.
 
-- serveur Rust ↔ client Web ;
-- serveur C++ ↔ client Python ;
-- serveur Python ↔ client Rust ;
-- serveur C legacy ↔ client de conformité.
+L'archéologie peut être enrichie plus tard, mais elle ne bloque plus le développement moderne.
 
-## 6. Axes d'audit détaillé
+### R1 — Modèle moderne — cadré
 
-### Serveur C
+- architecture minimale ;
+- capabilities/adapters ;
+- local-first ;
+- invariants ;
+- V1 volontairement petite.
 
-À examiner en priorité :
+### R2 — Spike RADOME 2026
 
-- ownership et durée de vie des buffers ;
-- allocations/libérations ;
-- tailles de buffers et copies de chaînes ;
-- validation des entrées JSON ;
-- gestion des erreurs ;
-- concurrence et synchronisation pthread ;
-- partage d'état entre clients ;
-- callbacks libwebsockets ;
-- fragmentation WebSocket ;
-- déconnexion/reconnexion ;
-- limites de taille des messages ;
-- comportement sous clients lents ;
-- sécurité réseau et TLS ;
-- portabilité Linux/Windows/embarqué.
+Créer un démonstrateur minimal :
 
-### Client Web
+- runtime local ;
+- deux clients ;
+- annonce de capabilities ;
+- `vehicle.telemetry` simulée ;
+- matching d'une expérience ;
+- commande + résultat ;
+- événements ;
+- reconnexion simple ;
+- traces structurées.
 
-À examiner en priorité :
+Le candidat initial pour le runtime est Rust.
 
-- cycle de vie WebSocket ;
-- reconnexion ;
-- parsing/validation des messages ;
-- manipulation du DOM ;
-- injections HTML éventuelles ;
-- couplage AngularJS/jQuery ;
-- gestion des erreurs ;
-- état global ;
-- fonctions média ;
-- responsive/adaptation réelle aux terminaux.
+### R3 — Protocole V1
 
-### Protocole
+À partir du spike :
 
-À reconstruire à partir du code et des exemples JSON :
+- figer uniquement les concepts éprouvés ;
+- définir l'enveloppe et le versionnement ;
+- ajouter schémas et fixtures ;
+- construire une suite de conformité indépendante.
 
-- catalogue exhaustif des messages ;
-- direction client → serveur / serveur → client ;
-- champs obligatoires/facultatifs ;
-- sémantique de chaque message ;
-- réponses et erreurs ;
-- diffusion unicast/broadcast ;
-- ordre des messages ;
-- état initial ;
-- comportement multi-client.
+### R4 — Portabilité et interopérabilité
 
-## 7. Roadmap de restauration
+- CI Linux/Windows/macOS ;
+- ARM64 ;
+- simulateurs/outils Python ;
+- SDK C++ si besoin réel ;
+- tests croisés entre implémentations.
 
-### R0 — Archéologie
+### R5 — Infotainment réel
 
-- documenter l'arborescence ;
-- lire le code RADOME propriétaire ;
-- reconstruire le protocole legacy ;
-- établir l'inventaire des dépendances ;
-- identifier un scénario de démonstration minimal.
+Seulement après validation du core :
 
-### R1 — Résurrection
+- adapter CAN/CAN-FD/SocketCAN si pertinent ;
+- navigation ;
+- média ;
+- rôles d'écrans ;
+- sécurité renforcée ;
+- intégration matérielle réelle.
 
-- obtenir un build Linux reproductible ;
-- exécuter le serveur legacy ;
-- connecter un client minimal ;
-- enregistrer des traces de protocole ;
-- ajouter des smoke tests.
+## 10. Compatibilité legacy
 
-### R2 — Spécification
+RADOME 2026 n'a aucune obligation de reproduire les défauts ou la topologie à neuf sockets du legacy.
 
-- formaliser `protocol/legacy` ;
-- définir les invariants observés ;
-- ajouter des fixtures JSON ;
-- créer une première suite de conformité.
+Si une compatibilité devient utile, elle sera réalisée en périphérie :
 
-### R3 — Nettoyage
+```text
+legacy protocol
+      ↓
+LegacyAdapter
+      ↓
+RADOME 2026
+```
 
-- isoler l'implémentation historique ;
-- supprimer les artefacts générés de la branche moderne ;
-- externaliser les dépendances ;
-- réduire le build à ce qui appartient réellement à RADOME.
+Cette compatibilité ne doit jamais contaminer le modèle du core.
 
-### R4 — RADOME 2026
+## 11. Conclusion de l'audit
 
-- décider des concepts du nouveau protocole ;
-- versionner explicitement le protocole ;
-- négocier capacités et versions ;
-- définir erreurs, sessions, rôles et sécurité ;
-- choisir une première implémentation moderne de référence.
+RADOME 2015 a rempli son rôle de prototype : il matérialise plusieurs intuitions intéressantes mais son implémentation n'est pas une fondation adaptée à une maintenance moderne.
 
-### R5 — Polyglotte
+La stratégie retenue est donc **préserver les idées et les observations, pas le code par principe**.
 
-- C++ / Rust / Python selon les cas d'usage ;
-- tests d'interopérabilité croisés ;
-- client Web moderne ;
-- exemples infotainment reproductibles.
-
-## 8. Décisions volontairement reportées
-
-L'audit ne décide pas encore :
-
-- si WebSocket reste l'unique transport ;
-- si JSON reste le format principal ;
-- si le serveur moderne de référence sera écrit en Rust, C++ ou Python ;
-- quel framework Web remplacera éventuellement AngularJS ;
-- si l'implémentation C historique doit être maintenue à long terme.
-
-Ces décisions doivent découler de l'analyse du comportement réel et des contraintes d'embarqué, pas d'une préférence technologique.
-
-## 9. Prochaine tranche
-
-La prochaine tranche doit produire `docs/LEGACY-PROTOCOL.md` à partir de `RADOME_JSON.c`, `RADOME_Functions.c`, `RADOME_WebSocket.c`, des fichiers `Read_test.json` / `Write_test.json` et du code JavaScript client.
-
-En parallèle, elle doit dresser une liste de défauts concrets avec fichier, fonction, impact et priorité, plutôt qu'une liste générique de risques.
+La prochaine étape n'est plus de restaurer le serveur C. Elle est de construire un petit spike RADOME 2026 permettant de tester les frontières architecturales proposées avant de figer un nouveau protocole.
