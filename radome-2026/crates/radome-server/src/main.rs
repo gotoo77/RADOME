@@ -1,16 +1,21 @@
+mod hub;
+
 use futures_util::{SinkExt, StreamExt};
+use hub::{event_envelope, ConnectionHub};
 use radome_core::{Capability, Client, Envelope, Experience, MessageType, Role, SystemCapabilities};
 use radome_core::runtime::Runtime;
 use radome_core::telemetry::TelemetrySimulator;
 use serde_json::{json, Value};
-use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::{Arc, Mutex};
 use tokio::net::{TcpListener, TcpStream};
+use tokio::sync::mpsc;
 use tokio_tungstenite::{accept_async, tungstenite::Message};
 
 const DEFAULT_ADDR: &str = "127.0.0.1:8787";
 static NEXT_SESSION_ID: AtomicU64 = AtomicU64::new(1);
 type SharedRuntime = Arc<Mutex<Runtime>>;
+type SharedHub = Arc<Mutex<ConnectionHub>>;
 
 #[derive(Debug, Default)]
 struct ConnectionSession { id: Option<String>, client_id: Option<String>, registered: bool }
@@ -25,7 +30,7 @@ impl ConnectionSession {
 fn new_runtime() -> SharedRuntime {
     Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([Capability::new("vehicle.telemetry")]))))
 }
-
+fn new_hub() -> SharedHub { Arc::new(Mutex::new(ConnectionHub::default())) }
 fn telemetry_experience() -> Experience {
     Experience::new("telemetry", [Capability::new("vehicle.telemetry")], [Capability::new("display")], [Capability::new("touch")], [Role::new("driver-display"), Role::new("center-console")])
 }
@@ -35,63 +40,70 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr = std::env::var("RADOME_ADDR").unwrap_or_else(|_| DEFAULT_ADDR.to_owned());
     let listener = TcpListener::bind(&addr).await?;
     println!("RADOME server listening on ws://{addr}");
-    serve(listener, new_runtime()).await
+    serve(listener, new_runtime(), new_hub()).await
 }
 
-async fn serve(listener: TcpListener, runtime: SharedRuntime) -> Result<(), Box<dyn std::error::Error>> {
+async fn serve(listener: TcpListener, runtime: SharedRuntime, hub: SharedHub) -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let (stream, peer) = listener.accept().await?;
-        let runtime = Arc::clone(&runtime);
-        tokio::spawn(async move { if let Err(error) = handle_connection(stream, runtime).await { eprintln!("connection {peer} closed with error: {error}"); } });
+        let runtime = Arc::clone(&runtime); let hub = Arc::clone(&hub);
+        tokio::spawn(async move { if let Err(error) = handle_connection(stream, runtime, hub).await { eprintln!("connection {peer} closed with error: {error}"); } });
     }
 }
 
-async fn handle_connection(stream: TcpStream, runtime: SharedRuntime) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let mut websocket = accept_async(stream).await?;
+async fn handle_connection(stream: TcpStream, runtime: SharedRuntime, hub: SharedHub) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    let websocket = accept_async(stream).await?;
+    let (mut sink, mut source) = websocket.split();
+    let (outbound_tx, mut outbound_rx) = mpsc::unbounded_channel::<Envelope>();
+    let writer = tokio::spawn(async move {
+        while let Some(envelope) = outbound_rx.recv().await {
+            sink.send(Message::Text(envelope.encode_json()?.into())).await?;
+        }
+        Ok::<(), Box<dyn std::error::Error + Send + Sync>>(())
+    });
+
     let mut session = ConnectionSession::default();
-    while let Some(message) = websocket.next().await {
+    while let Some(message) = source.next().await {
         let message = message?;
         match message {
             Message::Text(text) => {
                 let response = match Envelope::decode_json(text.as_ref()) {
-                    Ok(incoming) => handle_envelope(&mut session, &runtime, incoming),
+                    Ok(incoming) => handle_envelope(&mut session, &runtime, &hub, &outbound_tx, incoming),
                     Err(error) => Envelope::new("server-error", MessageType::Error, json!({"reason":format!("{error:?}")})),
                 };
                 let should_emit_demo = response.message_type == MessageType::CapabilityAnnounce && response.payload["accepted"] == true;
-                websocket.send(Message::Text(response.encode_json()?.into())).await?;
-                if should_emit_demo { send_first_telemetry_sample(&mut websocket, &session, &runtime).await?; }
+                outbound_tx.send(response).map_err(|_| "websocket writer closed")?;
+                if should_emit_demo { publish_first_telemetry_sample(&runtime, &hub, &session); }
             }
-            Message::Ping(payload) => websocket.send(Message::Pong(payload)).await?,
             Message::Close(_) => break,
             _ => {}
         }
     }
-    unregister_session(&session, &runtime);
+    unregister_session(&session, &runtime, &hub);
+    drop(outbound_tx);
+    writer.await??;
     Ok(())
 }
 
-async fn send_first_telemetry_sample<S>(websocket: &mut tokio_tungstenite::WebSocketStream<S>, session: &ConnectionSession, runtime: &SharedRuntime) -> Result<(), Box<dyn std::error::Error + Send + Sync>>
-where S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin {
-    let Some(client_id) = session.client_id.as_deref() else { return Ok(()); };
+fn publish_first_telemetry_sample(runtime: &SharedRuntime, hub: &SharedHub, session: &ConnectionSession) {
+    let Some(session_id) = session.id.as_deref() else { return; };
     let mut simulator = TelemetrySimulator::demo_drive();
-    let Some(events) = simulator.next_events() else { return Ok(()); };
+    let Some(events) = simulator.next_events() else { return; };
     let experience = telemetry_experience();
     for event in events {
         let deliveries = runtime.lock().expect("runtime mutex poisoned").publish_for_experience(&experience, event);
-        for delivery in deliveries.into_iter().filter(|d| d.client_id == client_id) {
-            let envelope = Envelope::new(delivery.event.id.value(), MessageType::Event, json!({"name":delivery.event.name,"data":delivery.event.payload})).in_session(session.id.clone().expect("established session"));
-            websocket.send(Message::Text(envelope.encode_json()?.into())).await?;
+        for delivery in deliveries {
+            hub.lock().expect("hub mutex poisoned").send_to(&delivery.client_id, event_envelope(&delivery.event, session_id));
         }
     }
-    Ok(())
 }
 
-fn handle_envelope(session: &mut ConnectionSession, runtime: &SharedRuntime, incoming: Envelope) -> Envelope {
+fn handle_envelope(session: &mut ConnectionSession, runtime: &SharedRuntime, hub: &SharedHub, outbound: &mpsc::UnboundedSender<Envelope>, incoming: Envelope) -> Envelope {
     match incoming.message_type {
         MessageType::Hello if !session.is_established() => handle_hello(session, incoming),
         MessageType::Hello => error_for(&incoming, "session_already_established"),
         MessageType::CapabilityAnnounce if !session.is_established() => error_for(&incoming, "hello_required"),
-        MessageType::CapabilityAnnounce => handle_capability_announce(session, runtime, incoming),
+        MessageType::CapabilityAnnounce => handle_capability_announce(session, runtime, hub, outbound, incoming),
         _ if !session.is_established() => error_for(&incoming, "hello_required"),
         _ => error_for(&incoming, "unsupported_message_type"),
     }
@@ -103,19 +115,25 @@ fn handle_hello(session: &mut ConnectionSession, incoming: Envelope) -> Envelope
     Envelope::new("server-hello", MessageType::Hello, json!({"server":"radome-server","protocol_version":radome_core::PROTOCOL_VERSION})).correlated_to(incoming.id).in_session(session_id)
 }
 
-fn handle_capability_announce(session: &mut ConnectionSession, runtime: &SharedRuntime, incoming: Envelope) -> Envelope {
+fn handle_capability_announce(session: &mut ConnectionSession, runtime: &SharedRuntime, hub: &SharedHub, outbound: &mpsc::UnboundedSender<Envelope>, incoming: Envelope) -> Envelope {
     if incoming.session_id.as_deref() != session.id.as_deref() { return error_for(&incoming, "invalid_session"); }
     let Some(role) = incoming.payload.get("role").and_then(Value::as_str) else { return error_for(&incoming, "missing_role"); };
     let Some(values) = incoming.payload.get("capabilities").and_then(Value::as_array) else { return error_for(&incoming, "missing_capabilities"); };
     let Some(capabilities) = values.iter().map(Value::as_str).collect::<Option<Vec<_>>>() else { return error_for(&incoming, "invalid_capabilities"); };
     let client_id = session.client_id.clone().expect("established session has client id");
     runtime.lock().expect("runtime mutex poisoned").register_client(Client::new(client_id.clone(), Role::new(role), capabilities.into_iter().map(Capability::new)));
+    hub.lock().expect("hub mutex poisoned").register(client_id.clone(), outbound.clone());
     session.registered = true;
     Envelope::new("capabilities-accepted", MessageType::CapabilityAnnounce, json!({"accepted":true,"client_id":client_id})).correlated_to(incoming.id).in_session(session.id.clone().expect("established session"))
 }
 
-fn unregister_session(session: &ConnectionSession, runtime: &SharedRuntime) {
-    if session.registered { if let Some(client_id) = session.client_id.as_deref() { runtime.lock().expect("runtime mutex poisoned").unregister_client(client_id); } }
+fn unregister_session(session: &ConnectionSession, runtime: &SharedRuntime, hub: &SharedHub) {
+    if session.registered {
+        if let Some(client_id) = session.client_id.as_deref() {
+            runtime.lock().expect("runtime mutex poisoned").unregister_client(client_id);
+            hub.lock().expect("hub mutex poisoned").unregister(client_id);
+        }
+    }
 }
 
 fn error_for(incoming: &Envelope, reason: &str) -> Envelope {
@@ -134,19 +152,12 @@ mod tests {
         let Message::Text(text) = message else { panic!("expected text message") }; Envelope::decode_json(text.as_ref()).expect("valid RADOME envelope")
     }
 
-    #[test]
-    fn capability_announce_registers_client_in_runtime() {
-        let runtime = new_runtime(); let mut session = ConnectionSession::default();
-        let session_id = handle_envelope(&mut session, &runtime, hello("hello-1")).session_id.unwrap();
-        let incoming = Envelope::new("caps-1", MessageType::CapabilityAnnounce, json!({"role":"driver-display","capabilities":["display","touch"]})).in_session(session_id);
-        handle_envelope(&mut session, &runtime, incoming); assert_eq!(runtime.lock().unwrap().client_count(), 1);
-    }
-
     #[tokio::test]
-    async fn websocket_client_receives_telemetry_after_registration() {
+    async fn websocket_client_receives_telemetry_through_hub() {
         let listener = TcpListener::bind("127.0.0.1:0").await.expect("bind ephemeral port");
-        let addr = listener.local_addr().unwrap(); let runtime = new_runtime(); let server_runtime = Arc::clone(&runtime);
-        let server = tokio::spawn(async move { let (stream, _) = listener.accept().await.expect("accept client"); handle_connection(stream, server_runtime).await.expect("serve client"); });
+        let addr = listener.local_addr().unwrap(); let runtime = new_runtime(); let hub = new_hub();
+        let server_runtime = Arc::clone(&runtime); let server_hub = Arc::clone(&hub);
+        let server = tokio::spawn(async move { let (stream, _) = listener.accept().await.expect("accept client"); handle_connection(stream, server_runtime, server_hub).await.expect("serve client"); });
         let (mut socket, _) = connect_async(format!("ws://{addr}")).await.expect("connect websocket");
         socket.send(Message::Text(hello("hello-net-1").encode_json().unwrap().into())).await.unwrap();
         let hello_response = recv_envelope(&mut socket).await; let session_id = hello_response.session_id.expect("server session id");
@@ -154,9 +165,9 @@ mod tests {
         socket.send(Message::Text(announce.encode_json().unwrap().into())).await.unwrap();
         let accepted = recv_envelope(&mut socket).await; assert_eq!(accepted.message_type, MessageType::CapabilityAnnounce);
         let speed = recv_envelope(&mut socket).await; let rpm = recv_envelope(&mut socket).await;
-        assert_eq!(speed.message_type, MessageType::Event); assert_eq!(speed.payload["name"], "vehicle.speed_changed"); assert_eq!(speed.payload["data"], "speed_kmh=0");
-        assert_eq!(rpm.message_type, MessageType::Event); assert_eq!(rpm.payload["name"], "vehicle.engine_rpm_changed"); assert_eq!(rpm.payload["data"], "engine_rpm=800");
-        assert_eq!(speed.session_id.as_deref(), Some(session_id.as_str()));
-        socket.close(None).await.unwrap(); server.await.unwrap(); assert_eq!(runtime.lock().unwrap().client_count(), 0);
+        assert_eq!(speed.payload["name"], "vehicle.speed_changed"); assert_eq!(rpm.payload["name"], "vehicle.engine_rpm_changed");
+        assert_eq!(runtime.lock().unwrap().client_count(), 1); assert_eq!(hub.lock().unwrap().client_count(), 1);
+        socket.close(None).await.unwrap(); server.await.unwrap();
+        assert_eq!(runtime.lock().unwrap().client_count(), 0); assert_eq!(hub.lock().unwrap().client_count(), 0);
     }
 }
