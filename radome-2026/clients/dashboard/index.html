@@ -26,49 +26,29 @@
     <article class="gauge"><div id="rpm" class="value">----</div><div class="unit">TR/MIN</div></article>
   </section>
 </main>
-<script>
+<script type="module">
+import { RadomeClient } from '../sdk/radome-client.js';
+
 const statusEl = document.querySelector('#status');
 const speedEl = document.querySelector('#speed');
 const rpmEl = document.querySelector('#rpm');
 const wsUrl = new URLSearchParams(location.search).get('ws') ?? 'ws://127.0.0.1:8787';
-let sessionId;
-const ws = new WebSocket(wsUrl);
 
-function envelope(id, type, payload, session_id) {
-  const message = { version: 1, id, type, payload };
-  if (session_id) message.session_id = session_id;
-  return message;
-}
-function send(value) { ws.send(JSON.stringify(value)); }
-
-ws.addEventListener('open', () => {
-  statusEl.textContent = 'connexion…';
-  send(envelope('dashboard-hello', 'hello', { client_id: 'dashboard-web' }));
+const client = new RadomeClient({
+  url: wsUrl,
+  clientId: 'dashboard-web',
+  role: 'driver-display',
+  capabilities: ['display', 'touch'],
 });
 
-ws.addEventListener('message', ({ data }) => {
-  const message = JSON.parse(data);
-  if (message.type === 'hello') {
-    sessionId = message.session_id;
-    send(envelope('dashboard-capabilities', 'capability_announce', {
-      role: 'driver-display', capabilities: ['display', 'touch']
-    }, sessionId));
-    return;
-  }
-  if (message.type === 'capability_announce' && message.payload.accepted) {
-    statusEl.textContent = 'RADOME connecté';
-    return;
-  }
-  if (message.type === 'event') {
-    const value = String(message.payload.data).split('=')[1];
-    if (message.payload.name === 'vehicle.speed_changed') speedEl.textContent = value;
-    if (message.payload.name === 'vehicle.engine_rpm_changed') rpmEl.textContent = value;
-  }
-  if (message.type === 'error') statusEl.textContent = `erreur: ${message.payload.reason}`;
+client.on('status', status => {
+  statusEl.textContent = status === 'connected' ? 'RADOME connecté' : status === 'handshake' ? 'connexion…' : 'déconnecté';
 });
+client.on('event:vehicle.speed_changed', data => { speedEl.textContent = String(data).split('=')[1]; });
+client.on('event:vehicle.engine_rpm_changed', data => { rpmEl.textContent = String(data).split('=')[1]; });
+client.on('error', error => { statusEl.textContent = `erreur: ${error.message}`; });
 
-ws.addEventListener('close', () => { statusEl.textContent = 'déconnecté'; });
-ws.addEventListener('error', () => { statusEl.textContent = 'erreur réseau'; });
+client.connect();
 </script>
 </body>
 </html>
