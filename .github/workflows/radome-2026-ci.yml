@@ -1,0 +1,47 @@
+name: RADOME 2026 CI
+
+on:
+  push:
+    paths:
+      - "radome-2026/**"
+      - ".github/workflows/radome-2026-ci.yml"
+  pull_request:
+    paths:
+      - "radome-2026/**"
+      - ".github/workflows/radome-2026-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: cargo test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: radome-2026
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: radome-2026
+
+      # Le spike ne versionne pas encore Cargo.lock. On laisse Cargo resoudre
+      # les dependances ici afin d'atteindre la compilation et les vrais tests.
+      # Une fois le lockfile genere et commite, ces commandes repasseront en --locked.
+      - name: Check
+        run: cargo check --workspace --all-targets
+
+      - name: Test
+        run: cargo test --workspace --all-targets
