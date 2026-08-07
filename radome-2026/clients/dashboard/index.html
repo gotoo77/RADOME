@@ -11,6 +11,8 @@
     header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
     h1 { letter-spacing: .18em; font-size: 1rem; }
     #status { font-size: .85rem; opacity: .8; }
+    #status[data-state="connected"] { opacity: 1; }
+    #status[data-state="error"] { font-weight: 700; }
     .cluster { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
     .gauge { padding: 2rem; border: 1px solid #303640; border-radius: 1rem; background: #12161c; text-align: center; }
     .value { font-size: clamp(4rem, 12vw, 8rem); font-variant-numeric: tabular-nums; line-height: 1; }
@@ -20,20 +22,20 @@
 </head>
 <body>
 <main>
-  <header><h1>RADOME // DRIVER DISPLAY</h1><span id="status">déconnecté</span></header>
-  <section class="cluster">
+  <header><h1>RADOME // DRIVER DISPLAY</h1><span id="status" data-state="disconnected">déconnecté</span></header>
+  <section class="cluster" aria-label="État du véhicule">
     <article class="gauge"><div id="speed" class="value">--</div><div class="unit">KM/H</div></article>
     <article class="gauge"><div id="rpm" class="value">----</div><div class="unit">TR/MIN</div></article>
   </section>
 </main>
 <script type="module">
 import { RadomeClient } from '../sdk/radome-client.js';
+import { VehicleState } from './vehicle-state.js';
+import { DashboardView } from './dashboard-view.js';
 
-const statusEl = document.querySelector('#status');
-const speedEl = document.querySelector('#speed');
-const rpmEl = document.querySelector('#rpm');
 const wsUrl = new URLSearchParams(location.search).get('ws') ?? 'ws://127.0.0.1:8787';
-
+const vehicle = new VehicleState();
+const view = new DashboardView();
 const client = new RadomeClient({
   url: wsUrl,
   clientId: 'dashboard-web',
@@ -41,13 +43,13 @@ const client = new RadomeClient({
   capabilities: ['display', 'touch'],
 });
 
-client.on('status', status => {
-  statusEl.textContent = status === 'connected' ? 'RADOME connecté' : status === 'handshake' ? 'connexion…' : 'déconnecté';
-});
-client.on('event:vehicle.speed_changed', data => { speedEl.textContent = String(data).split('=')[1]; });
-client.on('event:vehicle.engine_rpm_changed', data => { rpmEl.textContent = String(data).split('=')[1]; });
-client.on('error', error => { statusEl.textContent = `erreur: ${error.message}`; });
+vehicle.addEventListener('change', ({ detail }) => view.renderVehicle(detail));
+client.on('status', status => view.renderStatus(status));
+client.on('event:vehicle.speed_changed', data => vehicle.applyRadomeEvent('vehicle.speed_changed', data));
+client.on('event:vehicle.engine_rpm_changed', data => vehicle.applyRadomeEvent('vehicle.engine_rpm_changed', data));
+client.on('error', error => view.renderError(error));
 
+view.renderVehicle(vehicle.snapshot);
 client.connect();
 </script>
 </body>
