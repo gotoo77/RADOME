@@ -37,8 +37,11 @@ jobs:
         with:
           workspaces: radome-2026
 
+      # Le spike ne versionne pas encore Cargo.lock. On laisse Cargo resoudre
+      # les dependances ici afin d'atteindre la compilation et les vrais tests.
+      # Une fois le lockfile genere et commite, ces commandes repasseront en --locked.
       - name: Check
-        run: cargo check --workspace --all-targets --locked
+        run: cargo check --workspace --all-targets
 
       - name: Test
-        run: cargo test --workspace --all-targets --locked
+        run: cargo test --workspace --all-targets
