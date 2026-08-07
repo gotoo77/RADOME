@@ -34,8 +34,10 @@ const wsUrl = new URLSearchParams(location.search).get('ws') ?? 'ws://127.0.0.1:
 let sessionId;
 const ws = new WebSocket(wsUrl);
 
-function envelope(id, messageType, payload, session_id) {
-  return { protocol_version: 1, id, message_type: messageType, correlation_id: null, session_id: session_id ?? null, payload };
+function envelope(id, type, payload, session_id) {
+  const message = { version: 1, id, type, payload };
+  if (session_id) message.session_id = session_id;
+  return message;
 }
 function send(value) { ws.send(JSON.stringify(value)); }
 
@@ -46,22 +48,23 @@ ws.addEventListener('open', () => {
 
 ws.addEventListener('message', ({ data }) => {
   const message = JSON.parse(data);
-  if (message.message_type === 'hello') {
+  if (message.type === 'hello') {
     sessionId = message.session_id;
     send(envelope('dashboard-capabilities', 'capability_announce', {
       role: 'driver-display', capabilities: ['display', 'touch']
     }, sessionId));
     return;
   }
-  if (message.message_type === 'capability_announce' && message.payload.accepted) {
+  if (message.type === 'capability_announce' && message.payload.accepted) {
     statusEl.textContent = 'RADOME connecté';
     return;
   }
-  if (message.message_type === 'event') {
+  if (message.type === 'event') {
     const value = String(message.payload.data).split('=')[1];
     if (message.payload.name === 'vehicle.speed_changed') speedEl.textContent = value;
     if (message.payload.name === 'vehicle.engine_rpm_changed') rpmEl.textContent = value;
   }
+  if (message.type === 'error') statusEl.textContent = `erreur: ${message.payload.reason}`;
 });
 
 ws.addEventListener('close', () => { statusEl.textContent = 'déconnecté'; });
