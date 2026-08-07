@@ -29,28 +29,11 @@
   </section>
 </main>
 <script type="module">
-import { RadomeClient } from '../sdk/radome-client.js';
-import { VehicleState } from './vehicle-state.js';
-import { DashboardView } from './dashboard-view.js';
+import { createDashboardApp } from './dashboard-app.js';
 
 const wsUrl = new URLSearchParams(location.search).get('ws') ?? 'ws://127.0.0.1:8787';
-const vehicle = new VehicleState();
-const view = new DashboardView();
-const client = new RadomeClient({
-  url: wsUrl,
-  clientId: 'dashboard-web',
-  role: 'driver-display',
-  capabilities: ['display', 'touch'],
-});
-
-vehicle.addEventListener('change', ({ detail }) => view.renderVehicle(detail));
-client.on('status', status => view.renderStatus(status));
-client.on('event:vehicle.speed_changed', data => vehicle.applyRadomeEvent('vehicle.speed_changed', data));
-client.on('event:vehicle.engine_rpm_changed', data => vehicle.applyRadomeEvent('vehicle.engine_rpm_changed', data));
-client.on('error', error => view.renderError(error));
-
-view.renderVehicle(vehicle.snapshot);
-client.connect();
+const app = createDashboardApp({ url: wsUrl });
+app.start();
 </script>
 </body>
 </html>
