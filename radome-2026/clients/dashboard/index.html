@@ -12,6 +12,7 @@
     h1 { letter-spacing: .18em; font-size: 1rem; }
     #status { font-size: .85rem; opacity: .8; }
     #status[data-state="connected"] { opacity: 1; }
+    #status[data-state="demo"] { opacity: 1; font-weight: 700; }
     #status[data-state="error"] { font-weight: 700; }
     .cluster { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
     .gauge, .media { padding: 2rem; border: 1px solid #303640; border-radius: 1rem; background: #12161c; }
@@ -43,10 +44,19 @@
 </main>
 <script type="module">
 import { createDashboardApp } from './dashboard-app.js';
+import { playDashboardDemo } from './demo-events.js';
 
-const wsUrl = new URLSearchParams(location.search).get('ws') ?? 'ws://127.0.0.1:8787';
+const params = new URLSearchParams(location.search);
+const wsUrl = params.get('ws') ?? 'ws://127.0.0.1:8787';
 const app = createDashboardApp({ url: wsUrl });
-app.start();
+
+if (params.has('demo')) {
+  playDashboardDemo(app);
+  app.view.status.textContent = 'MODE DÉMO';
+  app.view.status.dataset.state = 'demo';
+} else {
+  app.start();
+}
 </script>
 </body>
 </html>
