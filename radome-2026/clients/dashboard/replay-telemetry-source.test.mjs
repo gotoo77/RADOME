@@ -19,7 +19,7 @@ test('framesToReplayEntries conserve le delai une fois par frame', () => {
   ]);
 });
 
-test('ReplayTelemetrySource rejoue les entrees dans la timeline', () => {
+test('ReplayTelemetrySource rejoue les entrees puis signale sa fin', () => {
   const scheduled = [];
   const vehicle = recorder();
   const infotainment = recorder();
@@ -32,15 +32,33 @@ test('ReplayTelemetrySource rejoue les entrees dans la timeline', () => {
     setTimer(fn, delay) { scheduled.push({ fn, delay }); return scheduled.length; },
     clearTimer() {},
   });
+  let completed = 0;
+  source.addEventListener('complete', () => completed += 1);
 
   source.start();
+  assert.equal(source.running, true);
   assert.deepEqual(scheduled.map(item => item.delay), [10, 30]);
   scheduled.forEach(item => item.fn());
+
   assert.deepEqual(vehicle.calls, [['vehicle.speed_changed', 'speed_kmh=42']]);
   assert.deepEqual(infotainment.calls, [['media.title_changed', 'title=Replay']]);
+  assert.equal(source.running, false);
+  assert.equal(completed, 1);
 });
 
-test('ReplayTelemetrySource annule les timers au stop', () => {
+test('un replay vide se termine immediatement', () => {
+  const source = new ReplayTelemetrySource({
+    app: { vehicle: recorder(), infotainment: recorder() },
+    entries: [],
+  });
+  let completed = 0;
+  source.addEventListener('complete', () => completed += 1);
+  source.start();
+  assert.equal(source.running, false);
+  assert.equal(completed, 1);
+});
+
+test('ReplayTelemetrySource annule les timers au stop sans signaler complete', () => {
   const cleared = [];
   const source = new ReplayTelemetrySource({
     app: { vehicle: recorder(), infotainment: recorder() },
@@ -48,7 +66,11 @@ test('ReplayTelemetrySource annule les timers au stop', () => {
     setTimer() { return 7; },
     clearTimer(timer) { cleared.push(timer); },
   });
+  let completed = 0;
+  source.addEventListener('complete', () => completed += 1);
   source.start();
   source.stop();
   assert.deepEqual(cleared, [7]);
+  assert.equal(completed, 0);
+  assert.equal(source.running, false);
 });
