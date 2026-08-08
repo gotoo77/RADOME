@@ -45,18 +45,22 @@
 <script type="module">
 import { createDashboardApp } from './dashboard-app.js';
 import { playDashboardDemo } from './demo-events.js';
+import { DemoTelemetrySource, RadomeTelemetrySource } from './telemetry-source.js';
 
 const params = new URLSearchParams(location.search);
 const wsUrl = params.get('ws') ?? 'ws://127.0.0.1:8787';
 const app = createDashboardApp({ url: wsUrl });
+const source = params.has('demo')
+  ? new DemoTelemetrySource({ app, play: playDashboardDemo })
+  : new RadomeTelemetrySource(app.client);
 
 if (params.has('demo')) {
-  playDashboardDemo(app);
   app.view.status.textContent = 'MODE DÉMO';
   app.view.status.dataset.state = 'demo';
-} else {
-  app.start();
 }
+
+source.start();
+window.addEventListener('pagehide', () => source.stop(), { once: true });
 </script>
 </body>
 </html>
