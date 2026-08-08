@@ -61,9 +61,10 @@ import { DemoTelemetrySource, RadomeTelemetrySource } from './telemetry-source.j
 import { parseTelemetryRecording, TelemetryRecorder } from './telemetry-recorder.js';
 
 const params = new URLSearchParams(location.search);
+const demoMode = params.has('demo') || params.get('mode') === 'demo';
 const wsUrl = params.get('ws') ?? 'ws://127.0.0.1:8787';
 const app = createDashboardApp({ url: wsUrl });
-let source = params.has('demo')
+let source = demoMode
   ? new DemoTelemetrySource({ app, play: playDashboardDemo })
   : new RadomeTelemetrySource(app.client);
 const recorder = new TelemetryRecorder();
@@ -72,7 +73,7 @@ const recordStop = document.querySelector('#record-stop');
 const replayFile = document.querySelector('#replay-file');
 const recordingState = document.querySelector('#recording-state');
 
-if (params.has('demo')) {
+if (demoMode) {
   app.view.status.textContent = 'MODE DÉMO';
   app.view.status.dataset.state = 'demo';
 }
