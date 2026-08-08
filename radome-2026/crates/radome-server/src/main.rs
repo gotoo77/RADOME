@@ -1,10 +1,12 @@
 mod hub;
 mod producer;
+mod socketcan;
 
 use futures_util::{SinkExt, StreamExt};
 use hub::ConnectionHub;
-use producer::{run_demo_telemetry, SharedHub, SharedRuntime};
+use producer::{publish_bus_frame, run_demo_telemetry, SharedHub, SharedRuntime};
 use radome_core::runtime::Runtime;
+use radome_core::vehicle_bus::DemoCanAdapter;
 use radome_core::{Capability, Client, Envelope, MessageType, Role, SystemCapabilities};
 use serde_json::{json, Value};
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -38,9 +40,52 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let listener = TcpListener::bind(&addr).await?;
     let runtime = new_runtime();
     let hub = new_hub();
-    tokio::spawn(run_demo_telemetry(Arc::clone(&runtime), Arc::clone(&hub), Duration::from_secs(1)));
+    start_telemetry_source(Arc::clone(&runtime), Arc::clone(&hub))?;
     println!("RADOME server listening on ws://{addr}");
     serve(listener, runtime, hub).await
+}
+
+fn start_telemetry_source(runtime: SharedRuntime, hub: SharedHub) -> Result<(), Box<dyn std::error::Error>> {
+    let source = std::env::var("RADOME_TELEMETRY_SOURCE").unwrap_or_else(|_| "demo".to_owned());
+    match source.as_str() {
+        "demo" => {
+            tokio::spawn(run_demo_telemetry(runtime, hub, Duration::from_secs(1)));
+            println!("RADOME telemetry source: demo");
+            Ok(())
+        }
+        "socketcan" => start_socketcan(runtime, hub),
+        other => Err(format!("unknown RADOME_TELEMETRY_SOURCE: {other}").into()),
+    }
+}
+
+#[cfg(target_os = "linux")]
+fn start_socketcan(runtime: SharedRuntime, hub: SharedHub) -> Result<(), Box<dyn std::error::Error>> {
+    use socketcan::{SocketCanSource, VehicleFrameSource};
+    let interface = std::env::var("RADOME_CAN_INTERFACE").unwrap_or_else(|_| "can0".to_owned());
+    let mut source = SocketCanSource::open(&interface)?;
+    println!("RADOME telemetry source: SocketCAN ({interface})");
+    tokio::task::spawn_blocking(move || {
+        let adapter = DemoCanAdapter;
+        loop {
+            match source.recv() {
+                Ok(frame) => {
+                    if let Err(error) = publish_bus_frame(&adapter, &frame, &runtime, &hub) {
+                        eprintln!("CAN frame ignored: {error:?}");
+                    }
+                }
+                Err(error) => {
+                    eprintln!("SocketCAN receive failed: {error}");
+                    break;
+                }
+            }
+        }
+    });
+    Ok(())
+}
+
+#[cfg(not(target_os = "linux"))]
+fn start_socketcan(_runtime: SharedRuntime, _hub: SharedHub) -> Result<(), Box<dyn std::error::Error>> {
+    Err("SocketCAN telemetry is only available on Linux".into())
 }
 
 async fn serve(listener: TcpListener, runtime: SharedRuntime, hub: SharedHub) -> Result<(), Box<dyn std::error::Error>> {
