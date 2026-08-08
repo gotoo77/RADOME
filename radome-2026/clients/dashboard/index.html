@@ -12,10 +12,10 @@
     h1 { letter-spacing: .18em; font-size: 1rem; }
     #status { font-size: .85rem; opacity: .8; }
     #status[data-state="connected"] { opacity: 1; }
-    #status[data-state="demo"] { opacity: 1; font-weight: 700; }
+    #status[data-state="demo"], #status[data-state="replay"] { opacity: 1; font-weight: 700; }
     #status[data-state="error"] { font-weight: 700; }
     .cluster { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-    .gauge, .media { padding: 2rem; border: 1px solid #303640; border-radius: 1rem; background: #12161c; }
+    .gauge, .media, .tools { padding: 2rem; border: 1px solid #303640; border-radius: 1rem; background: #12161c; }
     .gauge { text-align: center; }
     .value { font-size: clamp(4rem, 12vw, 8rem); font-variant-numeric: tabular-nums; line-height: 1; }
     .unit, .media-source { margin-top: .75rem; opacity: .65; letter-spacing: .12em; }
@@ -25,7 +25,12 @@
     .media-artist { opacity: .7; }
     .media-playback { grid-column: 2; grid-row: 1 / span 3; font-size: .75rem; letter-spacing: .12em; opacity: .6; }
     .media-playback[data-state="playing"] { opacity: 1; }
-    @media (max-width: 600px) { .cluster { grid-template-columns: 1fr; } .media { grid-template-columns: 1fr; } .media-playback { grid-column: 1; grid-row: auto; } }
+    .tools { margin-top: 1.5rem; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+    button, .file-button { border: 1px solid #46505e; border-radius: .6rem; background: #1a2029; color: inherit; padding: .65rem .9rem; font: inherit; cursor: pointer; }
+    button:disabled { opacity: .4; cursor: default; }
+    .file-button input { display: none; }
+    #recording-state { margin-left: auto; opacity: .65; font-size: .8rem; }
+    @media (max-width: 600px) { .cluster { grid-template-columns: 1fr; } .media { grid-template-columns: 1fr; } .media-playback { grid-column: 1; grid-row: auto; } #recording-state { width: 100%; margin-left: 0; } }
   </style>
 </head>
 <body>
@@ -41,26 +46,86 @@
     <div id="media-artist" class="media-artist">—</div>
     <div id="media-playback" class="media-playback" data-state="paused">PAUSE</div>
   </section>
+  <section class="tools" aria-label="Diagnostic télémétrie">
+    <button id="record-start" type="button">Enregistrer</button>
+    <button id="record-stop" type="button" disabled>Arrêter + exporter</button>
+    <label class="file-button">Charger un replay<input id="replay-file" type="file" accept="application/json,.json"></label>
+    <span id="recording-state">diagnostic prêt</span>
+  </section>
 </main>
 <script type="module">
 import { createDashboardApp } from './dashboard-app.js';
 import { playDashboardDemo } from './demo-events.js';
+import { ReplayTelemetrySource } from './replay-telemetry-source.js';
 import { DemoTelemetrySource, RadomeTelemetrySource } from './telemetry-source.js';
+import { parseTelemetryRecording, TelemetryRecorder } from './telemetry-recorder.js';
 
 const params = new URLSearchParams(location.search);
 const wsUrl = params.get('ws') ?? 'ws://127.0.0.1:8787';
 const app = createDashboardApp({ url: wsUrl });
-const source = params.has('demo')
+let source = params.has('demo')
   ? new DemoTelemetrySource({ app, play: playDashboardDemo })
   : new RadomeTelemetrySource(app.client);
+const recorder = new TelemetryRecorder();
+const recordStart = document.querySelector('#record-start');
+const recordStop = document.querySelector('#record-stop');
+const replayFile = document.querySelector('#replay-file');
+const recordingState = document.querySelector('#recording-state');
 
 if (params.has('demo')) {
   app.view.status.textContent = 'MODE DÉMO';
   app.view.status.dataset.state = 'demo';
 }
 
+recordStart.addEventListener('click', () => {
+  recorder.start(app.client);
+  recordStart.disabled = true;
+  recordStop.disabled = false;
+  recordingState.textContent = 'enregistrement en cours…';
+});
+
+recordStop.addEventListener('click', () => {
+  recorder.stop();
+  downloadRecording(recorder.toJSON());
+  recordStart.disabled = false;
+  recordStop.disabled = true;
+  recordingState.textContent = `${recorder.snapshot().length} événement(s) exporté(s)`;
+});
+
+replayFile.addEventListener('change', async () => {
+  const file = replayFile.files?.[0];
+  if (!file) return;
+  try {
+    const entries = parseTelemetryRecording(await file.text());
+    recorder.stop();
+    source.stop();
+    source = new ReplayTelemetrySource({ app, entries });
+    app.view.status.textContent = `REPLAY // ${file.name}`;
+    app.view.status.dataset.state = 'replay';
+    recordingState.textContent = `${entries.length} événement(s) chargés`;
+    source.start();
+  } catch (error) {
+    app.view.renderError(error);
+  } finally {
+    replayFile.value = '';
+  }
+});
+
 source.start();
-window.addEventListener('pagehide', () => source.stop(), { once: true });
+window.addEventListener('pagehide', () => {
+  recorder.stop();
+  source.stop();
+}, { once: true });
+
+function downloadRecording(json) {
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = `radome-telemetry-${new Date().toISOString().replaceAll(':', '-')}.json`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
