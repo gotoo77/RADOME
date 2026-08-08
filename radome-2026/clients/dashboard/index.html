@@ -7,17 +7,24 @@
   <style>
     :root { color-scheme: dark; font-family: system-ui, sans-serif; }
     body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0b0d10; color: #f5f7fa; }
-    main { width: min(900px, 92vw); }
+    main { width: min(900px, 92vw); padding: 2rem 0; }
     header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
     h1 { letter-spacing: .18em; font-size: 1rem; }
     #status { font-size: .85rem; opacity: .8; }
     #status[data-state="connected"] { opacity: 1; }
     #status[data-state="error"] { font-weight: 700; }
     .cluster { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-    .gauge { padding: 2rem; border: 1px solid #303640; border-radius: 1rem; background: #12161c; text-align: center; }
+    .gauge, .media { padding: 2rem; border: 1px solid #303640; border-radius: 1rem; background: #12161c; }
+    .gauge { text-align: center; }
     .value { font-size: clamp(4rem, 12vw, 8rem); font-variant-numeric: tabular-nums; line-height: 1; }
-    .unit { margin-top: .75rem; opacity: .65; letter-spacing: .12em; }
-    @media (max-width: 600px) { .cluster { grid-template-columns: 1fr; } }
+    .unit, .media-source { margin-top: .75rem; opacity: .65; letter-spacing: .12em; }
+    .media { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr auto; gap: .5rem 2rem; align-items: center; }
+    .media-source { margin: 0; font-size: .75rem; }
+    .media-title { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 700; }
+    .media-artist { opacity: .7; }
+    .media-playback { grid-column: 2; grid-row: 1 / span 3; font-size: .75rem; letter-spacing: .12em; opacity: .6; }
+    .media-playback[data-state="playing"] { opacity: 1; }
+    @media (max-width: 600px) { .cluster { grid-template-columns: 1fr; } .media { grid-template-columns: 1fr; } .media-playback { grid-column: 1; grid-row: auto; } }
   </style>
 </head>
 <body>
@@ -26,6 +33,12 @@
   <section class="cluster" aria-label="État du véhicule">
     <article class="gauge"><div id="speed" class="value">--</div><div class="unit">KM/H</div></article>
     <article class="gauge"><div id="rpm" class="value">----</div><div class="unit">TR/MIN</div></article>
+  </section>
+  <section class="media" aria-label="Infodivertissement">
+    <div id="media-source" class="media-source">Aucune source</div>
+    <div id="media-title" class="media-title">Aucun média</div>
+    <div id="media-artist" class="media-artist">—</div>
+    <div id="media-playback" class="media-playback" data-state="paused">PAUSE</div>
   </section>
 </main>
 <script type="module">
