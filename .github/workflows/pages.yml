@@ -1,0 +1,65 @@
+name: RADOME Pages
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construire le site statique
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/demo
+          cp -R site/. _site/
+          cp -R radome-2026/clients/dashboard/. _site/demo/
+          touch _site/.nojekyll
+
+      - name: Vérifier l'artefact Pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f _site/index.html
+          test -f _site/site.css
+          test -f _site/demo/index.html
+          test -f _site/demo/vehicle-state.js
+          grep -q 'href="demo/?demo"' _site/index.html
+
+      - name: Configurer Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+
+      - name: Publier l'artefact Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Déployer GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

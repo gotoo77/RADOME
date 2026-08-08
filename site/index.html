@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RADOME — laboratoire de cockpit automobile ouvert, observable et reproductible.">
+  <title>RADOME — cockpit automobile ouvert</title>
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <header class="hero">
+    <nav><strong>RADOME</strong><a href="https://github.com/gotoo77/RADOME">GitHub ↗</a></nav>
+    <div class="hero-copy">
+      <p class="eyebrow">RADOME 2026</p>
+      <h1>Un cockpit automobile ouvert,<br> découplé du véhicule.</h1>
+      <p class="lead">Les données peuvent venir d’un simulateur aujourd’hui, d’un véhicule demain. Le cockpit, lui, consomme le même contrat.</p>
+      <div class="actions"><a class="primary" href="demo/?demo">▶ Essayer le cockpit</a><a href="#architecture">Comprendre l’architecture</a></div>
+    </div>
+  </header>
+
+  <main>
+    <section id="architecture" class="section">
+      <p class="eyebrow">Une frontière, plusieurs sources</p>
+      <h2>Le matériel produit des faits. RADOME les transporte.</h2>
+      <div class="flow" aria-label="Architecture RADOME">
+        <div class="sources"><span>Simulation <b>disponible</b></span><span>Replay <b>disponible</b></span><span>Live / CAN <em>local · futur</em></span></div>
+        <div class="arrow">→</div><div class="radome">événements<br><strong>RADOME</strong></div><div class="arrow">→</div>
+        <div class="target">État<br><strong>Cockpit</strong></div>
+      </div>
+      <p class="explain">Le dashboard n’a pas à savoir si <code>vehicle.speed_changed</code> vient d’une simulation, d’une trace enregistrée ou d’un futur adaptateur CAN.</p>
+    </section>
+
+    <section class="section demo-callout">
+      <div><p class="eyebrow">La démo est le vrai client</p><h2>Pas une vidéo. Pas une maquette.</h2><p>Le cockpit public exécute les composants JavaScript de RADOME dans votre navigateur. Le mode simulation et le chargement local de traces fonctionnent sans backend.</p></div>
+      <a class="primary" href="demo/?demo">Lancer la simulation →</a>
+    </section>
+
+    <section class="section invariant">
+      <p class="eyebrow">Record & replay</p>
+      <h2>Une propriété testée du système.</h2>
+      <blockquote>Enregistrer puis rejouer une séquence d’événements conserve son état observable.</blockquote>
+      <div class="pipeline"><span>événements</span> → <span>recorder</span> → <span>JSON</span> → <span>validation</span> → <span>replay</span> → <span>état</span></div>
+    </section>
+  </main>
+
+  <footer><strong>RADOME</strong><span>Laboratoire de cockpit automobile ouvert.</span><a href="https://github.com/gotoo77/RADOME">Code source ↗</a></footer>
+</body>
+</html>
