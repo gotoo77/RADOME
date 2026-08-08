@@ -1,5 +1,34 @@
 use crate::{Event, MessageId};
 
+pub const SPEED_CHANGED: &str = "vehicle.speed_changed";
+pub const ENGINE_RPM_CHANGED: &str = "vehicle.engine_rpm_changed";
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TelemetryEvent {
+    SpeedChanged { speed_kmh: u16 },
+    EngineRpmChanged { engine_rpm: u16 },
+}
+
+impl TelemetryEvent {
+    pub fn name(&self) -> &'static str {
+        match self {
+            Self::SpeedChanged { .. } => SPEED_CHANGED,
+            Self::EngineRpmChanged { .. } => ENGINE_RPM_CHANGED,
+        }
+    }
+
+    pub fn payload(&self) -> String {
+        match self {
+            Self::SpeedChanged { speed_kmh } => format!("speed_kmh={speed_kmh}"),
+            Self::EngineRpmChanged { engine_rpm } => format!("engine_rpm={engine_rpm}"),
+        }
+    }
+
+    pub fn into_event(self, id: MessageId) -> Event {
+        Event::new(id, self.name(), self.payload())
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TelemetrySample {
     pub speed_kmh: u16,
@@ -39,16 +68,10 @@ impl TelemetrySimulator {
 
         let prefix = format!("telemetry-{}", self.sequence);
         Some(vec![
-            Event::new(
-                MessageId::new(format!("{prefix}-speed")),
-                "vehicle.speed_changed",
-                format!("speed_kmh={}", sample.speed_kmh),
-            ),
-            Event::new(
-                MessageId::new(format!("{prefix}-rpm")),
-                "vehicle.engine_rpm_changed",
-                format!("engine_rpm={}", sample.engine_rpm),
-            ),
+            TelemetryEvent::SpeedChanged { speed_kmh: sample.speed_kmh }
+                .into_event(MessageId::new(format!("{prefix}-speed"))),
+            TelemetryEvent::EngineRpmChanged { engine_rpm: sample.engine_rpm }
+                .into_event(MessageId::new(format!("{prefix}-rpm"))),
         ])
     }
 
@@ -63,6 +86,17 @@ mod tests {
     use super::*;
 
     #[test]
+    fn telemetry_event_defines_name_and_payload_together() {
+        let speed = TelemetryEvent::SpeedChanged { speed_kmh: 90 };
+        let rpm = TelemetryEvent::EngineRpmChanged { engine_rpm: 2_600 };
+
+        assert_eq!(speed.name(), SPEED_CHANGED);
+        assert_eq!(speed.payload(), "speed_kmh=90");
+        assert_eq!(rpm.name(), ENGINE_RPM_CHANGED);
+        assert_eq!(rpm.payload(), "engine_rpm=2600");
+    }
+
+    #[test]
     fn simulator_emits_events_from_a_known_sample() {
         let mut simulator = TelemetrySimulator::new([TelemetrySample {
             speed_kmh: 90,
@@ -72,9 +106,9 @@ mod tests {
         let events = simulator.next_events().expect("one sample");
 
         assert_eq!(events.len(), 2);
-        assert_eq!(events[0].name, "vehicle.speed_changed");
+        assert_eq!(events[0].name, SPEED_CHANGED);
         assert_eq!(events[0].payload, "speed_kmh=90");
-        assert_eq!(events[1].name, "vehicle.engine_rpm_changed");
+        assert_eq!(events[1].name, ENGINE_RPM_CHANGED);
         assert_eq!(events[1].payload, "engine_rpm=2600");
     }
 
