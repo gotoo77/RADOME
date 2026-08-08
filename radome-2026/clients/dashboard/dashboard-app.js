@@ -7,7 +7,7 @@ export function createDashboardApp({
   url,
   clientId = 'dashboard-web',
   role = 'driver-display',
-  capabilities = ['display', 'touch'],
+  capabilities = ['display', 'touch', 'media.control'],
   root = document,
 } = {}) {
   const vehicle = new VehicleState();
@@ -25,6 +25,7 @@ export function createDashboardApp({
     'media.title_changed',
     'media.artist_changed',
     'media.playback_changed',
+    'media.playback_toggled',
   ]) {
     client.on(`event:${name}`, data => infotainment.applyRadomeEvent(name, data));
   }
@@ -38,6 +39,7 @@ export function createDashboardApp({
     vehicle,
     infotainment,
     view,
+    togglePlayback() { return client.sendCommand('media.toggle_playback'); },
     start() { client.connect(); },
     stop() { client.disconnect(); },
   };
