@@ -3,11 +3,23 @@ export class DashboardView {
     this.status = root.querySelector('#status');
     this.speed = root.querySelector('#speed');
     this.rpm = root.querySelector('#rpm');
+    this.mediaSource = root.querySelector('#media-source');
+    this.mediaTitle = root.querySelector('#media-title');
+    this.mediaArtist = root.querySelector('#media-artist');
+    this.mediaPlayback = root.querySelector('#media-playback');
   }
 
   renderVehicle(state) {
     this.speed.textContent = formatValue(state.speedKmh, '--');
     this.rpm.textContent = formatValue(state.engineRpm, '----');
+  }
+
+  renderInfotainment(state) {
+    this.mediaSource.textContent = state.source ?? 'Aucune source';
+    this.mediaTitle.textContent = state.title ?? 'Aucun média';
+    this.mediaArtist.textContent = state.artist ?? '—';
+    this.mediaPlayback.textContent = state.playing ? 'LECTURE' : 'PAUSE';
+    this.mediaPlayback.dataset.state = state.playing ? 'playing' : 'paused';
   }
 
   renderStatus(status) {
