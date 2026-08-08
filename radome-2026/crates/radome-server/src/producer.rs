@@ -129,7 +129,7 @@ mod tests {
         let envelope = rx.try_recv().expect("dashboard receives CAN-derived event");
         assert_eq!(envelope.message_type, MessageType::Event);
         assert_eq!(envelope.payload["name"], "vehicle.speed_changed");
-        assert_eq!(envelope.payload["payload"], "speed_kmh=90");
+        assert_eq!(envelope.payload["data"], "speed_kmh=90");
         assert!(rx.try_recv().is_err());
     }
 
