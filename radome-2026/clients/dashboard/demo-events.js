@@ -1,34 +1,30 @@
+import { VEHICLE_TELEMETRY } from './vehicle-state.js';
+
+const speed = value => [VEHICLE_TELEMETRY.speed.name, `${VEHICLE_TELEMETRY.speed.key}=${value}`];
+const rpm = value => [VEHICLE_TELEMETRY.engineRpm.name, `${VEHICLE_TELEMETRY.engineRpm.key}=${value}`];
+
 export const DASHBOARD_DEMO_FRAMES = [
   { afterMs: 0, events: [
-    ['vehicle.speed_changed', 'speed=0'],
-    ['vehicle.engine_rpm_changed', 'rpm=850'],
+    speed(0),
+    rpm(850),
     ['media.source_changed', 'source=Bluetooth'],
     ['media.title_changed', 'title=Road to Nowhere'],
     ['media.artist_changed', 'artist=Talking Heads'],
     ['media.playback_changed', 'state=playing'],
   ] },
-  { afterMs: 1200, events: [
-    ['vehicle.speed_changed', 'speed=18'],
-    ['vehicle.engine_rpm_changed', 'rpm=1450'],
-  ] },
-  { afterMs: 1200, events: [
-    ['vehicle.speed_changed', 'speed=52'],
-    ['vehicle.engine_rpm_changed', 'rpm=2350'],
-  ] },
-  { afterMs: 1200, events: [
-    ['vehicle.speed_changed', 'speed=82'],
-    ['vehicle.engine_rpm_changed', 'rpm=2850'],
-  ] },
+  { afterMs: 1200, events: [speed(18), rpm(1450)] },
+  { afterMs: 1200, events: [speed(52), rpm(2350)] },
+  { afterMs: 1200, events: [speed(82), rpm(2850)] },
   { afterMs: 1600, events: [
     ['media.playback_changed', 'state=paused'],
-    ['vehicle.speed_changed', 'speed=48'],
-    ['vehicle.engine_rpm_changed', 'rpm=1800'],
+    speed(48),
+    rpm(1800),
   ] },
   { afterMs: 1200, events: [
     ['media.title_changed', 'title=Once in a Lifetime'],
     ['media.playback_changed', 'state=playing'],
-    ['vehicle.speed_changed', 'speed=0'],
-    ['vehicle.engine_rpm_changed', 'rpm=850'],
+    speed(0),
+    rpm(850),
   ] },
 ];
 
