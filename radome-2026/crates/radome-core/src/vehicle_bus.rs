@@ -20,6 +20,7 @@ impl VehicleBusFrame {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum FrameDecodeError {
     UnknownFrame { id: u32 },
+    InvalidIdentifier { id: u32, max: u32 },
     InvalidLength { id: u32, expected: usize, actual: usize },
 }
 
@@ -50,6 +51,45 @@ impl VehicleBusAdapter for DemoCanAdapter {
     }
 }
 
+/// Profil LIN fictif RADOME.
+///
+/// LIN utilise un identifiant de trame sur 6 bits (0x00..=0x3f). Le profil de
+/// démonstration encode volontairement les mêmes faits métier que le profil
+/// CAN avec un layout différent, afin de vérifier que le domaine reste
+/// indépendant du bus.
+#[derive(Debug, Default, Clone, Copy)]
+pub struct DemoLinAdapter;
+
+impl DemoLinAdapter {
+    pub const VEHICLE_STATUS_FRAME_ID: u32 = 0x12;
+}
+
+impl VehicleBusAdapter for DemoLinAdapter {
+    fn decode(&self, frame: &VehicleBusFrame) -> Result<Vec<TelemetryEvent>, FrameDecodeError> {
+        if frame.id > 0x3f {
+            return Err(FrameDecodeError::InvalidIdentifier { id: frame.id, max: 0x3f });
+        }
+        if frame.id != Self::VEHICLE_STATUS_FRAME_ID {
+            return Err(FrameDecodeError::UnknownFrame { id: frame.id });
+        }
+        if frame.data.len() != 4 {
+            return Err(FrameDecodeError::InvalidLength {
+                id: frame.id,
+                expected: 4,
+                actual: frame.data.len(),
+            });
+        }
+
+        // Profil RADOME : vitesse puis régime, deux u16 little-endian.
+        let speed_kmh = u16::from_le_bytes([frame.data[0], frame.data[1]]);
+        let engine_rpm = u16::from_le_bytes([frame.data[2], frame.data[3]]);
+        Ok(vec![
+            TelemetryEvent::SpeedChanged { speed_kmh },
+            TelemetryEvent::EngineRpmChanged { engine_rpm },
+        ])
+    }
+}
+
 fn decode_u16_be(frame: &VehicleBusFrame) -> Result<u16, FrameDecodeError> {
     if frame.data.len() != 2 {
         return Err(FrameDecodeError::InvalidLength {
@@ -70,7 +110,6 @@ mod tests {
         let events = DemoCanAdapter
             .decode(&VehicleBusFrame::new(DemoCanAdapter::SPEED_FRAME_ID, [0x00, 0x5a]))
             .unwrap();
-
         assert_eq!(events, vec![TelemetryEvent::SpeedChanged { speed_kmh: 90 }]);
     }
 
@@ -79,8 +118,38 @@ mod tests {
         let events = DemoCanAdapter
             .decode(&VehicleBusFrame::new(DemoCanAdapter::ENGINE_RPM_FRAME_ID, [0x0a, 0x28]))
             .unwrap();
-
         assert_eq!(events, vec![TelemetryEvent::EngineRpmChanged { engine_rpm: 2_600 }]);
+    }
+
+    #[test]
+    fn demo_lin_status_becomes_the_same_domain_telemetry() {
+        let events = DemoLinAdapter
+            .decode(&VehicleBusFrame::new(DemoLinAdapter::VEHICLE_STATUS_FRAME_ID, [90, 0, 0x28, 0x0a]))
+            .unwrap();
+        assert_eq!(events, vec![
+            TelemetryEvent::SpeedChanged { speed_kmh: 90 },
+            TelemetryEvent::EngineRpmChanged { engine_rpm: 2_600 },
+        ]);
+    }
+
+    #[test]
+    fn demo_lin_rejects_identifier_outside_six_bits() {
+        assert_eq!(
+            DemoLinAdapter.decode(&VehicleBusFrame::new(0x40, [0, 0, 0, 0])),
+            Err(FrameDecodeError::InvalidIdentifier { id: 0x40, max: 0x3f })
+        );
+    }
+
+    #[test]
+    fn demo_lin_rejects_malformed_payload() {
+        assert_eq!(
+            DemoLinAdapter.decode(&VehicleBusFrame::new(DemoLinAdapter::VEHICLE_STATUS_FRAME_ID, [90, 0])),
+            Err(FrameDecodeError::InvalidLength {
+                id: DemoLinAdapter::VEHICLE_STATUS_FRAME_ID,
+                expected: 4,
+                actual: 2,
+            })
+        );
     }
 
     #[test]
