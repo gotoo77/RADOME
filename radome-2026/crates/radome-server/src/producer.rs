@@ -1,12 +1,16 @@
 use crate::hub::{event_envelope, ConnectionHub};
 use radome_core::runtime::Runtime;
-use radome_core::telemetry::TelemetrySimulator;
-use radome_core::{Capability, Experience, Role};
+use radome_core::telemetry::{TelemetryEvent, TelemetrySimulator};
+use radome_core::vehicle_bus::{FrameDecodeError, VehicleBusAdapter, VehicleBusFrame};
+use radome_core::{Capability, Experience, MessageId, Role};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 pub type SharedRuntime = Arc<Mutex<Runtime>>;
 pub type SharedHub = Arc<Mutex<ConnectionHub>>;
+
+static NEXT_BUS_EVENT_ID: AtomicU64 = AtomicU64::new(1);
 
 pub fn telemetry_experience() -> Experience {
     Experience::new(
@@ -18,12 +22,7 @@ pub fn telemetry_experience() -> Experience {
     )
 }
 
-pub fn publish_next_sample(
-    simulator: &mut TelemetrySimulator,
-    runtime: &SharedRuntime,
-    hub: &SharedHub,
-) -> bool {
-    let Some(events) = simulator.next_events() else { return false; };
+fn publish_events(events: impl IntoIterator<Item = radome_core::Event>, runtime: &SharedRuntime, hub: &SharedHub) {
     let experience = telemetry_experience();
     for event in events {
         let deliveries = runtime
@@ -36,7 +35,36 @@ pub fn publish_next_sample(
                 .send_to(&delivery.client_id, event_envelope(&delivery.event, "telemetry"));
         }
     }
+}
+
+pub fn publish_next_sample(
+    simulator: &mut TelemetrySimulator,
+    runtime: &SharedRuntime,
+    hub: &SharedHub,
+) -> bool {
+    let Some(events) = simulator.next_events() else { return false; };
+    publish_events(events, runtime, hub);
     true
+}
+
+/// Décode une trame de bus véhicule puis publie les faits métier obtenus via
+/// exactement le même runtime et le même hub que le simulateur.
+pub fn publish_bus_frame<A: VehicleBusAdapter>(
+    adapter: &A,
+    frame: &VehicleBusFrame,
+    runtime: &SharedRuntime,
+    hub: &SharedHub,
+) -> Result<usize, FrameDecodeError> {
+    let telemetry = adapter.decode(frame)?;
+    let count = telemetry.len();
+    let events = telemetry.into_iter().map(bus_telemetry_event);
+    publish_events(events, runtime, hub);
+    Ok(count)
+}
+
+fn bus_telemetry_event(event: TelemetryEvent) -> radome_core::Event {
+    let sequence = NEXT_BUS_EVENT_ID.fetch_add(1, Ordering::Relaxed);
+    event.into_event(MessageId::new(format!("vehicle-bus-{sequence}")))
 }
 
 pub async fn run_demo_telemetry(runtime: SharedRuntime, hub: SharedHub, period: Duration) {
@@ -52,11 +80,11 @@ pub async fn run_demo_telemetry(runtime: SharedRuntime, hub: SharedHub, period: 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use radome_core::vehicle_bus::DemoCanAdapter;
     use radome_core::{Client, MessageType, SystemCapabilities};
     use tokio::sync::mpsc;
 
-    #[test]
-    fn independent_producer_routes_telemetry_through_runtime_and_hub() {
+    fn connected_dashboard() -> (SharedRuntime, SharedHub, mpsc::UnboundedReceiver<radome_core::Envelope>) {
         let runtime = Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([
             Capability::new("vehicle.telemetry"),
         ]))));
@@ -65,9 +93,15 @@ mod tests {
             Role::new("driver-display"),
             [Capability::new("display")],
         ));
-        let (tx, mut rx) = mpsc::unbounded_channel();
+        let (tx, rx) = mpsc::unbounded_channel();
         let hub = Arc::new(Mutex::new(ConnectionHub::default()));
         hub.lock().unwrap().register("dashboard", tx);
+        (runtime, hub, rx)
+    }
+
+    #[test]
+    fn independent_producer_routes_telemetry_through_runtime_and_hub() {
+        let (runtime, hub, mut rx) = connected_dashboard();
         let mut simulator = TelemetrySimulator::demo_drive();
 
         assert!(publish_next_sample(&mut simulator, &runtime, &hub));
@@ -76,5 +110,41 @@ mod tests {
         assert_eq!(speed.message_type, MessageType::Event);
         assert_eq!(speed.payload["name"], "vehicle.speed_changed");
         assert_eq!(rpm.payload["name"], "vehicle.engine_rpm_changed");
+    }
+
+    #[test]
+    fn fake_can_reaches_dashboard_as_the_same_domain_event() {
+        let (runtime, hub, mut rx) = connected_dashboard();
+        let adapter = DemoCanAdapter;
+
+        let published = publish_bus_frame(
+            &adapter,
+            &VehicleBusFrame::new(DemoCanAdapter::SPEED_FRAME_ID, [0x00, 0x5a]),
+            &runtime,
+            &hub,
+        )
+        .expect("valid CAN frame");
+
+        assert_eq!(published, 1);
+        let envelope = rx.try_recv().expect("dashboard receives CAN-derived event");
+        assert_eq!(envelope.message_type, MessageType::Event);
+        assert_eq!(envelope.payload["name"], "vehicle.speed_changed");
+        assert_eq!(envelope.payload["data"], "speed_kmh=90");
+        assert!(rx.try_recv().is_err());
+    }
+
+    #[test]
+    fn malformed_bus_frame_is_not_published() {
+        let (runtime, hub, mut rx) = connected_dashboard();
+
+        let result = publish_bus_frame(
+            &DemoCanAdapter,
+            &VehicleBusFrame::new(DemoCanAdapter::SPEED_FRAME_ID, [90]),
+            &runtime,
+            &hub,
+        );
+
+        assert!(matches!(result, Err(FrameDecodeError::InvalidLength { .. })));
+        assert!(rx.try_recv().is_err());
     }
 }
