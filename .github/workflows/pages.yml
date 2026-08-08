@@ -40,7 +40,8 @@ jobs:
           test -f _site/site.css
           test -f _site/demo/index.html
           test -f _site/demo/vehicle-state.js
-          grep -q 'href="demo/?demo"' _site/index.html
+          grep -q 'href="demo/?mode=demo"' _site/index.html
+          grep -q "params.get('mode') === 'demo'" _site/demo/index.html
 
       - name: Configurer Pages
         if: github.event_name != 'pull_request'
