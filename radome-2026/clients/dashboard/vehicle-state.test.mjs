@@ -1,32 +1,34 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { VehicleState, parseNumericPayload } from './vehicle-state.js';
+import { VehicleState, parseNumericPayload, VEHICLE_TELEMETRY } from './vehicle-state.js';
 
-test('parseNumericPayload accepte le format historique cle=valeur', () => {
-  assert.equal(parseNumericPayload('speed_kmh=90'), 90);
-  assert.equal(parseNumericPayload('engine_rpm=2450'), 2450);
+test('le contrat dashboard utilise les noms et cles canoniques', () => {
+  assert.deepEqual(VEHICLE_TELEMETRY.speed, { name: 'vehicle.speed_changed', key: 'speed_kmh' });
+  assert.deepEqual(VEHICLE_TELEMETRY.engineRpm, { name: 'vehicle.engine_rpm_changed', key: 'engine_rpm' });
 });
 
-test('parseNumericPayload accepte aussi une valeur numerique directe', () => {
-  assert.equal(parseNumericPayload(42), 42);
-  assert.equal(parseNumericPayload('12.5'), 12.5);
+test('parseNumericPayload exige la cle attendue et un u16', () => {
+  assert.equal(parseNumericPayload('speed_kmh=90', 'speed_kmh'), 90);
+  assert.equal(parseNumericPayload('speed=90', 'speed_kmh'), null);
+  assert.equal(parseNumericPayload('90', 'speed_kmh'), null);
+  assert.equal(parseNumericPayload('speed_kmh=12.5', 'speed_kmh'), null);
+  assert.equal(parseNumericPayload('speed_kmh=-1', 'speed_kmh'), null);
+  assert.equal(parseNumericPayload('speed_kmh=65536', 'speed_kmh'), null);
+  assert.equal(parseNumericPayload('speed_kmh=', 'speed_kmh'), null);
+  assert.equal(parseNumericPayload('speed_kmh=90=oops', 'speed_kmh'), null);
 });
 
-test('parseNumericPayload rejette les donnees non numeriques', () => {
-  assert.equal(parseNumericPayload('speed_kmh=oops'), null);
-  assert.equal(parseNumericPayload(undefined), null);
-});
-
-test('VehicleState applique les evenements RADOME connus', () => {
+test('VehicleState applique les evenements RADOME conformes', () => {
   const vehicle = new VehicleState();
   assert.equal(vehicle.applyRadomeEvent('vehicle.speed_changed', 'speed_kmh=90'), true);
   assert.equal(vehicle.applyRadomeEvent('vehicle.engine_rpm_changed', 'engine_rpm=2450'), true);
   assert.deepEqual(vehicle.snapshot, { speedKmh: 90, engineRpm: 2450 });
 });
 
-test('VehicleState ignore les evenements inconnus et invalides', () => {
+test('VehicleState rejette les evenements inconnus ou non conformes', () => {
   const vehicle = new VehicleState();
   assert.equal(vehicle.applyRadomeEvent('vehicle.unknown', 'value=12'), false);
+  assert.equal(vehicle.applyRadomeEvent('vehicle.speed_changed', 'speed=90'), false);
   assert.equal(vehicle.applyRadomeEvent('vehicle.speed_changed', 'speed_kmh=nope'), false);
   assert.deepEqual(vehicle.snapshot, { speedKmh: null, engineRpm: null });
 });
