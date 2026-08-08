@@ -44,7 +44,39 @@ jobs:
           test -f _site/sdk/radome-client.js
           grep -q 'href="demo/?mode=demo"' _site/index.html
           grep -q "params.get('mode') === 'demo'" _site/demo/index.html
-          grep -q "../sdk/radome-client.js" _site/demo/dashboard-app.js
+
+      - name: Vérifier le graphe des modules JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('_site').resolve()
+          entrypoints = [root / 'demo' / 'index.html']
+          queue = list(entrypoints)
+          visited = set()
+          pattern = re.compile(r'''(?:from\s+|import\s*)["']([^"']+)["']''')
+
+          while queue:
+              current = queue.pop()
+              if current in visited:
+                  continue
+              visited.add(current)
+              text = current.read_text(encoding='utf-8')
+              for specifier in pattern.findall(text):
+                  if not specifier.startswith('.'):
+                      continue
+                  target = (current.parent / specifier).resolve()
+                  if root not in target.parents and target != root:
+                      raise SystemExit(f'import hors artefact: {current} -> {specifier}')
+                  if not target.is_file():
+                      raise SystemExit(f'import manquant: {current.relative_to(root)} -> {specifier}')
+                  queue.append(target)
+
+          print(f'{len(visited)} fichier(s) du graphe de modules vérifié(s)')
+          PY
 
       - name: Configurer Pages
         if: github.event_name != 'pull_request'
