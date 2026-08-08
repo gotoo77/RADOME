@@ -54,8 +54,8 @@ export function parseTelemetryRecording(text) {
   }
 
   return recording.entries.map((entry, index) => {
-    const afterMs = Number(entry?.afterMs);
-    if (!Number.isFinite(afterMs) || afterMs < 0 || !entry?.name) {
+    const afterMs = entry?.afterMs;
+    if (typeof afterMs !== 'number' || !Number.isFinite(afterMs) || afterMs < 0 || !entry?.name) {
       throw new Error(`Invalid telemetry recording entry at index ${index}`);
     }
     validateRecordedEvent(entry.name, entry.data);
