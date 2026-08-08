@@ -29,7 +29,7 @@ impl Runtime {
     /// Une commande issue d'un client est autorisée seulement si le client est
     /// enregistré et annonce explicitement la capacité requise.
     pub fn client_can(&self, client_id: &str, capability: &Capability) -> bool {
-        self.clients.get(client_id).is_some_and(|client| client.capabilities.contains(capability))
+        self.clients.get(client_id).is_some_and(|client| client.has(capability))
     }
 
     pub fn client_count(&self) -> usize { self.clients.len() }
