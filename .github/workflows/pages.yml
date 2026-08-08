@@ -27,9 +27,10 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf _site
-          mkdir -p _site/demo
+          mkdir -p _site/demo _site/sdk
           cp -R site/. _site/
           cp -R radome-2026/clients/dashboard/. _site/demo/
+          cp -R radome-2026/clients/sdk/. _site/sdk/
           touch _site/.nojekyll
 
       - name: Vérifier l'artefact Pages
@@ -40,8 +41,10 @@ jobs:
           test -f _site/site.css
           test -f _site/demo/index.html
           test -f _site/demo/vehicle-state.js
+          test -f _site/sdk/radome-client.js
           grep -q 'href="demo/?mode=demo"' _site/index.html
           grep -q "params.get('mode') === 'demo'" _site/demo/index.html
+          grep -q "../sdk/radome-client.js" _site/demo/dashboard-app.js
 
       - name: Configurer Pages
         if: github.event_name != 'pull_request'
