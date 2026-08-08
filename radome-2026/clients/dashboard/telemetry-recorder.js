@@ -1,3 +1,5 @@
+import { parseNumericPayload, VEHICLE_TELEMETRY } from './vehicle-state.js';
+
 export class TelemetryRecorder {
   constructor({ now = () => performance.now() } = {}) {
     this.now = now;
@@ -17,6 +19,7 @@ export class TelemetryRecorder {
 
   record(event) {
     if (this.startedAt === null || !event?.name) return false;
+    validateRecordedEvent(event.name, event.data);
     const current = this.now();
     this.entries.push({
       afterMs: Math.max(0, current - this.lastAt),
@@ -49,9 +52,26 @@ export function parseTelemetryRecording(text) {
   if (recording?.version !== 1 || !Array.isArray(recording.entries)) {
     throw new Error('Unsupported RADOME telemetry recording');
   }
-  return recording.entries.map(entry => ({
-    afterMs: Math.max(0, Number(entry.afterMs) || 0),
-    name: String(entry.name ?? ''),
-    data: entry.data,
-  })).filter(entry => entry.name);
+
+  return recording.entries.map((entry, index) => {
+    const afterMs = entry?.afterMs;
+    if (typeof afterMs !== 'number' || !Number.isFinite(afterMs) || afterMs < 0 || !entry?.name) {
+      throw new Error(`Invalid telemetry recording entry at index ${index}`);
+    }
+    validateRecordedEvent(entry.name, entry.data);
+    return { afterMs, name: entry.name, data: entry.data };
+  });
+}
+
+export function validateRecordedEvent(name, data) {
+  const contract = vehicleContractFor(name);
+  if (!contract) return true;
+  if (parseNumericPayload(data, contract.key) === null) {
+    throw new Error(`Invalid RADOME telemetry payload for ${name}`);
+  }
+  return true;
+}
+
+function vehicleContractFor(name) {
+  return Object.values(VEHICLE_TELEMETRY).find(contract => contract.name === name) ?? null;
 }
