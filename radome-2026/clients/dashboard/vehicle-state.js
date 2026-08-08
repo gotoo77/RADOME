@@ -33,7 +33,8 @@ export class VehicleState extends EventTarget {
 export function parseNumericPayload(data) {
   const raw = String(data ?? '');
   const separator = raw.indexOf('=');
-  const candidate = separator >= 0 ? raw.slice(separator + 1) : raw;
+  const candidate = (separator >= 0 ? raw.slice(separator + 1) : raw).trim();
+  if (!candidate) return null;
   const value = Number(candidate);
   return Number.isFinite(value) ? value : null;
 }
