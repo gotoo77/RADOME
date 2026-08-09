@@ -11,6 +11,12 @@ export class InfotainmentState extends EventTarget {
   }
 
   applyRadomeEvent(type, payload) {
+    if (type === 'media.playback_toggled') {
+      this.#state = { ...this.#state, playing: !this.#state.playing };
+      this.dispatchEvent(new CustomEvent('change', { detail: this.snapshot }));
+      return true;
+    }
+
     const patch = parseInfotainmentEvent(type, payload);
     if (!patch) return false;
 
@@ -28,20 +34,16 @@ export function parseInfotainmentEvent(type, payload) {
   if (value === null) return null;
 
   switch (type) {
-    case 'media.source_changed':
-      return { source: value };
-    case 'media.title_changed':
-      return { title: value };
-    case 'media.artist_changed':
-      return { artist: value };
+    case 'media.source_changed': return { source: value };
+    case 'media.title_changed': return { title: value };
+    case 'media.artist_changed': return { artist: value };
     case 'media.playback_changed': {
       const normalized = value.toLowerCase();
       if (['playing', 'play', 'true', '1'].includes(normalized)) return { playing: true };
       if (['paused', 'pause', 'stopped', 'stop', 'false', '0'].includes(normalized)) return { playing: false };
       return null;
     }
-    default:
-      return null;
+    default: return null;
   }
 }
 
