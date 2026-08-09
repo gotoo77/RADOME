@@ -116,8 +116,9 @@ mod tests {
 
     #[test]
     fn authorized_media_command_returns_result_and_domain_event() {
-        let runtime = new_runtime(); let session = registered_session(&runtime, &["display", "media.control"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
-        let responses = handle_envelope(&mut { session }, &runtime, &hub, &tx, command(&registered_session(&runtime, &["display", "media.control"]), "cmd-1", "media.toggle_playback"));
+        let runtime = new_runtime(); let mut session = registered_session(&runtime, &["display", "media.control"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
+        let incoming = command(&session, "cmd-1", "media.toggle_playback");
+        let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
         assert_eq!(responses.len(), 2); assert_eq!(responses[0].message_type, MessageType::CommandResult); assert_eq!(responses[0].correlation_id.as_deref(), Some("cmd-1")); assert_eq!(responses[0].payload["outcome"], "succeeded"); assert_eq!(responses[1].payload["name"], "media.playback_toggled");
     }
 
