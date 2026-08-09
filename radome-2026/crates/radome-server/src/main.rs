@@ -125,6 +125,20 @@ mod tests {
     }
 
     #[test]
+    fn next_track_uses_the_same_server_command_path() {
+        let runtime = new_runtime(); let mut session = registered_session(&runtime, &["display", "media.control"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
+        let incoming = command(&session, "cmd-next", "media.next_track");
+        let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
+        assert_eq!(responses.len(), 2);
+        assert_eq!(responses[0].message_type, MessageType::CommandResult);
+        assert_eq!(responses[0].correlation_id.as_deref(), Some("cmd-next"));
+        assert_eq!(responses[0].payload["outcome"], "succeeded");
+        assert_eq!(responses[1].message_type, MessageType::Event);
+        assert_eq!(responses[1].payload["name"], "media.next_track_requested");
+        assert_eq!(responses[1].payload["data"], "next");
+    }
+
+    #[test]
     fn media_command_without_capability_is_denied() {
         let runtime = new_runtime(); let mut session = registered_session(&runtime, &["display"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
         let incoming = command(&session, "cmd-2", "media.toggle_playback"); let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
