@@ -1,11 +1,18 @@
 use radome_core::Capability;
 use serde_json::{json, Value};
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum CommandKind {
+    TogglePlayback,
+    NextTrack,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CommandDefinition {
     pub name: &'static str,
     pub required_capability: Capability,
     pub event_name: &'static str,
+    kind: CommandKind,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -16,10 +23,11 @@ pub struct CommandExecution {
 
 impl CommandDefinition {
     pub fn execute(&self, _data: &Value) -> CommandExecution {
-        CommandExecution {
-            event_name: self.event_name,
-            event_data: json!("toggle"),
-        }
+        let event_data = match self.kind {
+            CommandKind::TogglePlayback => json!("toggle"),
+            CommandKind::NextTrack => json!("next"),
+        };
+        CommandExecution { event_name: self.event_name, event_data }
     }
 }
 
@@ -29,6 +37,13 @@ pub fn find(name: &str) -> Option<CommandDefinition> {
             name: "media.toggle_playback",
             required_capability: Capability::new("media.control"),
             event_name: "media.playback_toggled",
+            kind: CommandKind::TogglePlayback,
+        }),
+        "media.next_track" => Some(CommandDefinition {
+            name: "media.next_track",
+            required_capability: Capability::new("media.control"),
+            event_name: "media.next_track_requested",
+            kind: CommandKind::NextTrack,
         }),
         _ => None,
     }
@@ -46,6 +61,15 @@ mod tests {
         let execution = command.execute(&Value::Null);
         assert_eq!(execution.event_name, "media.playback_toggled");
         assert_eq!(execution.event_data, "toggle");
+    }
+
+    #[test]
+    fn next_track_uses_the_same_router_with_a_distinct_execution() {
+        let command = find("media.next_track").expect("registered command");
+        assert_eq!(command.required_capability, Capability::new("media.control"));
+        let execution = command.execute(&Value::Null);
+        assert_eq!(execution.event_name, "media.next_track_requested");
+        assert_eq!(execution.event_data, "next");
     }
 
     #[test]
