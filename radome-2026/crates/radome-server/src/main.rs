@@ -1,3 +1,4 @@
+mod commands;
 mod hub;
 mod producer;
 mod socketcan;
@@ -80,12 +81,13 @@ fn handle_command(session: &ConnectionSession, runtime: &SharedRuntime, incoming
     if incoming.session_id.as_deref() != session.id.as_deref() { return vec![error_for(&incoming, "invalid_session")]; }
     if !session.registered { return vec![error_for(&incoming, "capability_announce_required")]; }
     let Some(name) = incoming.payload.get("name").and_then(Value::as_str) else { return vec![error_for(&incoming, "missing_command_name")]; };
+    let Some(definition) = commands::find(name) else { return vec![command_result(&incoming, "failed", "unsupported_command")]; };
     let client_id = session.client_id.as_deref().expect("established session client id");
-    if name != "media.toggle_playback" { return vec![command_result(&incoming, "failed", "unsupported_command")]; }
-    if !runtime.lock().expect("runtime mutex poisoned").client_can(client_id, &Capability::new("media.control")) { return vec![command_result(&incoming, "failed", "capability_denied")]; }
+    if !runtime.lock().expect("runtime mutex poisoned").client_can(client_id, &definition.required_capability) { return vec![command_result(&incoming, "failed", "capability_denied")]; }
 
+    let execution = definition.execute(incoming.payload.get("data").unwrap_or(&Value::Null));
     let result = command_result(&incoming, "succeeded", "accepted");
-    let event = Envelope::new(server_id("event"), MessageType::Event, json!({"name":"media.playback_toggled","data":"toggle"}));
+    let event = Envelope::new(server_id("event"), MessageType::Event, json!({"name":execution.event_name,"data":execution.event_data}));
     vec![result, event]
 }
 
@@ -120,6 +122,20 @@ mod tests {
         let incoming = command(&session, "cmd-1", "media.toggle_playback");
         let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
         assert_eq!(responses.len(), 2); assert_eq!(responses[0].message_type, MessageType::CommandResult); assert_eq!(responses[0].correlation_id.as_deref(), Some("cmd-1")); assert_eq!(responses[0].payload["outcome"], "succeeded"); assert_eq!(responses[1].payload["name"], "media.playback_toggled");
+    }
+
+    #[test]
+    fn next_track_uses_the_same_server_command_path() {
+        let runtime = new_runtime(); let mut session = registered_session(&runtime, &["display", "media.control"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
+        let incoming = command(&session, "cmd-next", "media.next_track");
+        let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
+        assert_eq!(responses.len(), 2);
+        assert_eq!(responses[0].message_type, MessageType::CommandResult);
+        assert_eq!(responses[0].correlation_id.as_deref(), Some("cmd-next"));
+        assert_eq!(responses[0].payload["outcome"], "succeeded");
+        assert_eq!(responses[1].message_type, MessageType::Event);
+        assert_eq!(responses[1].payload["name"], "media.next_track_requested");
+        assert_eq!(responses[1].payload["data"], "next");
     }
 
     #[test]
