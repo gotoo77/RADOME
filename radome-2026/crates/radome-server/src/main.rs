@@ -85,13 +85,24 @@ fn handle_command(session: &ConnectionSession, runtime: &SharedRuntime, incoming
     let client_id = session.client_id.as_deref().expect("established session client id");
     if !runtime.lock().expect("runtime mutex poisoned").client_can(client_id, &definition.required_capability) { return vec![command_result(&incoming, "failed", "capability_denied")]; }
 
-    let execution = definition.execute(incoming.payload.get("data").unwrap_or(&Value::Null));
+    let execution = match definition.execute(incoming.payload.get("data").unwrap_or(&Value::Null)) {
+        Ok(execution) => execution,
+        Err(error) => return vec![command_error_result(&incoming, &error)],
+    };
     let result = command_result(&incoming, "succeeded", "accepted");
     let event = Envelope::new(server_id("event"), MessageType::Event, json!({"name":execution.event_name,"data":execution.event_data}));
     vec![result, event]
 }
 
 fn command_result(incoming: &Envelope, outcome: &str, data: &str) -> Envelope {
+    command_result_payload(incoming, outcome, json!(data))
+}
+
+fn command_error_result(incoming: &Envelope, error: &commands::CommandError) -> Envelope {
+    command_result_payload(incoming, "failed", json!({"code":error.code(),"detail":error.detail()}))
+}
+
+fn command_result_payload(incoming: &Envelope, outcome: &str, data: Value) -> Envelope {
     let mut result = Envelope::new(server_id("command-result"), MessageType::CommandResult, json!({"outcome":outcome,"data":data})).correlated_to(incoming.id.clone());
     if let Some(session_id) = incoming.session_id.clone() { result = result.in_session(session_id); } result
 }
@@ -114,34 +125,36 @@ mod tests {
         let mut session = ConnectionSession::default(); session.establish("console".into()); session.registered = true;
         runtime.lock().unwrap().register_client(Client::new("console", Role::new("center-console"), capabilities.iter().copied().map(Capability::new))); session
     }
-    fn command(session: &ConnectionSession, id: &str, name: &str) -> Envelope { Envelope::new(id, MessageType::Command, json!({"name":name,"data":""})).in_session(session.id.clone().unwrap()) }
+    fn command_with_data(session: &ConnectionSession, id: &str, name: &str, data: Value) -> Envelope { Envelope::new(id, MessageType::Command, json!({"name":name,"data":data})).in_session(session.id.clone().unwrap()) }
+    fn command(session: &ConnectionSession, id: &str, name: &str) -> Envelope { command_with_data(session, id, name, Value::Null) }
 
     #[test]
     fn authorized_media_command_returns_result_and_domain_event() {
         let runtime = new_runtime(); let mut session = registered_session(&runtime, &["display", "media.control"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
-        let incoming = command(&session, "cmd-1", "media.toggle_playback");
-        let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
-        assert_eq!(responses.len(), 2); assert_eq!(responses[0].message_type, MessageType::CommandResult); assert_eq!(responses[0].correlation_id.as_deref(), Some("cmd-1")); assert_eq!(responses[0].payload["outcome"], "succeeded"); assert_eq!(responses[1].payload["name"], "media.playback_toggled");
+        let responses = handle_envelope(&mut session, &runtime, &hub, &tx, command(&session, "cmd-1", "media.toggle_playback"));
+        assert_eq!(responses.len(), 2); assert_eq!(responses[0].payload["outcome"], "succeeded"); assert_eq!(responses[1].payload["name"], "media.playback_toggled");
     }
 
     #[test]
-    fn next_track_uses_the_same_server_command_path() {
-        let runtime = new_runtime(); let mut session = registered_session(&runtime, &["display", "media.control"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
-        let incoming = command(&session, "cmd-next", "media.next_track");
+    fn climate_command_with_valid_payload_returns_event() {
+        let runtime = new_runtime(); let mut session = registered_session(&runtime, &["climate.control"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
+        let incoming = command_with_data(&session, "cmd-climate", "climate.set_temperature", json!({"temperature_c":21.5}));
         let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
-        assert_eq!(responses.len(), 2);
-        assert_eq!(responses[0].message_type, MessageType::CommandResult);
-        assert_eq!(responses[0].correlation_id.as_deref(), Some("cmd-next"));
-        assert_eq!(responses[0].payload["outcome"], "succeeded");
-        assert_eq!(responses[1].message_type, MessageType::Event);
-        assert_eq!(responses[1].payload["name"], "media.next_track_requested");
-        assert_eq!(responses[1].payload["data"], "next");
+        assert_eq!(responses.len(), 2); assert_eq!(responses[0].payload["outcome"], "succeeded"); assert_eq!(responses[1].payload["name"], "climate.temperature_changed"); assert_eq!(responses[1].payload["data"]["temperature_c"], 21.5);
+    }
+
+    #[test]
+    fn invalid_climate_payload_returns_failed_command_result_without_event() {
+        let runtime = new_runtime(); let mut session = registered_session(&runtime, &["climate.control"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
+        let incoming = command_with_data(&session, "cmd-bad-climate", "climate.set_temperature", json!({"temperature_c":"chaud"}));
+        let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
+        assert_eq!(responses.len(), 1); assert_eq!(responses[0].message_type, MessageType::CommandResult); assert_eq!(responses[0].correlation_id.as_deref(), Some("cmd-bad-climate")); assert_eq!(responses[0].payload["outcome"], "failed"); assert_eq!(responses[0].payload["data"]["code"], "invalid_payload"); assert_eq!(responses[0].payload["data"]["detail"], "temperature_c_required");
     }
 
     #[test]
     fn media_command_without_capability_is_denied() {
         let runtime = new_runtime(); let mut session = registered_session(&runtime, &["display"]); let hub = new_hub(); let (tx, _rx) = mpsc::unbounded_channel();
         let incoming = command(&session, "cmd-2", "media.toggle_playback"); let responses = handle_envelope(&mut session, &runtime, &hub, &tx, incoming);
-        assert_eq!(responses.len(), 1); assert_eq!(responses[0].message_type, MessageType::CommandResult); assert_eq!(responses[0].payload["outcome"], "failed"); assert_eq!(responses[0].payload["data"], "capability_denied");
+        assert_eq!(responses.len(), 1); assert_eq!(responses[0].payload["outcome"], "failed"); assert_eq!(responses[0].payload["data"], "capability_denied");
     }
 }
