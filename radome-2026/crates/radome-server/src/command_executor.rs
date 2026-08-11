@@ -14,7 +14,7 @@ fn apply(&self,action:&CommandAction)->Result<(),CommandExecutionError>{let resu
 
 fn media_state_json(state:&MediaState)->Value{json!({"playback":match state.playback{PlaybackState::Playing=>"playing",PlaybackState::Paused=>"paused"},"volume":state.volume,"track_index":state.track_index})}
 
-#[cfg(test)]mod tests{use super::*;use crate::actuators::{ActuatorError,ClimateActuator,DemoClimateActuator,DemoMediaActuator};use serde_json::json;use std::sync::Arc;
+#[cfg(test)]mod tests{use super::*;use crate::actuators::{ActuatorError,ClimateActuator,DemoClimateActuator,DemoMediaActuator,MediaActuator};use serde_json::json;use std::sync::Arc;
 #[derive(Debug)]struct RejectingClimateActuator;impl ClimateActuator for RejectingClimateActuator{fn set_temperature(&self,_:f64)->Result<(),ActuatorError>{Err(ActuatorError::Rejected("test_rejection"))}}
 fn media()->Arc<DemoMediaActuator>{Arc::new(DemoMediaActuator::new())}
 #[test]fn climate_command_is_validated_actuated_and_converted_to_event(){let climate=Arc::new(DemoClimateActuator::new());let executor=CommandExecutor::new(climate.clone(),media());let success=executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|cap|cap==&Capability::new("climate.control")).unwrap();assert_eq!(climate.last_temperature_c(),Some(21.5));assert_eq!(success.event_name,"climate.temperature_changed");assert_eq!(success.event_data,json!({"temperature_c":21.5}));}
