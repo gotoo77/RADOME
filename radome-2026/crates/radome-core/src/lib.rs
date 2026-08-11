@@ -7,4 +7,4 @@ pub mod vehicle_bus;
 
 pub use domain::{Capability, Client, Experience, MatchResult, Role, SystemCapabilities};
 pub use message::{Command, CommandOutcome, CommandResult, Event, MessageId};
-pub use protocol::{Envelope, MessageType, ProtocolError, PROTOCOL_VERSION};
+pub use protocol::{Envelope, MessageType, ProtocolError, ProtocolErrorCode, ProtocolErrorPayload, PROTOCOL_VERSION};
