@@ -14,7 +14,7 @@ Le principe de progression est simple : avancer par **tranches verticales testab
 | M3 | Discovery, état et bootstrap dynamique | ✅ Terminé |
 | M4 | Robustesse et cohérence du protocole | 🚧 En cours |
 | M5 | Bus véhicule réel | ⏳ À venir |
-| M6 | Premier client RADOME réel | ⏳ À venir |
+| M6 | Premier client RADOME réel et IHM véhicule | ⏳ À venir |
 | M7 | Durcissement et exploitation | ⏳ À venir |
 
 ---
@@ -183,35 +183,88 @@ Le support LIN réel reste différé : l'adapter de démonstration existe, mais 
 
 ---
 
-## M6 — Premier client RADOME réel ⏳
+## M6 — Premier client RADOME réel et IHM véhicule ⏳
 
 ### Objectif
 
-Valider que le protocole est réellement consommable par une application indépendante.
+Valider le protocole avec une vraie application indépendante **et produire une IHM qui ressemble à un système embarqué utilisable**, pas à un panneau de debug WebSocket.
 
-### Cible minimale
+Le premier client doit servir à la fois de démonstrateur du protocole et de première incarnation visuelle de RADOME.
 
-Un dashboard simple capable de :
+### Tranches prévues
 
-- se connecter au serveur ;
-- effectuer le bootstrap dynamique ;
-- afficher la discovery ;
-- afficher le snapshot courant ;
-- recevoir la télémétrie ;
-- piloter le climat ;
-- piloter le lecteur média ;
-- se resynchroniser après reconnexion.
+- [ ] **M6.1 — Shell client et bootstrap dynamique**
+  - connexion/déconnexion ;
+  - `hello → discovery → capability_announce → state_snapshot` ;
+  - état de connexion visible ;
+  - aucun catalogue de commandes serveur dupliqué côté client ;
+  - resynchronisation après reconnexion.
 
-### Contraintes
+- [ ] **M6.2 — Vehicle Info Display**
+  - vue véhicule dédiée ;
+  - vitesse clairement lisible ;
+  - régime moteur / RPM ;
+  - autres télémétries disponibles exposées progressivement ;
+  - indicateurs animés à partir des événements reçus ;
+  - état initial issu du snapshot quand la donnée existe ;
+  - comportement explicite en absence ou perte de télémétrie ;
+  - présentation pensée pour une lecture rapide de type écran embarqué, pas pour afficher du JSON brut.
 
-- aucun catalogue de commandes serveur dupliqué côté client ;
-- UI découplée du transport ;
-- état local dérivé du snapshot puis des événements ;
-- erreurs visibles et compréhensibles.
+- [ ] **M6.3 — Media Player**
+  - composant visuel dédié ;
+  - play / pause ;
+  - précédent / suivant ;
+  - volume + / - ;
+  - réglage direct du volume ;
+  - état de lecture, volume et index de piste synchronisés depuis snapshot + événements ;
+  - retour visuel immédiat sur les commandes en attente, réussies ou refusées ;
+  - ergonomie tactile avec contrôles suffisamment grands ;
+  - identité visuelle cohérente avec le Vehicle Info Display.
+
+- [ ] **M6.4 — Climate Control**
+  - température courante ;
+  - réglage de consigne ;
+  - validation par le serveur et affichage de l'état réellement obtenu ;
+  - cohérence graphique avec les autres modules de l'IHM.
+
+- [ ] **M6.5 — Composition de l'écran RADOME**
+  - navigation ou composition claire entre véhicule, média et climat ;
+  - layout responsive pour écran embarqué / navigateur desktop ;
+  - hiérarchie visuelle cohérente ;
+  - états connecté, reconnexion, dégradé et erreur ;
+  - aucune information protocolaire interne imposée à l'utilisateur normal ;
+  - possibilité d'un mode diagnostic séparé pour afficher discovery, session, événements et erreurs brutes.
+
+- [ ] **M6.6 — Boucle UX complète et démonstration**
+  - démarrage serveur + client documenté ;
+  - bootstrap sans configuration manuelle du catalogue ;
+  - télémétrie animant le Vehicle Info Display ;
+  - commandes média et climat réellement exécutées ;
+  - reconnexion suivie d'une resynchronisation visible ;
+  - scénario de démonstration reproductible.
+
+### Contraintes d'architecture
+
+- UI découplée du transport WebSocket ;
+- état local dérivé d'un snapshot puis réduit par les événements ;
+- composants UI sans connaissance des envelopes réseau ;
+- commandes disponibles dérivées de la discovery ;
+- erreurs visibles et compréhensibles ;
+- le mode normal ne doit pas ressembler à un outil développeur ;
+- un éventuel mode diagnostic peut, lui, exposer le protocole brut.
+
+### Direction UX
+
+L'IHM doit viser une esthétique de **cockpit numérique / infotainment sobre et lisible**, avec deux zones particulièrement soignées :
+
+1. **Vehicle Info Display** : priorité à la lecture instantanée des informations de conduite ;
+2. **Media Player** : commandes tactiles évidentes et état du lecteur immédiatement perceptible.
+
+L'objectif n'est pas de figer une DA définitive dès M6, mais la première version doit déjà être suffisamment propre pour donner envie de l'utiliser et de la montrer.
 
 ### Critère de sortie
 
-Une application distincte du serveur peut fonctionner à partir du seul protocole public et survivre à une reconnexion.
+Une application distincte du serveur peut se bootstrapper depuis le protocole public, afficher une IHM véhicule cohérente, recevoir la télémétrie, piloter média et climat, puis survivre à une reconnexion sans perdre la cohérence de son état local.
 
 ---
 
@@ -250,6 +303,7 @@ Le serveur peut être lancé, observé, arrêté et diagnostiqué proprement dan
 5. **Discovery avant duplication.** Un client doit découvrir le serveur plutôt que recopier son catalogue.
 6. **Snapshot + événements** constitue le modèle de synchronisation client.
 7. **Une milestone possède un critère de sortie.** Une liste de commits n'est pas une définition de fini.
+8. **L'IHM normale n'est pas un outil de debug.** Le protocole structure l'application mais ne doit pas polluer l'expérience utilisateur.
 
 ## Règle pour le prochain `next`
 
