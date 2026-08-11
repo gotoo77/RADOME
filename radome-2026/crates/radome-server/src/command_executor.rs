@@ -1,30 +1,24 @@
-use crate::actuators::{SharedClimateActuator, SharedMediaActuator};
+use crate::actuators::{MediaState, PlaybackState, SharedClimateActuator, SharedMediaActuator};
 use crate::commands::{self, CommandAction};
 use radome_core::Capability;
-use serde_json::Value;
+use serde_json::{json, Value};
 
 #[derive(Debug,Clone,PartialEq)]pub struct CommandSuccess{pub event_name:&'static str,pub event_data:Value}
 #[derive(Debug,Clone,PartialEq)]pub enum CommandExecutionError{UnsupportedCommand,CapabilityDenied,InvalidPayload{code:&'static str,detail:&'static str},ActuatorRejected}
 pub struct CommandExecutor{climate_actuator:SharedClimateActuator,media_actuator:SharedMediaActuator}
 impl CommandExecutor{
 pub fn new(climate_actuator:SharedClimateActuator,media_actuator:SharedMediaActuator)->Self{Self{climate_actuator,media_actuator}}
-pub fn execute(&self,command_name:&str,data:&Value,has_capability:impl FnOnce(&Capability)->bool)->Result<CommandSuccess,CommandExecutionError>{let definition=commands::find(command_name).ok_or(CommandExecutionError::UnsupportedCommand)?;if !has_capability(&definition.required_capability){return Err(CommandExecutionError::CapabilityDenied);}let action=definition.prepare(data).map_err(|error|CommandExecutionError::InvalidPayload{code:error.code(),detail:error.detail()})?;self.apply(&action)?;Ok(CommandSuccess{event_name:definition.event_name,event_data:definition.event_data(&action)})}
-fn apply(&self,action:&CommandAction)->Result<(),CommandExecutionError>{let result=match action{
-CommandAction::Play=>self.media_actuator.play(),
-CommandAction::Pause=>self.media_actuator.pause(),
-CommandAction::TogglePlayback=>self.media_actuator.toggle_playback(),
-CommandAction::NextTrack=>self.media_actuator.next_track(),
-CommandAction::PreviousTrack=>self.media_actuator.previous_track(),
-CommandAction::VolumeUp=>self.media_actuator.volume_up(),
-CommandAction::VolumeDown=>self.media_actuator.volume_down(),
-CommandAction::SetVolume{volume}=>self.media_actuator.set_volume(*volume),
-CommandAction::SetClimateTemperature{temperature_c}=>self.climate_actuator.set_temperature(*temperature_c),};result.map_err(|_|CommandExecutionError::ActuatorRejected)}}
+pub fn execute(&self,command_name:&str,data:&Value,has_capability:impl FnOnce(&Capability)->bool)->Result<CommandSuccess,CommandExecutionError>{let definition=commands::find(command_name).ok_or(CommandExecutionError::UnsupportedCommand)?;if !has_capability(&definition.required_capability){return Err(CommandExecutionError::CapabilityDenied);}let action=definition.prepare(data).map_err(|error|CommandExecutionError::InvalidPayload{code:error.code(),detail:error.detail()})?;self.apply(&action)?;let event_data=if Self::is_media_action(&action){media_state_json(&self.media_actuator.state())}else{definition.event_data(&action)};Ok(CommandSuccess{event_name:definition.event_name,event_data})}
+fn is_media_action(action:&CommandAction)->bool{!matches!(action,CommandAction::SetClimateTemperature{..})}
+fn apply(&self,action:&CommandAction)->Result<(),CommandExecutionError>{let result=match action{CommandAction::Play=>self.media_actuator.play(),CommandAction::Pause=>self.media_actuator.pause(),CommandAction::TogglePlayback=>self.media_actuator.toggle_playback(),CommandAction::NextTrack=>self.media_actuator.next_track(),CommandAction::PreviousTrack=>self.media_actuator.previous_track(),CommandAction::VolumeUp=>self.media_actuator.volume_up(),CommandAction::VolumeDown=>self.media_actuator.volume_down(),CommandAction::SetVolume{volume}=>self.media_actuator.set_volume(*volume),CommandAction::SetClimateTemperature{temperature_c}=>self.climate_actuator.set_temperature(*temperature_c),};result.map_err(|_|CommandExecutionError::ActuatorRejected)}}
 
-#[cfg(test)]mod tests{use super::*;use crate::actuators::{ActuatorError,ClimateActuator,DemoClimateActuator,DemoMediaAction,DemoMediaActuator};use serde_json::json;use std::sync::Arc;
+fn media_state_json(state:&MediaState)->Value{json!({"playback":match state.playback{PlaybackState::Playing=>"playing",PlaybackState::Paused=>"paused"},"volume":state.volume,"track_index":state.track_index})}
+
+#[cfg(test)]mod tests{use super::*;use crate::actuators::{ActuatorError,ClimateActuator,DemoClimateActuator,DemoMediaActuator,MediaActuator};use serde_json::json;use std::sync::Arc;
 #[derive(Debug)]struct RejectingClimateActuator;impl ClimateActuator for RejectingClimateActuator{fn set_temperature(&self,_:f64)->Result<(),ActuatorError>{Err(ActuatorError::Rejected("test_rejection"))}}
 fn media()->Arc<DemoMediaActuator>{Arc::new(DemoMediaActuator::new())}
-#[test]fn climate_command_is_validated_actuated_and_converted_to_event(){let climate=Arc::new(DemoClimateActuator::new());let executor=CommandExecutor::new(climate.clone(),media());let success=executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|cap|cap==&Capability::new("climate.control")).unwrap();assert_eq!(climate.last_temperature_c(),Some(21.5));assert_eq!(success.event_name,"climate.temperature_changed");}
-#[test]fn media_player_commands_are_actuated(){let media=media();let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media.clone());executor.execute("media.play",&Value::Null,|_|true).unwrap();assert_eq!(media.last_action(),Some(DemoMediaAction::Play));executor.execute("media.previous_track",&Value::Null,|_|true).unwrap();assert_eq!(media.last_action(),Some(DemoMediaAction::PreviousTrack));let success=executor.execute("media.set_volume",&json!({"volume":42}),|cap|cap==&Capability::new("media.control")).unwrap();assert_eq!(media.last_action(),Some(DemoMediaAction::SetVolume(42)));assert_eq!(success.event_name,"media.volume_changed");assert_eq!(success.event_data,json!({"volume":42}));}
+#[test]fn climate_command_is_validated_actuated_and_converted_to_event(){let climate=Arc::new(DemoClimateActuator::new());let executor=CommandExecutor::new(climate.clone(),media());let success=executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|cap|cap==&Capability::new("climate.control")).unwrap();assert_eq!(climate.last_temperature_c(),Some(21.5));assert_eq!(success.event_name,"climate.temperature_changed");assert_eq!(success.event_data,json!({"temperature_c":21.5}));}
+#[test]fn media_event_contains_resulting_player_state(){let media=media();let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media);let play=executor.execute("media.play",&Value::Null,|_|true).unwrap();assert_eq!(play.event_data,json!({"playback":"playing","volume":50,"track_index":0}));let next=executor.execute("media.next_track",&Value::Null,|_|true).unwrap();assert_eq!(next.event_data,json!({"playback":"playing","volume":50,"track_index":1}));let volume=executor.execute("media.set_volume",&json!({"volume":42}),|_|true).unwrap();assert_eq!(volume.event_name,"media.volume_changed");assert_eq!(volume.event_data,json!({"playback":"playing","volume":42,"track_index":1}));}
 #[test]fn actuator_rejection_does_not_produce_a_success(){let executor=CommandExecutor::new(Arc::new(RejectingClimateActuator),media());let result=executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|_|true);assert_eq!(result,Err(CommandExecutionError::ActuatorRejected));}
 #[test]fn capability_is_checked_before_command_execution(){let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media());let result=executor.execute("media.play",&Value::Null,|_|false);assert_eq!(result,Err(CommandExecutionError::CapabilityDenied));}
-#[test]fn invalid_media_volume_is_reported_before_actuation(){let media=media();let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media.clone());let result=executor.execute("media.set_volume",&json!({"volume":101}),|_|true);assert_eq!(result,Err(CommandExecutionError::InvalidPayload{code:"invalid_payload",detail:"volume_out_of_range"}));assert_eq!(media.last_action(),None);}}
+#[test]fn invalid_media_volume_is_reported_before_actuation(){let media=media();let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media.clone());let result=executor.execute("media.set_volume",&json!({"volume":101}),|_|true);assert_eq!(result,Err(CommandExecutionError::InvalidPayload{code:"invalid_payload",detail:"volume_out_of_range"}));assert_eq!(media.state(),MediaState::default());}}
