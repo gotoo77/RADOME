@@ -31,7 +31,7 @@ impl CommandExecutor {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::actuators::{ActuatorError,ClimateActuator,DemoClimateActuator,DemoMediaAction,DemoMediaActuator,MediaActuator};
+    use crate::actuators::{ActuatorError,ClimateActuator,DemoClimateActuator,DemoMediaAction,DemoMediaActuator};
     use serde_json::json;
     use std::sync::Arc;
     #[derive(Debug)] struct RejectingClimateActuator;
@@ -39,8 +39,7 @@ mod tests {
     fn media()->Arc<DemoMediaActuator>{Arc::new(DemoMediaActuator::new())}
     #[test] fn climate_command_is_validated_actuated_and_converted_to_event(){let climate=Arc::new(DemoClimateActuator::new());let executor=CommandExecutor::new(climate.clone(),media());let success=executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|cap|cap==&Capability::new("climate.control")).unwrap();assert_eq!(climate.last_temperature_c(),Some(21.5));assert_eq!(success.event_name,"climate.temperature_changed");}
     #[test] fn media_commands_are_actuated(){let media=media();let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media.clone());let toggle=executor.execute("media.toggle_playback",&Value::Null,|cap|cap==&Capability::new("media.control")).unwrap();assert_eq!(media.last_action(),Some(DemoMediaAction::TogglePlayback));assert_eq!(toggle.event_name,"media.playback_toggled");executor.execute("media.next_track",&Value::Null,|_|true).unwrap();assert_eq!(media.last_action(),Some(DemoMediaAction::NextTrack));}
-    #[test] fn actuator_rejection_does_not_produce_a_success(){let executor=CommandExecutor::new(Arc::new(RejectingClimateActuator),media());assert_eq!(executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|_|true),Err(CommandExecutionError::ActuatorRejected));}
-    #[test] fn capability_is_checked_before_command_execution(){let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media());assert_eq!(executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|_|false),Err(CommandExecutionError::CapabilityDenied));}
-    #[test] fn invalid_payload_is_reported_as_a_typed_execution_error(){let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media());assert_eq!(executor.execute("climate.set_temperature",&json!({"temperature_c":"chaud"}),|_|true),Err(CommandExecutionError::InvalidPayload{code:"invalid_payload",detail:"temperature_c_required"}));}
-    #[allow(dead_code)] fn _assert_media_trait<T:MediaActuator>(){}
+    #[test] fn actuator_rejection_does_not_produce_a_success(){let executor=CommandExecutor::new(Arc::new(RejectingClimateActuator),media());let result=executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|_|true);assert_eq!(result,Err(CommandExecutionError::ActuatorRejected));}
+    #[test] fn capability_is_checked_before_command_execution(){let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media());let result=executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|_|false);assert_eq!(result,Err(CommandExecutionError::CapabilityDenied));}
+    #[test] fn invalid_payload_is_reported_as_a_typed_execution_error(){let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()),media());let result=executor.execute("climate.set_temperature",&json!({"temperature_c":"chaud"}),|_|true);assert_eq!(result,Err(CommandExecutionError::InvalidPayload{code:"invalid_payload",detail:"temperature_c_required"}));}
 }
