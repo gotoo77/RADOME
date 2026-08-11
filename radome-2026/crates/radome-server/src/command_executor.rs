@@ -1,19 +1,17 @@
-use crate::actuators::{ClimateState,MediaState,PlaybackState,SharedClimateActuator,SharedMediaActuator};
+use crate::actuators::{ActuatorState,ClimateState,SharedClimateActuator,SharedMediaActuator};
 use crate::commands::{self,CommandAction};
 use radome_core::Capability;
-use serde_json::{json,Value};
+use serde_json::Value;
 
 #[derive(Debug,Clone,PartialEq)]pub struct CommandSuccess{pub event_name:&'static str,pub event_data:Value}
 #[derive(Debug,Clone,PartialEq)]pub enum CommandExecutionError{UnsupportedCommand,CapabilityDenied,InvalidPayload{code:&'static str,detail:&'static str},ActuatorRejected}
 pub struct CommandExecutor{climate_actuator:SharedClimateActuator,media_actuator:SharedMediaActuator}
 impl CommandExecutor{
 pub fn new(climate_actuator:SharedClimateActuator,media_actuator:SharedMediaActuator)->Self{Self{climate_actuator,media_actuator}}
-pub fn execute(&self,command_name:&str,data:&Value,has_capability:impl FnOnce(&Capability)->bool)->Result<CommandSuccess,CommandExecutionError>{let definition=commands::find(command_name).ok_or(CommandExecutionError::UnsupportedCommand)?;if !has_capability(&definition.required_capability){return Err(CommandExecutionError::CapabilityDenied);}let action=definition.prepare(data).map_err(|error|CommandExecutionError::InvalidPayload{code:error.code(),detail:error.detail()})?;self.apply(&action)?;let event_data=match action{CommandAction::SetClimateTemperature{..}=>climate_state_json(&self.climate_actuator.state()),_=>media_state_json(&self.media_actuator.state())};Ok(CommandSuccess{event_name:definition.event_name,event_data})}
+pub fn execute(&self,command_name:&str,data:&Value,has_capability:impl FnOnce(&Capability)->bool)->Result<CommandSuccess,CommandExecutionError>{let definition=commands::find(command_name).ok_or(CommandExecutionError::UnsupportedCommand)?;if !has_capability(&definition.required_capability){return Err(CommandExecutionError::CapabilityDenied);}let action=definition.prepare(data).map_err(|error|CommandExecutionError::InvalidPayload{code:error.code(),detail:error.detail()})?;self.apply(&action)?;let event_data=match action{CommandAction::SetClimateTemperature{..}=>self.climate_actuator.state().event_data(),_=>self.media_actuator.state().event_data()};Ok(CommandSuccess{event_name:definition.event_name,event_data})}
 fn apply(&self,action:&CommandAction)->Result<(),CommandExecutionError>{let result=match action{CommandAction::Play=>self.media_actuator.play(),CommandAction::Pause=>self.media_actuator.pause(),CommandAction::TogglePlayback=>self.media_actuator.toggle_playback(),CommandAction::NextTrack=>self.media_actuator.next_track(),CommandAction::PreviousTrack=>self.media_actuator.previous_track(),CommandAction::VolumeUp=>self.media_actuator.volume_up(),CommandAction::VolumeDown=>self.media_actuator.volume_down(),CommandAction::SetVolume{volume}=>self.media_actuator.set_volume(*volume),CommandAction::SetClimateTemperature{temperature_c}=>self.climate_actuator.set_temperature(*temperature_c),};result.map_err(|_|CommandExecutionError::ActuatorRejected)}}
-fn climate_state_json(state:&ClimateState)->Value{json!({"temperature_c":state.temperature_c})}
-fn media_state_json(state:&MediaState)->Value{json!({"playback":match state.playback{PlaybackState::Playing=>"playing",PlaybackState::Paused=>"paused"},"volume":state.volume,"track_index":state.track_index})}
 
-#[cfg(test)]mod tests{use super::*;use crate::actuators::{ActuatorError,ClimateActuator,DemoClimateActuator,DemoMediaActuator,MediaActuator};use serde_json::json;use std::sync::Arc;
+#[cfg(test)]mod tests{use super::*;use crate::actuators::{ActuatorError,ClimateActuator,DemoClimateActuator,DemoMediaActuator,MediaActuator,MediaState};use serde_json::json;use std::sync::Arc;
 #[derive(Debug)]struct RejectingClimateActuator;impl ClimateActuator for RejectingClimateActuator{fn set_temperature(&self,_:f64)->Result<(),ActuatorError>{Err(ActuatorError::Rejected("test_rejection"))}fn state(&self)->ClimateState{ClimateState::default()}}
 fn media()->Arc<DemoMediaActuator>{Arc::new(DemoMediaActuator::new())}
 #[test]fn climate_event_contains_resulting_state(){let climate=Arc::new(DemoClimateActuator::new());let executor=CommandExecutor::new(climate.clone(),media());let success=executor.execute("climate.set_temperature",&json!({"temperature_c":21.5}),|cap|cap==&Capability::new("climate.control")).unwrap();assert_eq!(climate.state(),ClimateState{temperature_c:21.5});assert_eq!(success.event_name,"climate.temperature_changed");assert_eq!(success.event_data,json!({"temperature_c":21.5}));}
