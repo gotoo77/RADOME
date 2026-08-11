@@ -1,10 +1,12 @@
 mod actuators;
+mod command_executor;
 mod commands;
 mod hub;
 mod producer;
 mod socketcan;
 
 use actuators::{DemoClimateActuator, SharedClimateActuator};
+use command_executor::{CommandExecutionError, CommandExecutor};
 use futures_util::{SinkExt, StreamExt};
 use hub::ConnectionHub;
 use producer::{publish_bus_frame, run_demo_telemetry, SharedHub, SharedRuntime};
@@ -61,44 +63,47 @@ async fn serve(listener: TcpListener, runtime: SharedRuntime, hub: SharedHub, cl
 async fn handle_connection(stream: TcpStream, runtime: SharedRuntime, hub: SharedHub, climate_actuator: SharedClimateActuator) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let websocket = accept_async(stream).await?; let (mut sink, mut source) = websocket.split(); let (outbound_tx, mut outbound_rx) = mpsc::unbounded_channel::<Envelope>();
     let writer = tokio::spawn(async move { while let Some(envelope) = outbound_rx.recv().await { sink.send(Message::Text(envelope.encode_json()?.into())).await?; } Ok::<(), Box<dyn std::error::Error + Send + Sync>>(()) });
+    let executor = CommandExecutor::new(climate_actuator);
     let mut session = ConnectionSession::default();
-    while let Some(message) = source.next().await { let message = message?; match message { Message::Text(text) => { let responses = match Envelope::decode_json(text.as_ref()) { Ok(incoming) => handle_envelope(&mut session, &runtime, &hub, &outbound_tx, &climate_actuator, incoming), Err(error) => vec![Envelope::new("server-error", MessageType::Error, json!({"reason":format!("{error:?}")}))] }; for response in responses { outbound_tx.send(response).map_err(|_| "websocket writer closed")?; } }, Message::Close(_) => break, _ => {} } }
+    while let Some(message) = source.next().await { let message = message?; match message { Message::Text(text) => { let responses = match Envelope::decode_json(text.as_ref()) { Ok(incoming) => handle_envelope(&mut session, &runtime, &hub, &outbound_tx, &executor, incoming), Err(error) => vec![Envelope::new("server-error", MessageType::Error, json!({"reason":format!("{error:?}")}))] }; for response in responses { outbound_tx.send(response).map_err(|_| "websocket writer closed")?; } }, Message::Close(_) => break, _ => {} } }
     unregister_session(&session, &runtime, &hub); drop(outbound_tx); writer.await??; Ok(())
 }
 
-fn handle_envelope(session: &mut ConnectionSession, runtime: &SharedRuntime, hub: &SharedHub, outbound: &mpsc::UnboundedSender<Envelope>, climate_actuator: &SharedClimateActuator, incoming: Envelope) -> Vec<Envelope> {
+fn handle_envelope(session: &mut ConnectionSession, runtime: &SharedRuntime, hub: &SharedHub, outbound: &mpsc::UnboundedSender<Envelope>, executor: &CommandExecutor, incoming: Envelope) -> Vec<Envelope> {
     let response = match incoming.message_type {
         MessageType::Hello if !session.is_established() => handle_hello(session, incoming),
         MessageType::Hello => error_for(&incoming, "session_already_established"),
         MessageType::CapabilityAnnounce if !session.is_established() => error_for(&incoming, "hello_required"),
         MessageType::CapabilityAnnounce => handle_capability_announce(session, runtime, hub, outbound, incoming),
         MessageType::Command if !session.is_established() => error_for(&incoming, "hello_required"),
-        MessageType::Command => return handle_command(session, runtime, climate_actuator, incoming),
+        MessageType::Command => return handle_command(session, runtime, executor, incoming),
         _ if !session.is_established() => error_for(&incoming, "hello_required"),
         _ => error_for(&incoming, "unsupported_message_type"),
     };
     vec![response]
 }
 
-fn handle_command(session: &ConnectionSession, runtime: &SharedRuntime, climate_actuator: &SharedClimateActuator, incoming: Envelope) -> Vec<Envelope> {
+fn handle_command(session: &ConnectionSession, runtime: &SharedRuntime, executor: &CommandExecutor, incoming: Envelope) -> Vec<Envelope> {
     if incoming.session_id.as_deref() != session.id.as_deref() { return vec![error_for(&incoming, "invalid_session")]; }
     if !session.registered { return vec![error_for(&incoming, "capability_announce_required")]; }
     let Some(name) = incoming.payload.get("name").and_then(Value::as_str) else { return vec![error_for(&incoming, "missing_command_name")]; };
-    let Some(definition) = commands::find(name) else { return vec![command_result(&incoming, "failed", "unsupported_command")]; };
     let client_id = session.client_id.as_deref().expect("established session client id");
-    if !runtime.lock().expect("runtime mutex poisoned").client_can(client_id, &definition.required_capability) { return vec![command_result(&incoming, "failed", "capability_denied")]; }
+    let data = incoming.payload.get("data").unwrap_or(&Value::Null);
 
-    let action = match definition.prepare(incoming.payload.get("data").unwrap_or(&Value::Null)) { Ok(action) => action, Err(error) => return vec![command_error_result(&incoming, &error)] };
-    if let commands::CommandAction::SetClimateTemperature { temperature_c } = &action {
-        if climate_actuator.set_temperature(*temperature_c).is_err() { return vec![command_result(&incoming, "failed", "actuator_rejected")]; }
+    match executor.execute(name, data, |capability| runtime.lock().expect("runtime mutex poisoned").client_can(client_id, capability)) {
+        Ok(success) => {
+            let result = command_result(&incoming, "succeeded", "accepted");
+            let event = Envelope::new(server_id("event"), MessageType::Event, json!({"name":success.event_name,"data":success.event_data}));
+            vec![result, event]
+        }
+        Err(CommandExecutionError::UnsupportedCommand) => vec![command_result(&incoming, "failed", "unsupported_command")],
+        Err(CommandExecutionError::CapabilityDenied) => vec![command_result(&incoming, "failed", "capability_denied")],
+        Err(CommandExecutionError::ActuatorRejected) => vec![command_result(&incoming, "failed", "actuator_rejected")],
+        Err(CommandExecutionError::InvalidPayload { code, detail }) => vec![command_result_payload(&incoming, "failed", json!({"code":code,"detail":detail}))],
     }
-    let result = command_result(&incoming, "succeeded", "accepted");
-    let event = Envelope::new(server_id("event"), MessageType::Event, json!({"name":definition.event_name,"data":definition.event_data(&action)}));
-    vec![result, event]
 }
 
 fn command_result(incoming: &Envelope, outcome: &str, data: &str) -> Envelope { command_result_payload(incoming, outcome, json!(data)) }
-fn command_error_result(incoming: &Envelope, error: &commands::CommandError) -> Envelope { command_result_payload(incoming, "failed", json!({"code":error.code(),"detail":error.detail()})) }
 fn command_result_payload(incoming: &Envelope, outcome: &str, data: Value) -> Envelope { let mut result = Envelope::new(server_id("command-result"), MessageType::CommandResult, json!({"outcome":outcome,"data":data})).correlated_to(incoming.id.clone()); if let Some(session_id) = incoming.session_id.clone() { result = result.in_session(session_id); } result }
 
 fn handle_hello(session: &mut ConnectionSession, incoming: Envelope) -> Envelope { let Some(client_id) = incoming.payload.get("client_id").and_then(Value::as_str) else { return error_for(&incoming, "missing_client_id"); }; let session_id = session.establish(client_id.to_owned()); Envelope::new("server-hello", MessageType::Hello, json!({"server":"radome-server","protocol_version":radome_core::PROTOCOL_VERSION})).correlated_to(incoming.id).in_session(session_id) }
@@ -109,27 +114,23 @@ fn error_for(incoming: &Envelope, reason: &str) -> Envelope { let mut response =
 #[cfg(test)]
 mod tests {
     use super::*;
-    use actuators::{ActuatorError, ClimateActuator};
 
     fn registered_session(runtime: &SharedRuntime, capabilities: &[&str]) -> ConnectionSession { let mut session = ConnectionSession::default(); session.establish("console".into()); session.registered = true; runtime.lock().unwrap().register_client(Client::new("console", Role::new("center-console"), capabilities.iter().copied().map(Capability::new))); session }
     fn command_with_data(session: &ConnectionSession, id: &str, name: &str, data: Value) -> Envelope { Envelope::new(id, MessageType::Command, json!({"name":name,"data":data})).in_session(session.id.clone().unwrap()) }
 
-    #[derive(Debug)] struct RejectingClimateActuator;
-    impl ClimateActuator for RejectingClimateActuator { fn set_temperature(&self, _temperature_c:f64) -> Result<(),ActuatorError> { Err(ActuatorError::Rejected("demo_rejection")) } }
-
     #[test]
-    fn climate_event_is_emitted_only_after_successful_actuation() {
-        let runtime = new_runtime(); let mut session = registered_session(&runtime, &["climate.control"]); let hub = new_hub(); let (tx,_rx)=mpsc::unbounded_channel(); let actuator:SharedClimateActuator=Arc::new(DemoClimateActuator::new());
+    fn server_translates_successful_execution_to_protocol_messages() {
+        let runtime = new_runtime(); let mut session = registered_session(&runtime, &["climate.control"]); let hub = new_hub(); let (tx,_rx)=mpsc::unbounded_channel(); let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()));
         let incoming=command_with_data(&session,"cmd-climate","climate.set_temperature",json!({"temperature_c":21.5}));
-        let responses=handle_envelope(&mut session,&runtime,&hub,&tx,&actuator,incoming);
-        assert_eq!(responses.len(),2); assert_eq!(responses[0].payload["outcome"],"succeeded"); assert_eq!(responses[1].payload["name"],"climate.temperature_changed");
+        let responses=handle_envelope(&mut session,&runtime,&hub,&tx,&executor,incoming);
+        assert_eq!(responses.len(),2); assert_eq!(responses[0].message_type,MessageType::CommandResult); assert_eq!(responses[0].payload["outcome"],"succeeded"); assert_eq!(responses[1].message_type,MessageType::Event); assert_eq!(responses[1].payload["name"],"climate.temperature_changed");
     }
 
     #[test]
-    fn actuator_rejection_returns_failure_without_domain_event() {
-        let runtime=new_runtime(); let mut session=registered_session(&runtime,&["climate.control"]); let hub=new_hub(); let (tx,_rx)=mpsc::unbounded_channel(); let actuator:SharedClimateActuator=Arc::new(RejectingClimateActuator);
+    fn server_translates_execution_failure_without_emitting_event() {
+        let runtime = new_runtime(); let mut session = registered_session(&runtime, &[]); let hub = new_hub(); let (tx,_rx)=mpsc::unbounded_channel(); let executor=CommandExecutor::new(Arc::new(DemoClimateActuator::new()));
         let incoming=command_with_data(&session,"cmd-climate","climate.set_temperature",json!({"temperature_c":21.5}));
-        let responses=handle_envelope(&mut session,&runtime,&hub,&tx,&actuator,incoming);
-        assert_eq!(responses.len(),1); assert_eq!(responses[0].message_type,MessageType::CommandResult); assert_eq!(responses[0].payload["outcome"],"failed"); assert_eq!(responses[0].payload["data"],"actuator_rejected");
+        let responses=handle_envelope(&mut session,&runtime,&hub,&tx,&executor,incoming);
+        assert_eq!(responses.len(),1); assert_eq!(responses[0].message_type,MessageType::CommandResult); assert_eq!(responses[0].payload["outcome"],"failed"); assert_eq!(responses[0].payload["data"],"capability_denied");
     }
 }
