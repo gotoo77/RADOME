@@ -5,6 +5,8 @@ mod hub;
 mod producer;
 mod server;
 mod socketcan;
+#[cfg(test)]
+mod ordering_tests;
 
 use actuators::{DemoClimateActuator, DemoMediaActuator, SharedClimateActuator, SharedMediaActuator};
 use hub::ConnectionHub;
