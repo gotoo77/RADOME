@@ -114,9 +114,91 @@ fn error_for(incoming: &Envelope, reason: &str) -> Envelope { let mut response =
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tokio::time::{timeout, Duration as TokioDuration};
+    use tokio_tungstenite::connect_async;
 
     fn registered_session(runtime: &SharedRuntime, capabilities: &[&str]) -> ConnectionSession { let mut session = ConnectionSession::default(); session.establish("console".into()); session.registered = true; runtime.lock().unwrap().register_client(Client::new("console", Role::new("center-console"), capabilities.iter().copied().map(Capability::new))); session }
     fn command_with_data(session: &ConnectionSession, id: &str, name: &str, data: Value) -> Envelope { Envelope::new(id, MessageType::Command, json!({"name":name,"data":data})).in_session(session.id.clone().unwrap()) }
+
+    async fn send_envelope<S>(socket: &mut tokio_tungstenite::WebSocketStream<S>, envelope: Envelope)
+    where
+        S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin,
+    {
+        socket.send(Message::Text(envelope.encode_json().unwrap().into())).await.unwrap();
+    }
+
+    async fn receive_envelope<S>(socket: &mut tokio_tungstenite::WebSocketStream<S>) -> Envelope
+    where
+        S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin,
+    {
+        let message = timeout(TokioDuration::from_secs(2), socket.next()).await.expect("server response timeout").expect("socket closed").expect("websocket error");
+        let Message::Text(text) = message else { panic!("expected text websocket message") };
+        Envelope::decode_json(text.as_ref()).unwrap()
+    }
+
+    async fn websocket_fixture() -> (tokio_tungstenite::WebSocketStream<tokio_tungstenite::MaybeTlsStream<TcpStream>>, tokio::task::JoinHandle<()>) {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let addr = listener.local_addr().unwrap();
+        let runtime = new_runtime();
+        let hub = new_hub();
+        let actuator = new_climate_actuator();
+        let server = tokio::spawn(async move {
+            let (stream, _) = listener.accept().await.unwrap();
+            handle_connection(stream, runtime, hub, actuator).await.unwrap();
+        });
+        let (socket, _) = connect_async(format!("ws://{addr}")).await.unwrap();
+        (socket, server)
+    }
+
+    async fn establish_client(socket: &mut tokio_tungstenite::WebSocketStream<tokio_tungstenite::MaybeTlsStream<TcpStream>>, capabilities: Value) -> String {
+        send_envelope(socket, Envelope::new("hello-test", MessageType::Hello, json!({"client_id":"integration-console"}))).await;
+        let hello = receive_envelope(socket).await;
+        assert_eq!(hello.message_type, MessageType::Hello);
+        assert_eq!(hello.correlation_id.as_deref(), Some("hello-test"));
+        let session_id = hello.session_id.clone().expect("server session id");
+
+        send_envelope(socket, Envelope::new("caps-test", MessageType::CapabilityAnnounce, json!({"role":"center-console","capabilities":capabilities})).in_session(session_id.clone())).await;
+        let accepted = receive_envelope(socket).await;
+        assert_eq!(accepted.message_type, MessageType::CapabilityAnnounce);
+        assert_eq!(accepted.payload["accepted"], true);
+        session_id
+    }
+
+    #[tokio::test]
+    async fn websocket_client_can_execute_climate_command_end_to_end() {
+        let (mut socket, server) = websocket_fixture().await;
+        let session_id = establish_client(&mut socket, json!(["climate.control"])).await;
+
+        send_envelope(&mut socket, Envelope::new("cmd-climate", MessageType::Command, json!({"name":"climate.set_temperature","data":{"temperature_c":21.5}})).in_session(session_id)).await;
+        let result = receive_envelope(&mut socket).await;
+        let event = receive_envelope(&mut socket).await;
+
+        assert_eq!(result.message_type, MessageType::CommandResult);
+        assert_eq!(result.correlation_id.as_deref(), Some("cmd-climate"));
+        assert_eq!(result.payload["outcome"], "succeeded");
+        assert_eq!(event.message_type, MessageType::Event);
+        assert_eq!(event.payload["name"], "climate.temperature_changed");
+        assert_eq!(event.payload["data"]["temperature_c"], 21.5);
+
+        socket.close(None).await.unwrap();
+        server.await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn websocket_denied_command_emits_no_domain_event() {
+        let (mut socket, server) = websocket_fixture().await;
+        let session_id = establish_client(&mut socket, json!([])).await;
+
+        send_envelope(&mut socket, Envelope::new("cmd-denied", MessageType::Command, json!({"name":"climate.set_temperature","data":{"temperature_c":21.5}})).in_session(session_id)).await;
+        let result = receive_envelope(&mut socket).await;
+        assert_eq!(result.message_type, MessageType::CommandResult);
+        assert_eq!(result.payload["outcome"], "failed");
+        assert_eq!(result.payload["data"], "capability_denied");
+
+        assert!(timeout(TokioDuration::from_millis(100), socket.next()).await.is_err(), "unexpected websocket message after denied command");
+        socket.close(None).await.unwrap();
+        server.await.unwrap();
+    }
 
     #[test]
     fn server_translates_successful_execution_to_protocol_messages() {
