@@ -5,52 +5,109 @@
 > **Démo publique : https://gotoo77.github.io/RADOME/**  
 > Aucun serveur, runtime Rust ou véhicule n'est nécessaire pour essayer le cockpit en simulation.
 
-Le projet explore une architecture dans laquelle les producteurs de données — simulateur aujourd'hui, bus CAN demain — ne pilotent pas directement l'interface. Ils publient des événements métier à travers un protocole commun. Le dashboard, l'enregistrement et le replay consomment tous ce même contrat.
+Le projet explore une architecture dans laquelle les producteurs de données — simulateur, replay ou SocketCAN — ne pilotent pas directement l'interface. Ils publient des événements métier à travers un protocole commun. Le dashboard, l'enregistrement et le replay consomment tous ce même contrat.
 
 L'objectif n'est pas de prétendre fournir aujourd'hui un système embarqué automobile prêt pour la production. RADOME sert à construire et éprouver les briques d'un cockpit observable, reproductible et progressivement connectable à un véhicule réel.
 
 ## État actuel
 
-La génération `radome-2026/` fournit déjà :
+La génération `radome-2026/` fournit :
 
 - un cœur Rust avec runtime, capacités et événements ;
-- un serveur WebSocket RADOME ;
-- une télémétrie véhicule simulée (vitesse et régime moteur) ;
-- un dashboard web avec instrumentation et infotainment ;
+- un serveur WebSocket RADOME versionné ;
+- une télémétrie véhicule simulée et une source SocketCAN Linux ;
+- un mapping CAN configurable et une validation `vcan` en CI ;
+- un SDK JavaScript avec discovery, snapshot, commandes, reconnexion et resynchronisation ;
+- un cockpit web avec Vehicle Info Display, Media Player et Climate Control ;
+- un mode diagnostic séparé de l'IHM normale ;
 - un mode démo utilisable sans serveur ni véhicule, publié sur GitHub Pages ;
-- un contrat canonique de télémétrie partagé par les producteurs et consommateurs ;
-- l'enregistrement de sessions en JSON versionné ;
-- le chargement et le replay déterministe de traces ;
-- un cycle de vie observable du replay (`running`, `complete`, annulation) ;
-- une CI exécutée sur Linux, Windows et macOS.
+- l'enregistrement de sessions en JSON versionné et leur replay déterministe ;
+- une CI Linux/Windows/macOS, plus des smoke tests SocketCAN et serveur ↔ SDK réel.
 
 ## Architecture
 
 Le principe central est de découpler la provenance physique d'une donnée de son usage :
 
 ```text
-          ┌──────────────┐
-          │ Simulateur   │
-          └──────┬───────┘
-                 │
-          ┌──────▼───────┐
-          │ futur CAN    │
-          └──────┬───────┘
-                 │
-                 ▼
-       événements métier RADOME
-                 │
-       ┌─────────┼─────────┐
-       ▼         ▼         ▼
-   Dashboard  Recorder   Replay
-       │                   │
-       └─────────┬─────────┘
-                 ▼
-          modèles d'état
-       véhicule / infotainment
+      simulateur / replay / SocketCAN
+                    │
+                    ▼
+          événements métier RADOME
+                    │
+          ┌─────────┼─────────┐
+          ▼         ▼         ▼
+      Dashboard  Recorder   Replay
+          │                   │
+          └─────────┬─────────┘
+                    ▼
+             modèles d'état
+       véhicule / média / climat
 ```
 
-Le dashboard ne doit donc pas avoir à savoir si `vehicle.speed_changed` provient d'un simulateur, d'une trace enregistrée ou, à terme, d'un adaptateur CAN.
+Le dashboard ne doit donc pas avoir à savoir si `vehicle.speed_changed` provient d'un simulateur, d'une trace enregistrée ou d'un adaptateur CAN.
+
+## Démo publique
+
+La façon la plus simple d'essayer RADOME est :
+
+**https://gotoo77.github.io/RADOME/**
+
+Le site publie le vrai client situé dans `radome-2026/clients/dashboard/` ainsi que son SDK. Le mode simulation fonctionne entièrement dans le navigateur et le replay d'un fichier JSON reste local au navigateur.
+
+## Démo live complète
+
+Pour exercer le vrai serveur Rust et le vrai client JavaScript ensemble :
+
+```bash
+cd radome-2026
+bash scripts/run-live-demo.sh
+```
+
+Puis ouvrir :
+
+```text
+http://127.0.0.1:8000/dashboard/
+```
+
+Le script lance le serveur RADOME sur `ws://127.0.0.1:8787` et sert le cockpit en HTTP local. Le client effectue automatiquement :
+
+```text
+hello → discovery → capability_announce → state_snapshot → connected
+```
+
+Les commandes Media Player et Climate Control sont activées uniquement si elles ont réellement été découvertes. Les changements affichés proviennent ensuite de l'état observé côté serveur, pas d'une mutation optimiste du navigateur.
+
+Le mode diagnostic est disponible séparément :
+
+```text
+http://127.0.0.1:8000/dashboard/?diagnostic
+```
+
+La procédure complète, y compris reconnexion et resynchronisation, est documentée dans `radome-2026/docs/m6-end-to-end-demo.md`.
+
+## Mode live manuel
+
+Le serveur RADOME écoute par défaut sur :
+
+```text
+ws://127.0.0.1:8787
+```
+
+Dans un premier terminal :
+
+```bash
+cd radome-2026
+cargo run -p radome-server
+```
+
+Dans un second :
+
+```bash
+cd radome-2026/clients
+python3 -m http.server 8000
+```
+
+Le dashboard utilise l'adresse WebSocket par défaut hors mode démo. Une autre URL peut être fournie avec le paramètre `ws`.
 
 ## Contrat de télémétrie
 
@@ -62,39 +119,6 @@ vehicle.engine_rpm_changed  engine_rpm=<u16>
 ```
 
 Le cœur Rust construit et décode ces événements via un type `TelemetryEvent`. Le dashboard applique le même contrat : noms, clés et valeurs sont validés plutôt que devinés ou convertis implicitement.
-
-Cette discipline évite que plusieurs dialectes (`speed=`, `speed_kmh=`, valeur brute, etc.) apparaissent silencieusement entre producteurs, fichiers de traces et consommateurs.
-
-## Démo du dashboard
-
-La façon la plus simple d'essayer RADOME est la démo publique :
-
-**https://gotoo77.github.io/RADOME/**
-
-Le site publie le vrai client situé dans `radome-2026/clients/dashboard/` ainsi que son SDK. Il ne maintient donc pas une seconde implémentation spécifique à GitHub Pages.
-
-Le mode simulation fonctionne entièrement dans le navigateur. Le dashboard permet également de charger localement un fichier JSON de replay : le fichier reste côté navigateur et ne nécessite aucun backend RADOME.
-
-Pour exécuter la même démo localement :
-
-```bash
-cd radome-2026/clients
-python3 -m http.server 8000
-```
-
-Puis ouvrir `http://127.0.0.1:8000/dashboard/?mode=demo` dans le navigateur.
-
-## Mode live
-
-Le serveur RADOME écoute par défaut sur :
-
-```text
-ws://127.0.0.1:8787
-```
-
-Le dashboard utilise cette adresse par défaut hors mode démo. Une autre URL WebSocket peut être fournie avec le paramètre `ws`.
-
-Le serveur publie actuellement une télémétrie de démonstration ; cette frontière est destinée à accueillir ensuite une source physique, notamment CAN, sans modifier les modèles du dashboard.
 
 ## Record & replay
 
@@ -124,11 +148,11 @@ Depuis `radome-2026/` :
 
 ```bash
 cargo test --workspace
+node --test clients/dashboard/*.test.mjs
+node --test clients/sdk/*.test.mjs
 ```
 
-Les tests du dashboard utilisent le runner natif de Node.js (`node --test`) et sont également exécutés par la CI du projet.
-
-Le workflow Pages construit en plus un artefact statique contenant la façade, le dashboard et son SDK avant tout déploiement public.
+La CI ajoute un E2E Linux qui construit le vrai `radome-server`, connecte le SDK JavaScript, reçoit la télémétrie, exécute des commandes média et climat, force une reconnexion puis vérifie la resynchronisation par snapshot.
 
 ## Structure
 
@@ -137,22 +161,18 @@ RADOME/
 ├── radome-2026/
 │   ├── crates/
 │   │   ├── radome-core/       # domaine, runtime, télémétrie
-│   │   ├── radome-protocol/   # primitives de protocole
-│   │   └── radome-server/     # serveur WebSocket et producteurs
-│   └── clients/
-│       ├── dashboard/         # cockpit web, démo, record/replay
-│       └── sdk/               # client JavaScript du protocole RADOME
+│   │   └── radome-server/     # serveur WebSocket, actionneurs, SocketCAN
+│   ├── clients/
+│   │   ├── dashboard/         # cockpit web, démo, record/replay
+│   │   └── sdk/               # client JavaScript du protocole RADOME
+│   ├── docs/
+│   └── scripts/
 ├── site/                      # façade publique GitHub Pages
 └── README.md
 ```
 
 ## Direction
 
-Les prochaines étapes naturelles sont :
-
-- améliorer progressivement la façade et l'ergonomie du cockpit ;
-- connecter une véritable source de télémétrie véhicule derrière la frontière existante ;
-- enrichir progressivement le contrat métier sans coupler l'interface au matériel ;
-- continuer à renforcer les propriétés de déterminisme, replay et observabilité.
+Après les fondations protocole, le bus véhicule et le premier cockpit complet, la suite vise surtout le **durcissement d'exploitation** : configuration externe, observabilité structurée, limites de ressources, shutdown propre, charge, packaging Linux et évolution du protocole au-delà de V1.
 
 RADOME avance volontairement par tranches courtes : chaque nouvelle source ou fonctionnalité doit préserver le même principe — **le matériel produit des faits ; le protocole les transporte ; les consommateurs restent découplés de leur origine.**
