@@ -5,42 +5,240 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>RADOME Dashboard</title>
   <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0b0d10; color: #f5f7fa; }
-    main { width: min(900px, 92vw); padding: 2rem 0; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    h1 { letter-spacing: .18em; font-size: 1rem; }
-    #status { font-size: .85rem; opacity: .8; }
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #07090c;
+      color: #f5f7fa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% -20%, rgba(74, 97, 128, .18), transparent 42rem),
+        linear-gradient(180deg, #090c11 0%, #06080b 100%);
+    }
+    main { width: min(1120px, 94vw); padding: 2rem 0 3rem; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.15rem; }
+    h1 { margin: 0; letter-spacing: .24em; font-size: .8rem; font-weight: 650; color: #d8dee8; }
+    #status { font-size: .78rem; opacity: .72; letter-spacing: .05em; }
     #status[data-state="connected"] { opacity: 1; }
-    #status[data-state="demo"], #status[data-state="replay"] { opacity: 1; font-weight: 700; }
-    #status[data-state="error"] { font-weight: 700; }
-    .cluster { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-    .gauge, .media, .tools { padding: 2rem; border: 1px solid #303640; border-radius: 1rem; background: #12161c; }
-    .gauge { text-align: center; }
-    .value { font-size: clamp(4rem, 12vw, 8rem); font-variant-numeric: tabular-nums; line-height: 1; }
-    .unit, .media-source { margin-top: .75rem; opacity: .65; letter-spacing: .12em; }
-    .media { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr auto; gap: .5rem 2rem; align-items: center; }
-    .media-source { margin: 0; font-size: .75rem; }
-    .media-title { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 700; }
-    .media-artist { opacity: .7; }
+    #status[data-state="demo"], #status[data-state="replay"] { opacity: 1; font-weight: 750; }
+    #status[data-state="error"] { font-weight: 750; }
+
+    .vehicle-display {
+      position: relative;
+      overflow: hidden;
+      min-height: 390px;
+      padding: clamp(1.25rem, 3vw, 2.4rem);
+      border: 1px solid #2b3441;
+      border-radius: 1.6rem;
+      background:
+        linear-gradient(115deg, rgba(255, 255, 255, .035), transparent 32%),
+        radial-gradient(circle at 22% 45%, rgba(94, 132, 180, .13), transparent 31rem),
+        #0d1117;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .035);
+      transition: border-color .3s ease, opacity .3s ease;
+    }
+    .vehicle-display::after {
+      content: "";
+      position: absolute;
+      inset: auto -12% -58% 20%;
+      height: 70%;
+      background: radial-gradient(ellipse, rgba(92, 127, 170, .10), transparent 67%);
+      pointer-events: none;
+    }
+    .vehicle-display[data-telemetry="stale"] { border-color: #7a653e; }
+    .vehicle-display[data-telemetry="offline"] { opacity: .68; border-color: #3d424a; }
+    .vehicle-display__meta {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: clamp(2rem, 5vw, 4rem);
+      color: #8d99a8;
+      font-size: .68rem;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+    .vehicle-health {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      letter-spacing: .11em;
+      color: #a6b0bd;
+    }
+    .vehicle-health::before {
+      content: "";
+      width: .48rem;
+      height: .48rem;
+      border-radius: 50%;
+      background: #59616c;
+      box-shadow: 0 0 0 .22rem rgba(89, 97, 108, .12);
+    }
+    .vehicle-health[data-state="live"] { color: #b9ddc7; }
+    .vehicle-health[data-state="live"]::before {
+      background: #6fd19a;
+      box-shadow: 0 0 0 .22rem rgba(111, 209, 154, .12), 0 0 1rem rgba(111, 209, 154, .36);
+      animation: telemetry-pulse 1.8s ease-out infinite;
+    }
+    .vehicle-health[data-state="stale"] { color: #d8bd84; }
+    .vehicle-health[data-state="stale"]::before { background: #c89a49; }
+    .vehicle-health[data-state="offline"] { color: #8c939c; }
+    @keyframes telemetry-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(.72); }
+    }
+
+    .vehicle-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(280px, .8fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: end;
+    }
+    .metric-label {
+      margin-bottom: .6rem;
+      color: #7f8b9a;
+      font-size: .7rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .speed-readout { display: flex; align-items: baseline; gap: .9rem; }
+    .speed-value {
+      font-size: clamp(6rem, 17vw, 11.5rem);
+      font-weight: 720;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.075em;
+      line-height: .79;
+      text-shadow: 0 0 2rem rgba(150, 184, 224, .08);
+    }
+    .speed-unit {
+      color: #9aa6b5;
+      font-size: .85rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .rpm-readout { display: flex; align-items: baseline; gap: .7rem; margin-bottom: 1.1rem; }
+    .rpm-value {
+      font-size: clamp(3.3rem, 8vw, 5.4rem);
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -.055em;
+      line-height: 1;
+    }
+    .rpm-unit { color: #8793a2; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+    .telemetry-track {
+      position: relative;
+      height: .38rem;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #202630;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, .45);
+    }
+    .telemetry-track > span {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #6f8cad, #a8c2de);
+      box-shadow: 0 0 1.2rem rgba(135, 170, 208, .24);
+      transition: width .42s cubic-bezier(.2, .72, .2, 1);
+    }
+    .rpm .telemetry-track > span { background: linear-gradient(90deg, #70859e 0%, #9baec4 72%, #c6a66b 100%); }
+    .telemetry-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: .5rem;
+      color: #596473;
+      font-size: .6rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .speed .telemetry-track { margin-top: 1.7rem; }
+    .vehicle-display[data-motion="moving"] .speed-value { color: #fbfcff; }
+
+    .media, .tools {
+      padding: 1.5rem 1.7rem;
+      border: 1px solid #252d37;
+      border-radius: 1rem;
+      background: #0e1218;
+    }
+    .media { margin-top: 1rem; display: grid; grid-template-columns: 1fr auto; gap: .5rem 2rem; align-items: center; }
+    .media-source { margin: 0; font-size: .72rem; opacity: .58; letter-spacing: .12em; text-transform: uppercase; }
+    .media-title { font-size: clamp(1.35rem, 4vw, 2.2rem); font-weight: 700; }
+    .media-artist { opacity: .66; }
     .media-controls { grid-column: 2; grid-row: 1 / span 3; display: grid; gap: .6rem; justify-items: center; }
-    .media-playback { font-size: .75rem; letter-spacing: .12em; opacity: .6; }
+    .media-playback { font-size: .7rem; letter-spacing: .12em; opacity: .58; }
     .media-playback[data-state="playing"] { opacity: 1; }
-    .tools { margin-top: 1.5rem; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
-    button, .file-button { border: 1px solid #46505e; border-radius: .6rem; background: #1a2029; color: inherit; padding: .65rem .9rem; font: inherit; cursor: pointer; }
+    .tools { margin-top: 1rem; display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+    button, .file-button {
+      border: 1px solid #3b4654;
+      border-radius: .65rem;
+      background: #171d25;
+      color: inherit;
+      padding: .68rem .95rem;
+      font: inherit;
+      cursor: pointer;
+    }
     button:disabled { opacity: .4; cursor: default; }
     .file-button input { display: none; }
-    #recording-state { margin-left: auto; opacity: .65; font-size: .8rem; }
-    @media (max-width: 600px) { .cluster { grid-template-columns: 1fr; } .media { grid-template-columns: 1fr; } .media-controls { grid-column: 1; grid-row: auto; justify-items: start; } #recording-state { width: 100%; margin-left: 0; } }
+    #recording-state { margin-left: auto; opacity: .62; font-size: .78rem; }
+
+    @media (max-width: 760px) {
+      main { width: min(94vw, 620px); padding-top: 1rem; }
+      .vehicle-display { min-height: 0; }
+      .vehicle-display__meta { align-items: flex-start; flex-direction: column; margin-bottom: 2.5rem; }
+      .vehicle-grid { grid-template-columns: 1fr; gap: 2.4rem; }
+      .speed-value { font-size: clamp(6rem, 28vw, 10rem); }
+      .rpm-value { font-size: clamp(3rem, 15vw, 5rem); }
+      .media { grid-template-columns: 1fr; }
+      .media-controls { grid-column: 1; grid-row: auto; justify-items: start; }
+      #recording-state { width: 100%; margin-left: 0; }
+    }
   </style>
 </head>
 <body>
 <main>
-  <header><h1>RADOME // DRIVER DISPLAY</h1><span id="status" data-state="disconnected">déconnecté</span></header>
-  <section class="cluster" aria-label="État du véhicule">
-    <article class="gauge"><div id="speed" class="value">--</div><div class="unit">KM/H</div></article>
-    <article class="gauge"><div id="rpm" class="value">----</div><div class="unit">TR/MIN</div></article>
+  <header>
+    <h1>RADOME // DRIVER DISPLAY</h1>
+    <span id="status" data-state="disconnected">déconnecté</span>
+  </header>
+
+  <section id="vehicle-display" class="vehicle-display" data-telemetry="waiting" data-motion="stationary" aria-label="Informations véhicule">
+    <div class="vehicle-display__meta">
+      <span>Vehicle Info Display</span>
+      <span id="vehicle-health" class="vehicle-health" data-state="waiting">EN ATTENTE DE TÉLÉMÉTRIE</span>
+    </div>
+
+    <div class="vehicle-grid">
+      <article class="metric speed" aria-label="Vitesse véhicule">
+        <div class="metric-label">Vitesse</div>
+        <div class="speed-readout">
+          <span id="speed" class="speed-value">--</span>
+          <span class="speed-unit">km/h</span>
+        </div>
+        <div class="telemetry-track" aria-hidden="true"><span id="speed-bar"></span></div>
+        <div class="telemetry-scale" aria-hidden="true"><span>0</span><span>60</span><span>120</span><span>180</span><span>240</span></div>
+      </article>
+
+      <article class="metric rpm" aria-label="Régime moteur">
+        <div class="metric-label">Régime moteur</div>
+        <div class="rpm-readout">
+          <span id="rpm" class="rpm-value">----</span>
+          <span class="rpm-unit">tr/min</span>
+        </div>
+        <div class="telemetry-track" aria-hidden="true"><span id="rpm-bar"></span></div>
+        <div class="telemetry-scale" aria-hidden="true"><span>0</span><span>2k</span><span>4k</span><span>6k</span><span>8k</span></div>
+      </article>
+    </div>
   </section>
+
   <section class="media" aria-label="Infodivertissement">
     <div id="media-source" class="media-source">Aucune source</div>
     <div id="media-title" class="media-title">Aucun média</div>
@@ -50,6 +248,7 @@
       <button id="media-toggle" type="button" disabled>Play / Pause</button>
     </div>
   </section>
+
   <section class="tools" aria-label="Diagnostic télémétrie">
     <button id="record-start" type="button">Enregistrer</button>
     <button id="record-stop" type="button" disabled>Arrêter + exporter</button>
@@ -84,20 +283,55 @@ mediaToggle.addEventListener('click', async () => {
   finally { mediaToggle.disabled = demoMode; }
 });
 
-if (demoMode) { app.view.status.textContent = 'MODE DÉMO'; app.view.status.dataset.state = 'demo'; }
-recordStart.addEventListener('click', () => { recorder.start(app.client); recordStart.disabled = true; recordStop.disabled = false; recordingState.textContent = 'enregistrement en cours…'; });
-recordStop.addEventListener('click', () => { recorder.stop(); downloadRecording(recorder.toJSON()); recordStart.disabled = false; recordStop.disabled = true; recordingState.textContent = `${recorder.snapshot().length} événement(s) exporté(s)`; });
+if (demoMode) {
+  app.view.status.textContent = 'MODE DÉMO';
+  app.view.status.dataset.state = 'demo';
+}
+recordStart.addEventListener('click', () => {
+  recorder.start(app.client);
+  recordStart.disabled = true;
+  recordStop.disabled = false;
+  recordingState.textContent = 'enregistrement en cours…';
+});
+recordStop.addEventListener('click', () => {
+  recorder.stop();
+  downloadRecording(recorder.toJSON());
+  recordStart.disabled = false;
+  recordStop.disabled = true;
+  recordingState.textContent = `${recorder.snapshot().length} événement(s) exporté(s)`;
+});
 replayFile.addEventListener('change', async () => {
-  const file = replayFile.files?.[0]; if (!file) return;
-  try { const entries = parseTelemetryRecording(await file.text()); recorder.stop(); source.stop(); source = new ReplayTelemetrySource({ app, entries }); app.view.status.textContent = `REPLAY // ${file.name}`; app.view.status.dataset.state = 'replay'; recordingState.textContent = `${entries.length} événement(s) chargés`; source.start(); }
-  catch (error) { app.view.renderError(error); }
-  finally { replayFile.value = ''; }
+  const file = replayFile.files?.[0];
+  if (!file) return;
+  try {
+    const entries = parseTelemetryRecording(await file.text());
+    recorder.stop();
+    source.stop();
+    source = new ReplayTelemetrySource({ app, entries });
+    app.view.status.textContent = `REPLAY // ${file.name}`;
+    app.view.status.dataset.state = 'replay';
+    recordingState.textContent = `${entries.length} événement(s) chargés`;
+    source.start();
+  } catch (error) {
+    app.view.renderError(error);
+  } finally {
+    replayFile.value = '';
+  }
 });
 source.start();
-window.addEventListener('pagehide', () => { recorder.stop(); source.stop(); }, { once: true });
+window.addEventListener('pagehide', () => {
+  recorder.stop();
+  source.stop();
+}, { once: true });
 
 function downloadRecording(json) {
-  const blob = new Blob([json], { type: 'application/json' }); const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `radome-telemetry-${new Date().toISOString().replaceAll(':', '-')}.json`; anchor.click(); URL.revokeObjectURL(url);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = `radome-telemetry-${new Date().toISOString().replaceAll(':', '-')}.json`;
+  anchor.click();
+  URL.revokeObjectURL(url);
 }
 </script>
 </body>
