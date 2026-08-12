@@ -8,6 +8,7 @@ use std::time::Duration;
 const DEFAULT_ADDR: &str = "127.0.0.1:8787";
 const DEFAULT_CAN_INTERFACE: &str = "can0";
 const DEFAULT_CAN_RETRY_MS: u64 = 1_000;
+const DEFAULT_METRICS_INTERVAL_MS: u64 = 30_000;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TelemetrySource {
@@ -32,6 +33,7 @@ pub struct TelemetryConfig {
 pub struct ServerConfig {
     pub listen_addr: String,
     pub telemetry: TelemetryConfig,
+    pub metrics_interval: Duration,
     pub config_path: Option<PathBuf>,
 }
 
@@ -40,6 +42,7 @@ pub struct ServerConfig {
 struct FileConfig {
     listen_addr: Option<String>,
     telemetry: Option<FileTelemetryConfig>,
+    metrics_interval_ms: Option<u64>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -77,6 +80,7 @@ fn collect_environment() -> Result<BTreeMap<String, String>, String> {
         "RADOME_CAN_INTERFACE",
         "RADOME_CAN_RETRY_MS",
         "RADOME_CAN_PROFILE",
+        "RADOME_METRICS_INTERVAL_MS",
     ];
 
     let mut vars = BTreeMap::new();
@@ -143,6 +147,16 @@ fn resolve(
         return Err("SocketCAN retry_ms must be greater than zero".to_owned());
     }
 
+    let metrics_interval_ms = match vars.get("RADOME_METRICS_INTERVAL_MS") {
+        Some(value) => value
+            .parse::<u64>()
+            .map_err(|_| format!("invalid RADOME_METRICS_INTERVAL_MS: {value}"))?,
+        None => file.metrics_interval_ms.unwrap_or(DEFAULT_METRICS_INTERVAL_MS),
+    };
+    if metrics_interval_ms == 0 {
+        return Err("metrics_interval_ms must be greater than zero".to_owned());
+    }
+
     let profile = match vars.get("RADOME_CAN_PROFILE") {
         Some(path) => Some(non_empty_path(path, "RADOME_CAN_PROFILE")?),
         None => match socketcan.profile {
@@ -164,6 +178,7 @@ fn resolve(
                 profile,
             },
         },
+        metrics_interval: Duration::from_millis(metrics_interval_ms),
         config_path,
     })
 }
@@ -226,6 +241,7 @@ mod tests {
         assert_eq!(config.telemetry.socketcan.interface, "can0");
         assert_eq!(config.telemetry.socketcan.retry_delay, Duration::from_secs(1));
         assert_eq!(config.telemetry.socketcan.profile, None);
+        assert_eq!(config.metrics_interval, Duration::from_secs(30));
     }
 
     #[test]
@@ -233,6 +249,7 @@ mod tests {
         let file = parse_file(
             r#"{
                 "listen_addr": "0.0.0.0:9000",
+                "metrics_interval_ms": 2500,
                 "telemetry": {
                     "source": "socketcan",
                     "socketcan": {
@@ -254,6 +271,7 @@ mod tests {
         assert_eq!(config.telemetry.source, TelemetrySource::SocketCan);
         assert_eq!(config.telemetry.socketcan.interface, "vcan0");
         assert_eq!(config.telemetry.socketcan.retry_delay, Duration::from_millis(250));
+        assert_eq!(config.metrics_interval, Duration::from_millis(2500));
         assert_eq!(
             config.telemetry.socketcan.profile,
             Some(PathBuf::from("/etc/radome/can-profile.json"))
@@ -265,6 +283,7 @@ mod tests {
         let file = parse_file(
             r#"{
                 "listen_addr": "0.0.0.0:9000",
+                "metrics_interval_ms": 5000,
                 "telemetry": {
                     "source": "socketcan",
                     "socketcan": {"interface": "can0", "retry_ms": 5000}
@@ -280,6 +299,7 @@ mod tests {
                 ("RADOME_CAN_INTERFACE", "vcan42"),
                 ("RADOME_CAN_RETRY_MS", "25"),
                 ("RADOME_CAN_PROFILE", "override.json"),
+                ("RADOME_METRICS_INTERVAL_MS", "75"),
             ]),
         )
         .unwrap();
@@ -288,6 +308,7 @@ mod tests {
         assert_eq!(config.telemetry.source, TelemetrySource::Demo);
         assert_eq!(config.telemetry.socketcan.interface, "vcan42");
         assert_eq!(config.telemetry.socketcan.retry_delay, Duration::from_millis(25));
+        assert_eq!(config.metrics_interval, Duration::from_millis(75));
         assert_eq!(
             config.telemetry.socketcan.profile,
             Some(PathBuf::from("override.json"))
@@ -311,6 +332,14 @@ mod tests {
         )
         .unwrap_err()
         .contains("greater than zero"));
+
+        assert!(resolve(
+            Some(parse_file(r#"{"metrics_interval_ms":0}"#)),
+            None,
+            &BTreeMap::new(),
+        )
+        .unwrap_err()
+        .contains("metrics_interval_ms"));
 
         assert!(serde_json::from_str::<FileConfig>(r#"{"surprise":true}"#).is_err());
     }
