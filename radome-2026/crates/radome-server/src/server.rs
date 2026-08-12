@@ -1,6 +1,8 @@
 use crate::actuators::{SharedClimateActuator, SharedMediaActuator};
 use crate::command_executor::{CommandExecutionError, CommandExecutor};
 use crate::commands;
+use crate::config::ConnectionLimits;
+use crate::metrics::process_metrics;
 use crate::producer::{SharedHub, SharedRuntime};
 use futures_util::{SinkExt, StreamExt};
 use radome_core::{
@@ -14,8 +16,6 @@ use std::sync::Arc;
 use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::mpsc;
 use tokio_tungstenite::{accept_async, tungstenite::Message};
-
-const OUTBOUND_QUEUE_CAPACITY: usize = 128;
 
 static NEXT_SESSION_ID: AtomicU64 = AtomicU64::new(1);
 static NEXT_SERVER_MESSAGE_ID: AtomicU64 = AtomicU64::new(1);
@@ -32,9 +32,18 @@ struct ConnectionSession {
     client_id: Option<String>,
     registered: bool,
     command_cache: BTreeMap<String, CachedCommand>,
+    limits: ConnectionLimits,
+    close_after_response: bool,
 }
 
 impl ConnectionSession {
+    fn with_limits(limits: ConnectionLimits) -> Self {
+        Self {
+            limits,
+            ..Self::default()
+        }
+    }
+
     fn is_established(&self) -> bool {
         self.id.is_some()
     }
@@ -62,6 +71,25 @@ pub async fn serve(
     climate_actuator: SharedClimateActuator,
     media_actuator: SharedMediaActuator,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    serve_with_limits(
+        listener,
+        runtime,
+        hub,
+        climate_actuator,
+        media_actuator,
+        ConnectionLimits::default(),
+    )
+    .await
+}
+
+pub async fn serve_with_limits(
+    listener: TcpListener,
+    runtime: SharedRuntime,
+    hub: SharedHub,
+    climate_actuator: SharedClimateActuator,
+    media_actuator: SharedMediaActuator,
+    limits: ConnectionLimits,
+) -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let (stream, peer) = listener.accept().await?;
         let runtime = Arc::clone(&runtime);
@@ -69,8 +97,15 @@ pub async fn serve(
         let climate_actuator = Arc::clone(&climate_actuator);
         let media_actuator = Arc::clone(&media_actuator);
         tokio::spawn(async move {
-            if let Err(error) =
-                handle_connection(stream, runtime, hub, climate_actuator, media_actuator).await
+            if let Err(error) = handle_connection(
+                stream,
+                runtime,
+                hub,
+                climate_actuator,
+                media_actuator,
+                limits,
+            )
+            .await
             {
                 tracing::warn!(peer = %peer, error = %error, "connection_closed_with_error");
             }
@@ -84,14 +119,13 @@ async fn handle_connection(
     hub: SharedHub,
     climate_actuator: SharedClimateActuator,
     media_actuator: SharedMediaActuator,
+    limits: ConnectionLimits,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let websocket = accept_async(stream).await?;
     let (mut sink, mut source) = websocket.split();
 
-    // Une connexion lente ne peut plus faire croître une file en mémoire sans
-    // limite. Les réponses directes attendent de la capacité ; les événements
-    // asynchrones du hub utilisent try_send et peuvent être abandonnés.
-    let (outbound_tx, mut outbound_rx) = mpsc::channel::<Envelope>(OUTBOUND_QUEUE_CAPACITY);
+    let (outbound_tx, mut outbound_rx) =
+        mpsc::channel::<Envelope>(limits.outbound_queue_capacity);
     let writer = tokio::spawn(async move {
         while let Some(envelope) = outbound_rx.recv().await {
             sink.send(Message::Text(envelope.encode_json()?.into())).await?;
@@ -100,7 +134,7 @@ async fn handle_connection(
     });
 
     let executor = CommandExecutor::new(climate_actuator, media_actuator);
-    let mut session = ConnectionSession::default();
+    let mut session = ConnectionSession::with_limits(limits);
 
     while let Some(message) = source.next().await {
         let message = message?;
@@ -134,6 +168,10 @@ async fn handle_connection(
                         .send(response)
                         .await
                         .map_err(|_| "websocket writer closed")?;
+                }
+
+                if session.close_after_response {
+                    break;
                 }
             }
             Message::Close(_) => break,
@@ -249,6 +287,21 @@ fn handle_command(
         }
         return vec![error_for(&incoming, ProtocolErrorCode::MessageIdConflict)];
     }
+    if session.command_cache.len() >= session.limits.command_cache_capacity {
+        process_metrics().record_connection_limit_rejection();
+        session.close_after_response = true;
+        tracing::warn!(
+            session_id = session.id.as_deref().unwrap_or("unknown"),
+            client_id = session.client_id.as_deref().unwrap_or("unknown"),
+            limit = session.limits.command_cache_capacity,
+            "connection_command_cache_limit_reached"
+        );
+        return vec![command_result_payload(
+            &incoming,
+            "failed",
+            json!({"code": "resource_limit", "detail": "command_cache_capacity"}),
+        )];
+    }
 
     let responses = if let Some(name) = incoming.payload.get("name").and_then(Value::as_str) {
         let client_id = session
@@ -351,6 +404,14 @@ fn handle_capability_announce(
     let Some(values) = incoming.payload.get("capabilities").and_then(Value::as_array) else {
         return error_for(&incoming, ProtocolErrorCode::MissingCapabilities);
     };
+    if values.len() > session.limits.max_capabilities {
+        process_metrics().record_connection_limit_rejection();
+        return error_for_with_detail(
+            &incoming,
+            ProtocolErrorCode::InvalidCapabilities,
+            "too_many_capabilities",
+        );
+    }
     let Some(capabilities) = values.iter().map(Value::as_str).collect::<Option<Vec<_>>>() else {
         return error_for(&incoming, ProtocolErrorCode::InvalidCapabilities);
     };
@@ -403,8 +464,19 @@ fn standalone_error(payload: ProtocolErrorPayload) -> Envelope {
 }
 
 fn error_for(incoming: &Envelope, code: ProtocolErrorCode) -> Envelope {
-    let mut response = standalone_error(ProtocolErrorPayload::new(code))
-        .correlated_to(incoming.id.clone());
+    correlated_error(incoming, ProtocolErrorPayload::new(code))
+}
+
+fn error_for_with_detail(
+    incoming: &Envelope,
+    code: ProtocolErrorCode,
+    detail: impl Into<String>,
+) -> Envelope {
+    correlated_error(incoming, ProtocolErrorPayload::with_detail(code, detail))
+}
+
+fn correlated_error(incoming: &Envelope, payload: ProtocolErrorPayload) -> Envelope {
+    let mut response = standalone_error(payload).correlated_to(incoming.id.clone());
     if let Some(session_id) = incoming.session_id.clone() {
         response = response.in_session(session_id);
     }
@@ -470,11 +542,20 @@ mod tests {
         tokio_tungstenite::WebSocketStream<tokio_tungstenite::MaybeTlsStream<TcpStream>>,
         tokio::task::JoinHandle<()>,
     ) {
+        fixture_with_limits(ConnectionLimits::default()).await
+    }
+
+    async fn fixture_with_limits(
+        limits: ConnectionLimits,
+    ) -> (
+        tokio_tungstenite::WebSocketStream<tokio_tungstenite::MaybeTlsStream<TcpStream>>,
+        tokio::task::JoinHandle<()>,
+    ) {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let addr = listener.local_addr().unwrap();
         let server = tokio::spawn(async move {
             let (stream, _) = listener.accept().await.unwrap();
-            handle_connection(stream, runtime(), hub(), climate(), media())
+            handle_connection(stream, runtime(), hub(), climate(), media(), limits)
                 .await
                 .unwrap();
         });
@@ -881,6 +962,98 @@ mod tests {
             .await
             .is_err());
         socket.close(None).await.unwrap();
+        server.await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn capability_limit_rejects_oversized_announce_without_killing_the_session() {
+        let limits = ConnectionLimits {
+            max_capabilities: 1,
+            ..ConnectionLimits::default()
+        };
+        let (mut socket, server) = fixture_with_limits(limits).await;
+        let session_id = hello(&mut socket).await;
+
+        send(
+            &mut socket,
+            Envelope::new(
+                "caps-too-many",
+                MessageType::CapabilityAnnounce,
+                json!({
+                    "role": "center-console",
+                    "capabilities": ["media.control", "climate.control"]
+                }),
+            )
+            .in_session(session_id.clone()),
+        )
+        .await;
+        let rejected = receive(&mut socket).await;
+        assert_eq!(rejected.message_type, MessageType::Error);
+        assert_eq!(rejected.payload["code"], "invalid_capabilities");
+        assert_eq!(rejected.payload["detail"], "too_many_capabilities");
+
+        send(
+            &mut socket,
+            Envelope::new(
+                "caps-within-limit",
+                MessageType::CapabilityAnnounce,
+                json!({"role": "center-console", "capabilities": ["media.control"]}),
+            )
+            .in_session(session_id),
+        )
+        .await;
+        assert_eq!(receive(&mut socket).await.payload["accepted"], true);
+        socket.close(None).await.unwrap();
+        server.await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn command_cache_limit_keeps_cached_replay_then_closes_on_new_command() {
+        let limits = ConnectionLimits {
+            command_cache_capacity: 1,
+            ..ConnectionLimits::default()
+        };
+        let (mut socket, server) = fixture_with_limits(limits).await;
+        let session_id = establish(&mut socket, json!(["media.control"])).await;
+        let first = Envelope::new(
+            "limited-command-1",
+            MessageType::Command,
+            json!({"name": "media.next_track"}),
+        )
+        .in_session(session_id.clone());
+
+        send(&mut socket, first.clone()).await;
+        let first_result = receive(&mut socket).await;
+        let first_event = receive(&mut socket).await;
+        assert_eq!(first_event.payload["data"]["track_index"], 1);
+
+        send(&mut socket, first).await;
+        assert_eq!(receive(&mut socket).await, first_result);
+        assert_eq!(receive(&mut socket).await, first_event);
+
+        send(
+            &mut socket,
+            Envelope::new(
+                "limited-command-2",
+                MessageType::Command,
+                json!({"name": "media.previous_track"}),
+            )
+            .in_session(session_id),
+        )
+        .await;
+        let rejected = receive(&mut socket).await;
+        assert_eq!(rejected.message_type, MessageType::CommandResult);
+        assert_eq!(rejected.payload["outcome"], "failed");
+        assert_eq!(rejected.payload["data"]["code"], "resource_limit");
+        assert_eq!(
+            rejected.payload["data"]["detail"],
+            "command_cache_capacity"
+        );
+
+        let closed = timeout(Duration::from_secs(2), socket.next())
+            .await
+            .expect("server must close the exhausted session");
+        assert!(closed.is_none() || closed.is_some_and(|message| message.is_ok()));
         server.await.unwrap();
     }
 }
