@@ -1,0 +1,11 @@
+{
+  "listen_addr": "127.0.0.1:8787",
+  "telemetry": {
+    "source": "demo",
+    "socketcan": {
+      "interface": "can0",
+      "retry_ms": 1000,
+      "profile": "can-profile.example.json"
+    }
+  }
+}
