@@ -12,7 +12,7 @@ Le principe de progression est simple : avancer par **tranches verticales testab
 | M1 | Serveur temps réel et télémétrie | ✅ Terminé |
 | M2 | Commandes et actionneurs | ✅ Terminé |
 | M3 | Discovery, état et bootstrap dynamique | ✅ Terminé |
-| M4 | Robustesse et cohérence du protocole | 🚧 En cours |
+| M4 | Robustesse et cohérence du protocole | ✅ Terminé |
 | M5 | Bus véhicule réel | ⏳ À venir |
 | M6 | Premier client RADOME réel et IHM véhicule | ⏳ À venir |
 | M7 | Durcissement et exploitation | ⏳ À venir |
@@ -129,13 +129,13 @@ Un client peut découvrir ce que le serveur propose, annoncer dynamiquement ce q
 
 ---
 
-## M4 — Robustesse et cohérence du protocole 🚧
+## M4 — Robustesse et cohérence du protocole ✅
 
 ### Objectif
 
 Passer d'un protocole fonctionnel à un protocole dont les invariants sont suffisamment stricts pour supporter reconnexions, reprise d'état et clients multiples sans ambiguïté.
 
-### Tranches prévues
+### Tranches réalisées
 
 - [x] **Contexte de session des événements de commande** : un événement produit à la suite d'une commande WebSocket conserve la `session_id` de la commande d'origine ;
 - [x] **Causalité explicite des événements issus de commande** : l'événement porte la corrélation vers la commande causale ;
@@ -144,15 +144,17 @@ Passer d'un protocole fonctionnel à un protocole dont les invariants sont suffi
 - [x] **Idempotence des commandes** : une retransmission exacte d'une commande dans la même session rejoue les mêmes réponses sans seconde actuation ; une réutilisation conflictuelle d'un ID est refusée ;
 - [x] **Reconnexion** : le `client_id` logique peut être réutilisé mais chaque nouvelle connexion obtient une nouvelle `session_id`, réannonce ses capabilities et conserve l'état serveur ;
 - [x] **Resynchronisation** : le workflow canonique refait le bootstrap puis utilise le snapshot comme barrière de vérité avant de reprendre événements et commandes ;
-- [ ] **Tests multi-clients** : vérifier isolation de session, routage et absence de fuite de contexte entre clients.
+- [x] **Tests multi-clients** : isolation des sessions, caches d'idempotence distincts, absence de fuite des réponses de commande et routage de télémétrie selon l'éligibilité sont couverts en E2E.
 
 ### Critère de sortie
 
-Un client peut perdre puis rétablir sa connexion, récupérer un état cohérent et reprendre sans double exécution ni ambiguïté de causalité ou de session.
+Un client peut perdre puis rétablir sa connexion, récupérer un état cohérent et reprendre sans double exécution ni ambiguïté de causalité ou de session. Plusieurs clients peuvent coexister en conservant chacun leur contexte protocolaire tout en observant le même état système partagé.
 
-### Prochaine tranche
+**État : atteint.**
 
-`feature/multi-client-isolation`
+### Prochaine milestone
+
+**M5 — Bus véhicule réel.** Avant de choisir la première tranche, comparer la roadmap avec l'implémentation SocketCAN déjà présente afin de ne pas refaire ce qui existe.
 
 ---
 
