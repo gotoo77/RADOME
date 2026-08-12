@@ -213,15 +213,16 @@ Le premier client doit servir à la fois de démonstrateur du protocole et de pr
   - perte de télémétrie détectée par fraîcheur temporelle ;
   - présentation responsive pensée pour une lecture rapide de type écran embarqué, sans JSON brut.
 
-- [ ] **M6.3 — Media Player**
-  - composant visuel dédié ;
-  - play / pause ;
+- [x] **M6.3 — Media Player**
+  - composant visuel dédié et tactile ;
+  - lecture / pause ;
   - précédent / suivant ;
   - volume + / - ;
-  - réglage direct du volume ;
+  - réglage direct du volume de 0 à 100 ;
   - état de lecture, volume et index de piste synchronisés depuis snapshot + événements ;
+  - contrôles activés uniquement pour les commandes réellement découvertes ;
   - retour visuel immédiat sur les commandes en attente, réussies ou refusées ;
-  - ergonomie tactile avec contrôles suffisamment grands ;
+  - aucune mutation optimiste de l'état réel : l'événement d'actionneur réconcilie l'UI ;
   - identité visuelle cohérente avec le Vehicle Info Display.
 
 - [ ] **M6.4 — Climate Control**
