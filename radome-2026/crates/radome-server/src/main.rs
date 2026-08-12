@@ -1,6 +1,7 @@
 mod actuators;
 mod command_executor;
 mod commands;
+mod config;
 mod hub;
 mod producer;
 mod server;
@@ -11,6 +12,7 @@ mod ordering_tests;
 use actuators::{
     DemoClimateActuator, DemoMediaActuator, SharedClimateActuator, SharedMediaActuator,
 };
+use config::{ServerConfig, SocketCanConfig, TelemetrySource};
 use hub::ConnectionHub;
 use producer::{
     publish_next_bus_frame, run_demo_telemetry, SharedHub, SharedRuntime, VehicleSourceError,
@@ -19,12 +21,10 @@ use radome_core::runtime::Runtime;
 use radome_core::vehicle_bus::{CanSignal, ConfigurableCanAdapter};
 use radome_core::{Capability, SystemCapabilities};
 use serde_json::Value;
+use std::path::Path;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 use tokio::net::TcpListener;
-
-const DEFAULT_ADDR: &str = "127.0.0.1:8787";
-const DEFAULT_CAN_RETRY_MS: u64 = 1_000;
 
 fn new_runtime() -> SharedRuntime {
     Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([
@@ -46,48 +46,38 @@ fn new_media_actuator() -> SharedMediaActuator {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = std::env::var("RADOME_ADDR").unwrap_or_else(|_| DEFAULT_ADDR.to_owned());
-    let listener = TcpListener::bind(&addr).await?;
+    let config = ServerConfig::load().map_err(|error| {
+        std::io::Error::new(std::io::ErrorKind::InvalidInput, error)
+    })?;
+    let listener = TcpListener::bind(&config.listen_addr).await?;
     let runtime = new_runtime();
     let hub = new_hub();
     let climate_actuator = new_climate_actuator();
     let media_actuator = new_media_actuator();
 
-    start_telemetry_source(Arc::clone(&runtime), Arc::clone(&hub))?;
-    println!("RADOME server listening on ws://{addr}");
+    start_telemetry_source(&config, Arc::clone(&runtime), Arc::clone(&hub))?;
+    if let Some(path) = &config.config_path {
+        println!("RADOME configuration: {}", path.display());
+    } else {
+        println!("RADOME configuration: defaults + environment");
+    }
+    println!("RADOME server listening on ws://{}", config.listen_addr);
     server::serve(listener, runtime, hub, climate_actuator, media_actuator).await
 }
 
 fn start_telemetry_source(
+    config: &ServerConfig,
     runtime: SharedRuntime,
     hub: SharedHub,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let source = std::env::var("RADOME_TELEMETRY_SOURCE").unwrap_or_else(|_| "demo".to_owned());
-    match source.as_str() {
-        "demo" => {
+    match config.telemetry.source {
+        TelemetrySource::Demo => {
             tokio::spawn(run_demo_telemetry(runtime, hub, Duration::from_secs(1)));
             println!("RADOME telemetry source: demo");
             Ok(())
         }
-        "socketcan" => start_socketcan(runtime, hub),
-        other => Err(format!("unknown RADOME_TELEMETRY_SOURCE: {other}").into()),
+        TelemetrySource::SocketCan => start_socketcan(&config.telemetry.socketcan, runtime, hub),
     }
-}
-
-fn parse_can_retry_delay(value: &str) -> Result<Duration, String> {
-    let milliseconds = value
-        .parse::<u64>()
-        .map_err(|_| format!("invalid RADOME_CAN_RETRY_MS: {value}"))?;
-    if milliseconds == 0 {
-        return Err("RADOME_CAN_RETRY_MS must be greater than zero".to_owned());
-    }
-    Ok(Duration::from_millis(milliseconds))
-}
-
-fn can_retry_delay() -> Result<Duration, Box<dyn std::error::Error>> {
-    let value = std::env::var("RADOME_CAN_RETRY_MS")
-        .unwrap_or_else(|_| DEFAULT_CAN_RETRY_MS.to_string());
-    parse_can_retry_delay(&value).map_err(Into::into)
 }
 
 fn parse_can_frame_id(value: &Value) -> Result<u32, String> {
@@ -151,28 +141,21 @@ fn parse_can_profile(contents: &str) -> Result<ConfigurableCanAdapter, String> {
         .map_err(|error| format!("invalid CAN profile mapping: {error:?}"))
 }
 
-fn configured_can_adapter() -> Result<(ConfigurableCanAdapter, String), String> {
-    match std::env::var("RADOME_CAN_PROFILE") {
-        Ok(path) => {
-            if path.trim().is_empty() {
-                return Err("RADOME_CAN_PROFILE cannot be empty".to_owned());
-            }
-            let contents = std::fs::read_to_string(&path)
-                .map_err(|error| format!("cannot read CAN profile `{path}`: {error}"))?;
+fn configured_can_adapter(profile: Option<&Path>) -> Result<(ConfigurableCanAdapter, String), String> {
+    match profile {
+        Some(path) => {
+            let contents = std::fs::read_to_string(path)
+                .map_err(|error| format!("cannot read CAN profile `{}`: {error}", path.display()))?;
             let adapter = parse_can_profile(&contents)?;
-            Ok((adapter, path))
+            Ok((adapter, path.display().to_string()))
         }
-        Err(std::env::VarError::NotPresent) => {
-            Ok((ConfigurableCanAdapter::demo(), "builtin-demo".to_owned()))
-        }
-        Err(std::env::VarError::NotUnicode(_)) => {
-            Err("RADOME_CAN_PROFILE is not valid Unicode".to_owned())
-        }
+        None => Ok((ConfigurableCanAdapter::demo(), "builtin-demo".to_owned())),
     }
 }
 
 #[cfg(target_os = "linux")]
 fn start_socketcan(
+    config: &SocketCanConfig,
     runtime: SharedRuntime,
     hub: SharedHub,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -180,12 +163,9 @@ fn start_socketcan(
         source_error_requires_reconnect, ReconnectingVehicleSource, SocketCanSource,
     };
 
-    let interface = std::env::var("RADOME_CAN_INTERFACE").unwrap_or_else(|_| "can0".to_owned());
-    if interface.as_bytes().contains(&0) {
-        return Err("RADOME_CAN_INTERFACE contains an invalid NUL byte".into());
-    }
-    let retry_delay = can_retry_delay()?;
-    let (adapter, profile) = configured_can_adapter().map_err(|error| {
+    let interface = config.interface.clone();
+    let retry_delay = config.retry_delay;
+    let (adapter, profile) = configured_can_adapter(config.profile.as_deref()).map_err(|error| {
         std::io::Error::new(std::io::ErrorKind::InvalidInput, error)
     })?;
     let interface_for_open = interface.clone();
@@ -222,6 +202,7 @@ fn start_socketcan(
 
 #[cfg(not(target_os = "linux"))]
 fn start_socketcan(
+    _config: &SocketCanConfig,
     _runtime: SharedRuntime,
     _hub: SharedHub,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -231,20 +212,6 @@ fn start_socketcan(
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn can_retry_delay_is_explicit_and_non_zero() {
-        assert_eq!(
-            parse_can_retry_delay("1000").unwrap(),
-            Duration::from_secs(1)
-        );
-        assert_eq!(
-            parse_can_retry_delay("25").unwrap(),
-            Duration::from_millis(25)
-        );
-        assert!(parse_can_retry_delay("0").is_err());
-        assert!(parse_can_retry_delay("later").is_err());
-    }
 
     #[test]
     fn can_profile_accepts_decimal_and_hexadecimal_ids() {
