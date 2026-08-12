@@ -15,7 +15,7 @@ Le principe de progression est simple : avancer par **tranches verticales testab
 | M4 | Robustesse et cohérence du protocole | ✅ Terminé |
 | M5 | Bus véhicule réel | ✅ Terminé côté logiciel |
 | M6 | Premier client RADOME réel et IHM véhicule | ✅ Terminé |
-| M7 | Durcissement et exploitation | ⏳ À venir |
+| M7 | Durcissement et exploitation | 🚧 En cours |
 
 ---
 
@@ -276,7 +276,7 @@ Une application distincte du serveur peut se bootstrapper depuis le protocole pu
 
 ---
 
-## M7 — Durcissement et exploitation ⏳
+## M7 — Durcissement et exploitation 🚧
 
 ### Objectif
 
@@ -284,7 +284,7 @@ Rendre RADOME exploitable comme service de longue durée et préparer les extens
 
 ### Tranches prévues
 
-- [ ] configuration externe ;
+- [x] **configuration externe** : modèle `ServerConfig`, fichier JSON via `RADOME_CONFIG`, valeurs par défaut, surcharge par variables d'environnement, validation avant démarrage et profil CAN relatif au fichier ;
 - [ ] `tracing` structuré ;
 - [ ] métriques essentielles ;
 - [ ] backpressure ;
@@ -299,6 +299,8 @@ Rendre RADOME exploitable comme service de longue durée et préparer les extens
 ### Critère de sortie
 
 Le serveur peut être lancé, observé, arrêté et diagnostiqué proprement dans un environnement Linux réel, avec un comportement défini sous charge et en cas de défaillance réseau.
+
+**État : en cours.** La prochaine tranche recommandée est le `tracing` structuré.
 
 ---
 
