@@ -137,7 +137,7 @@ mod tests {
     fn connected_dashboard() -> (
         SharedRuntime,
         SharedHub,
-        mpsc::UnboundedReceiver<radome_core::Envelope>,
+        mpsc::Receiver<radome_core::Envelope>,
     ) {
         let runtime = Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([
             Capability::new("vehicle.telemetry"),
@@ -147,7 +147,7 @@ mod tests {
             Role::new("driver-display"),
             [Capability::new("display")],
         ));
-        let (tx, rx) = mpsc::unbounded_channel();
+        let (tx, rx) = mpsc::channel(16);
         let hub = Arc::new(Mutex::new(ConnectionHub::default()));
         hub.lock().unwrap().register("dashboard", tx);
         (runtime, hub, rx)
