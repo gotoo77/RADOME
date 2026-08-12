@@ -172,3 +172,98 @@ async fn reconnecting_same_client_gets_fresh_session_without_resetting_server_st
 
     second.close(None).await.unwrap();
 }
+
+#[tokio::test]
+async fn reconnect_snapshot_then_resume_restores_an_operational_client() {
+    let addr = free_addr();
+    let _server = spawn_server(&addr);
+
+    let mut first = connect(&addr).await;
+    let first_session = hello(&mut first, "hello-before-resync").await;
+    announce_media(&mut first, &first_session).await;
+
+    send(
+        &mut first,
+        Envelope::new(
+            "cmd-set-volume-before-loss",
+            MessageType::Command,
+            json!({"name":"media.set_volume","data":{"volume":72}}),
+        )
+        .in_session(first_session.clone()),
+    )
+    .await;
+    assert_eq!(receive(&mut first).await.payload["outcome"], "succeeded");
+    assert_eq!(receive(&mut first).await.payload["data"]["volume"], 72);
+
+    first.close(None).await.unwrap();
+    sleep(Duration::from_millis(50)).await;
+
+    let mut second = connect(&addr).await;
+    let second_session = hello(&mut second, "hello-resync").await;
+    assert_ne!(second_session, first_session);
+
+    send(
+        &mut second,
+        Envelope::new("resync-discovery", MessageType::DiscoveryRequest, json!({}))
+            .in_session(second_session.clone()),
+    )
+    .await;
+    let discovery = receive(&mut second).await;
+    assert_eq!(discovery.message_type, MessageType::DiscoveryResult);
+    assert!(discovery.payload["capabilities"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|capability| capability == "media.control"));
+
+    announce_media(&mut second, &second_session).await;
+
+    send(
+        &mut second,
+        Envelope::new(
+            "resync-snapshot",
+            MessageType::StateSnapshotRequest,
+            json!({}),
+        )
+        .in_session(second_session.clone()),
+    )
+    .await;
+    let snapshot = receive(&mut second).await;
+    assert_eq!(snapshot.message_type, MessageType::StateSnapshot);
+    assert_eq!(snapshot.session_id.as_deref(), Some(second_session.as_str()));
+    assert_eq!(snapshot.payload["media"]["playback"], "paused");
+    assert_eq!(snapshot.payload["media"]["volume"], 72);
+    assert_eq!(snapshot.payload["media"]["track_index"], 0);
+
+    send(
+        &mut second,
+        Envelope::new(
+            "cmd-after-resync",
+            MessageType::Command,
+            json!({"name":"media.play"}),
+        )
+        .in_session(second_session.clone()),
+    )
+    .await;
+    let result = receive(&mut second).await;
+    let event = receive(&mut second).await;
+    assert_eq!(result.payload["outcome"], "succeeded");
+    assert_eq!(event.payload["name"], "media.playback_started");
+    assert_eq!(event.payload["data"]["playback"], "playing");
+    assert_eq!(event.payload["data"]["volume"], 72);
+
+    send(
+        &mut second,
+        Envelope::new(
+            "snapshot-after-resume",
+            MessageType::StateSnapshotRequest,
+            json!({}),
+        )
+        .in_session(second_session.clone()),
+    )
+    .await;
+    let resumed = receive(&mut second).await;
+    assert_eq!(resumed.payload["media"], event.payload["data"]);
+
+    second.close(None).await.unwrap();
+}
