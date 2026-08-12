@@ -76,16 +76,30 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Some(path) => tracing::info!(
             config_path = %path.display(),
             metrics_interval_ms = config.metrics_interval.as_millis() as u64,
+            outbound_queue_capacity = config.connection_limits.outbound_queue_capacity,
+            command_cache_capacity = config.connection_limits.command_cache_capacity,
+            max_capabilities = config.connection_limits.max_capabilities,
             "configuration_loaded"
         ),
         None => tracing::info!(
             config_source = "defaults+environment",
             metrics_interval_ms = config.metrics_interval.as_millis() as u64,
+            outbound_queue_capacity = config.connection_limits.outbound_queue_capacity,
+            command_cache_capacity = config.connection_limits.command_cache_capacity,
+            max_capabilities = config.connection_limits.max_capabilities,
             "configuration_loaded"
         ),
     }
     tracing::info!(listen_addr = %config.listen_addr, "server_listening");
-    server::serve(listener, runtime, hub, climate_actuator, media_actuator).await
+    server::serve_with_limits(
+        listener,
+        runtime,
+        hub,
+        climate_actuator,
+        media_actuator,
+        config.connection_limits,
+    )
+    .await
 }
 
 fn start_telemetry_source(
