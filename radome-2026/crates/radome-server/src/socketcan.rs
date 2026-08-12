@@ -123,7 +123,9 @@ mod tests {
 
     impl VehicleFrameSource for FakeSource {
         fn recv(&mut self) -> io::Result<VehicleBusFrame> {
-            self.0.pop_front().ok_or_else(|| io::Error::new(io::ErrorKind::UnexpectedEof, "done"))
+            self.0
+                .pop_front()
+                .ok_or_else(|| io::Error::new(io::ErrorKind::UnexpectedEof, "done"))
         }
     }
 
@@ -132,5 +134,53 @@ mod tests {
         let expected = VehicleBusFrame::new(0x100, [0, 90]);
         let mut source = FakeSource(VecDeque::from([expected.clone()]));
         assert_eq!(source.recv().unwrap(), expected);
+    }
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn vcan_frame_reaches_runtime_and_hub_through_real_socketcan() {
+        use crate::hub::ConnectionHub;
+        use crate::producer::publish_next_bus_frame;
+        use radome_core::runtime::Runtime;
+        use radome_core::vehicle_bus::DemoCanAdapter;
+        use radome_core::{Capability, Client, MessageType, Role, SystemCapabilities};
+        use std::process::Command;
+        use std::sync::{Arc, Mutex};
+        use tokio::sync::mpsc;
+
+        let Ok(interface) = std::env::var("RADOME_VCAN_INTERFACE") else {
+            eprintln!("RADOME_VCAN_INTERFACE absent: test vcan ignore");
+            return;
+        };
+
+        let runtime = Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([
+            Capability::new("vehicle.telemetry"),
+        ]))));
+        runtime.lock().unwrap().register_client(Client::new(
+            "vcan-dashboard",
+            Role::new("driver-display"),
+            [Capability::new("display")],
+        ));
+
+        let (tx, mut rx) = mpsc::unbounded_channel();
+        let hub = Arc::new(Mutex::new(ConnectionHub::default()));
+        hub.lock().unwrap().register("vcan-dashboard", tx);
+
+        let mut source = SocketCanSource::open(&interface).expect("open configured vcan interface");
+        let status = Command::new("cansend")
+            .args([interface.as_str(), "100#005A"])
+            .status()
+            .expect("execute cansend from can-utils");
+        assert!(status.success(), "cansend must inject the vcan frame");
+
+        let published = publish_next_bus_frame(&mut source, &DemoCanAdapter, &runtime, &hub)
+            .expect("vcan frame must traverse the real SocketCAN pipeline");
+        assert_eq!(published, 1);
+
+        let envelope = rx.try_recv().expect("dashboard receives vcan-derived event");
+        assert_eq!(envelope.message_type, MessageType::Event);
+        assert_eq!(envelope.payload["name"], "vehicle.speed_changed");
+        assert_eq!(envelope.payload["data"], "speed_kmh=90");
+        assert!(rx.try_recv().is_err());
     }
 }
