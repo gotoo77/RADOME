@@ -15,7 +15,8 @@ Les champs exposés sont :
 - `commands_failed_total` : commandes refusées ou échouées ;
 - `telemetry_events_total` : événements métier de télémétrie produits, indépendamment du nombre de destinataires ;
 - `telemetry_errors_total` : erreurs de lecture ou décodage de la source SocketCAN ;
-- `socketcan_reconnects_total` : pertes de source nécessitant une réouverture SocketCAN.
+- `socketcan_reconnects_total` : pertes de source nécessitant une réouverture SocketCAN ;
+- `outbound_backpressure_drops_total` : événements asynchrones abandonnés parce que la file sortante d'un client était pleine.
 
 Les compteurs `_total` sont monotones pendant la durée de vie du processus. `active_clients` est une jauge.
 
@@ -34,7 +35,8 @@ Par défaut, un snapshot est écrit toutes les 30 secondes sur stderr via le mê
     "commands_failed_total": 1,
     "telemetry_events_total": 42,
     "telemetry_errors_total": 0,
-    "socketcan_reconnects_total": 0
+    "socketcan_reconnects_total": 0,
+    "outbound_backpressure_drops_total": 0
   }
 }
 ```
@@ -63,6 +65,8 @@ La priorité reste celle de la configuration M7 : valeurs par défaut, puis fich
 
 `active_clients` suit le hub après annonce de capabilities. Une socket TCP ouverte mais non bootstrapée n'est pas considérée comme un client opérationnel.
 
+`outbound_backpressure_drops_total` compte les pertes de diffusion asynchrone dues à un consommateur lent. Les réponses protocolaires directes ne sont pas abandonnées : elles attendent de la capacité dans la file bornée de leur connexion.
+
 ## Validation
 
 Le smoke test live utilise un intervalle court de 50 ms et vérifie sur le vrai binaire que :
@@ -72,9 +76,11 @@ Le smoke test live utilise un intervalle court de 50 ms et vérifie sur le vrai 
 3. la télémétrie de démonstration augmente `telemetry_events_total` ;
 4. la reconnexion du SDK provoque un nouvel enregistrement client.
 
+La tranche backpressure ajoute en complément un test déterministe du hub qui remplit volontairement une file bornée et vérifie que seul l'événement excédentaire est abandonné.
+
 ## Hors périmètre
 
-Cette tranche ne fournit volontairement pas encore :
+Cette couche de métriques ne fournit volontairement pas encore :
 
 - endpoint HTTP `/metrics` ;
 - exposition Prometheus/OpenMetrics ;
@@ -82,4 +88,4 @@ Cette tranche ne fournit volontairement pas encore :
 - métriques système CPU/mémoire ;
 - persistance des compteurs entre redémarrages.
 
-Le prochain risque M7 est la **backpressure** : les métriques permettent désormais d'observer le service, mais le hub utilise encore des files non bornées et n'a pas de politique explicite face à un consommateur lent.
+Après la backpressure, le prochain risque M7 est la définition de **limites de ressources par connexion** plus larges que la seule file sortante.
