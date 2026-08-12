@@ -9,6 +9,63 @@ pub trait VehicleFrameSource {
     fn recv(&mut self) -> io::Result<VehicleBusFrame>;
 }
 
+/// Source qui ouvre sa source physique à la demande et l'oublie lorsqu'une
+/// erreur indique que le transport n'est plus utilisable.
+///
+/// Le prochain appel à `recv` tentera alors une nouvelle ouverture. Cette
+/// mécanique permet au serveur de survivre aussi bien à une interface absente
+/// au démarrage qu'à une disparition/réapparition en cours d'exécution.
+pub struct ReconnectingVehicleSource<S, O> {
+    source: Option<S>,
+    open: O,
+}
+
+impl<S, O> ReconnectingVehicleSource<S, O>
+where
+    S: VehicleFrameSource,
+    O: FnMut() -> io::Result<S>,
+{
+    pub fn new(open: O) -> Self {
+        Self { source: None, open }
+    }
+}
+
+impl<S, O> VehicleFrameSource for ReconnectingVehicleSource<S, O>
+where
+    S: VehicleFrameSource,
+    O: FnMut() -> io::Result<S>,
+{
+    fn recv(&mut self) -> io::Result<VehicleBusFrame> {
+        if self.source.is_none() {
+            self.source = Some((self.open)()?);
+        }
+
+        let result = self
+            .source
+            .as_mut()
+            .expect("source initialized before recv")
+            .recv();
+
+        if let Err(error) = &result {
+            if source_error_requires_reconnect(error) {
+                self.source = None;
+            }
+        }
+
+        result
+    }
+}
+
+/// Les erreurs de contenu de trame et interruptions transitoires ne justifient
+/// pas de jeter le socket. Les autres erreurs sont considérées comme une perte
+/// de source et provoqueront une réouverture au prochain `recv`.
+pub fn source_error_requires_reconnect(error: &io::Error) -> bool {
+    !matches!(
+        error.kind(),
+        io::ErrorKind::InvalidData | io::ErrorKind::Interrupted | io::ErrorKind::WouldBlock
+    )
+}
+
 #[cfg(target_os = "linux")]
 mod linux {
     use super::*;
@@ -117,23 +174,104 @@ pub use linux::SocketCanSource;
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::cell::Cell;
     use std::collections::VecDeque;
+    use std::rc::Rc;
 
-    struct FakeSource(VecDeque<VehicleBusFrame>);
+    enum FakeRead {
+        Frame(VehicleBusFrame),
+        Error(io::ErrorKind),
+    }
+
+    struct FakeSource(VecDeque<FakeRead>);
+
+    impl FakeSource {
+        fn with_frame(frame: VehicleBusFrame) -> Self {
+            Self(VecDeque::from([FakeRead::Frame(frame)]))
+        }
+
+        fn failing(kind: io::ErrorKind) -> Self {
+            Self(VecDeque::from([FakeRead::Error(kind)]))
+        }
+    }
 
     impl VehicleFrameSource for FakeSource {
         fn recv(&mut self) -> io::Result<VehicleBusFrame> {
-            self.0
-                .pop_front()
-                .ok_or_else(|| io::Error::new(io::ErrorKind::UnexpectedEof, "done"))
+            match self.0.pop_front() {
+                Some(FakeRead::Frame(frame)) => Ok(frame),
+                Some(FakeRead::Error(kind)) => Err(io::Error::new(kind, "fake source failure")),
+                None => Err(io::Error::new(io::ErrorKind::UnexpectedEof, "done")),
+            }
         }
     }
 
     #[test]
     fn frame_source_contract_is_testable_without_can_hardware() {
         let expected = VehicleBusFrame::new(0x100, [0, 90]);
-        let mut source = FakeSource(VecDeque::from([expected.clone()]));
+        let mut source = FakeSource::with_frame(expected.clone());
         assert_eq!(source.recv().unwrap(), expected);
+    }
+
+    #[test]
+    fn reconnecting_source_reopens_after_transport_failure() {
+        let expected = VehicleBusFrame::new(0x100, [0, 90]);
+        let opens = Rc::new(Cell::new(0));
+        let opens_for_factory = Rc::clone(&opens);
+        let mut sources = VecDeque::from([
+            FakeSource::failing(io::ErrorKind::NotConnected),
+            FakeSource::with_frame(expected.clone()),
+        ]);
+
+        let mut source = ReconnectingVehicleSource::new(move || {
+            opens_for_factory.set(opens_for_factory.get() + 1);
+            Ok(sources.pop_front().expect("fake source available"))
+        });
+
+        assert_eq!(source.recv().unwrap_err().kind(), io::ErrorKind::NotConnected);
+        assert_eq!(source.recv().unwrap(), expected);
+        assert_eq!(opens.get(), 2);
+    }
+
+    #[test]
+    fn reconnecting_source_recovers_when_interface_appears_after_startup() {
+        let expected = VehicleBusFrame::new(0x101, [0x0a, 0x28]);
+        let attempts = Rc::new(Cell::new(0));
+        let attempts_for_factory = Rc::clone(&attempts);
+        let mut recovered = Some(FakeSource::with_frame(expected.clone()));
+
+        let mut source = ReconnectingVehicleSource::new(move || {
+            let attempt = attempts_for_factory.get();
+            attempts_for_factory.set(attempt + 1);
+            if attempt == 0 {
+                Err(io::Error::new(io::ErrorKind::NotFound, "interface absent"))
+            } else {
+                Ok(recovered.take().expect("recovered source available"))
+            }
+        });
+
+        assert_eq!(source.recv().unwrap_err().kind(), io::ErrorKind::NotFound);
+        assert_eq!(source.recv().unwrap(), expected);
+        assert_eq!(attempts.get(), 2);
+    }
+
+    #[test]
+    fn invalid_frame_does_not_force_socket_reopen() {
+        let opens = Rc::new(Cell::new(0));
+        let opens_for_factory = Rc::clone(&opens);
+        let expected = VehicleBusFrame::new(0x100, [0, 90]);
+        let mut initial = Some(FakeSource(VecDeque::from([
+            FakeRead::Error(io::ErrorKind::InvalidData),
+            FakeRead::Frame(expected.clone()),
+        ])));
+
+        let mut source = ReconnectingVehicleSource::new(move || {
+            opens_for_factory.set(opens_for_factory.get() + 1);
+            Ok(initial.take().expect("single socket expected"))
+        });
+
+        assert_eq!(source.recv().unwrap_err().kind(), io::ErrorKind::InvalidData);
+        assert_eq!(source.recv().unwrap(), expected);
+        assert_eq!(opens.get(), 1);
     }
 
     #[cfg(target_os = "linux")]
