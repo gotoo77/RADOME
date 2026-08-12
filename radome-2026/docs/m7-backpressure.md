@@ -10,7 +10,7 @@ La vitesse de production n'était alors plus reliée à la vitesse réelle du co
 
 ## Politique retenue
 
-Chaque connexion possède maintenant une file sortante Tokio **bornée à 128 enveloppes**.
+Chaque connexion possède maintenant une file sortante Tokio bornée. La valeur par défaut est **128 enveloppes** et la tranche suivante M7 l'a rendue configurable via `limits.outbound_queue_capacity` / `RADOME_OUTBOUND_QUEUE_CAPACITY`.
 
 Deux classes de messages ont volontairement des politiques différentes.
 
@@ -63,6 +63,6 @@ Les tests du hub couvrent explicitement le cas suivant avec une capacité de 1 :
 
 Les tests WebSocket existants continuent de verrouiller l'ordre `CommandResult → Event → StateSnapshot` et la boucle E2E réelle continue de valider bootstrap, commandes et reconnexion.
 
-## Limite volontaire
+## Suite
 
-La capacité 128 est une politique serveur fixe dans cette tranche. Sa configuration externe ainsi que les autres plafonds par connexion (taille des messages, cache d'idempotence, nombre de connexions, etc.) appartiennent à la tranche suivante : **limites de ressources par connexion**.
+La backpressure traite la file sortante. `docs/m7-connection-resource-limits.md` complète ce travail en configurant ce budget et en bornant aussi le cache d'idempotence et le nombre de capabilities persistées par connexion.
