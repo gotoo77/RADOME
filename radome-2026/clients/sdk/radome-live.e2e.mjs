@@ -78,6 +78,7 @@ async function writeServerConfig(port) {
   const configPath = join(directory, 'server.json');
   await writeFile(configPath, JSON.stringify({
     listen_addr: `127.0.0.1:${port}`,
+    metrics_interval_ms: 50,
     telemetry: {
       source: 'demo',
       socketcan: {
@@ -103,6 +104,16 @@ function structuredLogs(stderr) {
     });
 }
 
+async function waitForStructuredLog(stderrValue, predicate, timeoutMs = TIMEOUT_MS) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const match = structuredLogs(stderrValue()).find(predicate);
+    if (match) return match;
+    await new Promise(resolvePromise => setTimeout(resolvePromise, 25));
+  }
+  throw new Error(`log structuré attendu absent:\n${stderrValue()}`);
+}
+
 test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisation', { timeout: 30_000 }, async () => {
   assert.equal(typeof WebSocket, 'function', 'Node.js doit fournir WebSocket pour ce smoke test');
 
@@ -119,6 +130,7 @@ test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisati
   delete serverEnv.RADOME_CAN_INTERFACE;
   delete serverEnv.RADOME_CAN_RETRY_MS;
   delete serverEnv.RADOME_CAN_PROFILE;
+  delete serverEnv.RADOME_METRICS_INTERVAL_MS;
 
   const server = spawn(serverBinary(), [], {
     env: serverEnv,
@@ -147,21 +159,21 @@ test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisati
     client.connect();
     await connected;
 
-    const logs = structuredLogs(stderr);
-    assert.ok(
-      logs.some(entry => entry?.fields?.message === 'configuration_loaded'
-        && entry?.fields?.config_path === configPath),
-      `configuration_loaded absent des logs structurés:\n${stderr}`,
+    await waitForStructuredLog(
+      () => stderr,
+      entry => entry?.fields?.message === 'configuration_loaded'
+        && entry?.fields?.config_path === configPath
+        && entry?.fields?.metrics_interval_ms === 50,
     );
-    assert.ok(
-      logs.some(entry => entry?.fields?.message === 'server_listening'
-        && entry?.fields?.listen_addr === `127.0.0.1:${port}`),
-      `server_listening absent des logs structurés:\n${stderr}`,
+    await waitForStructuredLog(
+      () => stderr,
+      entry => entry?.fields?.message === 'server_listening'
+        && entry?.fields?.listen_addr === `127.0.0.1:${port}`,
     );
-    assert.ok(
-      logs.some(entry => entry?.fields?.message === 'telemetry_source_started'
-        && entry?.fields?.source === 'demo'),
-      `telemetry_source_started absent des logs structurés:\n${stderr}`,
+    await waitForStructuredLog(
+      () => stderr,
+      entry => entry?.fields?.message === 'telemetry_source_started'
+        && entry?.fields?.source === 'demo',
     );
 
     assert.ok(client.sessionId);
@@ -201,6 +213,17 @@ test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisati
     const climateEvent = await climateEventPromise;
     assert.equal(climateEvent.data?.temperature_c, 23.5);
 
+    const metrics = await waitForStructuredLog(
+      () => stderr,
+      entry => entry?.fields?.message === 'metrics_snapshot'
+        && entry?.fields?.active_clients >= 1
+        && entry?.fields?.client_registrations_total >= 1
+        && entry?.fields?.commands_total >= 2
+        && entry?.fields?.commands_succeeded_total >= 2
+        && entry?.fields?.telemetry_events_total >= 1,
+    );
+    assert.equal(metrics.fields.commands_failed_total, 0);
+
     const updatedSnapshot = waitForClientEvent(
       client,
       'snapshot',
@@ -224,6 +247,12 @@ test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisati
     for (const phase of bootstrapPhases) {
       assert.ok(statuses.filter(status => status === phase).length >= 2, `phase ${phase} absente après reconnexion`);
     }
+
+    await waitForStructuredLog(
+      () => stderr,
+      entry => entry?.fields?.message === 'metrics_snapshot'
+        && entry?.fields?.client_registrations_total >= 2,
+    );
 
     const disconnected = waitForClientEvent(client, 'status', status => status === 'disconnected');
     client.disconnect();

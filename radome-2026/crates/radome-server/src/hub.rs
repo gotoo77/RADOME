@@ -1,3 +1,4 @@
+use crate::metrics::process_metrics;
 use radome_core::{Envelope, MessageType};
 use std::collections::BTreeMap;
 use tokio::sync::mpsc;
@@ -10,16 +11,19 @@ pub struct ConnectionHub {
 impl ConnectionHub {
     pub fn register(&mut self, client_id: impl Into<String>, sender: mpsc::UnboundedSender<Envelope>) {
         self.clients.insert(client_id.into(), sender);
+        process_metrics().record_client_registration(self.clients.len());
     }
 
     pub fn unregister(&mut self, client_id: &str) {
         self.clients.remove(client_id);
+        process_metrics().set_active_clients(self.clients.len());
     }
 
     pub fn send_to(&mut self, client_id: &str, envelope: Envelope) -> bool {
         let Some(sender) = self.clients.get(client_id) else { return false; };
         if sender.send(envelope).is_err() {
             self.clients.remove(client_id);
+            process_metrics().set_active_clients(self.clients.len());
             return false;
         }
         true

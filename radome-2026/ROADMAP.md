@@ -286,7 +286,7 @@ Rendre RADOME exploitable comme service de longue durée et préparer les extens
 
 - [x] **configuration externe** : modèle `ServerConfig`, fichier JSON via `RADOME_CONFIG`, valeurs par défaut, surcharge par variables d'environnement, validation avant démarrage et profil CAN relatif au fichier ;
 - [x] **`tracing` structuré** : logs JSON sur stderr, niveaux filtrables via `RUST_LOG`, événements nommés pour démarrage/configuration/sources véhicule et erreurs SocketCAN, contrat validé par le smoke test live ;
-- [ ] métriques essentielles ;
+- [x] **métriques essentielles** : jauge des clients actifs, compteurs d'enregistrements, commandes réussies/échouées, événements télémétriques, erreurs et reconnexions SocketCAN, publiés périodiquement via `metrics_snapshot` ;
 - [ ] backpressure ;
 - [ ] limites de ressources par connexion ;
 - [ ] timeouts explicites ;
@@ -300,7 +300,7 @@ Rendre RADOME exploitable comme service de longue durée et préparer les extens
 
 Le serveur peut être lancé, observé, arrêté et diagnostiqué proprement dans un environnement Linux réel, avec un comportement défini sous charge et en cas de défaillance réseau.
 
-**État : en cours.** La prochaine tranche recommandée est **métriques essentielles**.
+**État : en cours.** La prochaine tranche recommandée est **backpressure**.
 
 ---
 

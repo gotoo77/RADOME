@@ -1,4 +1,5 @@
 use crate::hub::{event_envelope, ConnectionHub};
+use crate::metrics::process_metrics;
 use crate::socketcan::VehicleFrameSource;
 use radome_core::runtime::Runtime;
 use radome_core::telemetry::{TelemetryEvent, TelemetrySimulator};
@@ -36,6 +37,7 @@ fn publish_events(
 ) {
     let experience = telemetry_experience();
     for event in events {
+        process_metrics().add_telemetry_events(1);
         let deliveries = runtime
             .lock()
             .expect("runtime mutex poisoned")

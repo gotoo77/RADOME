@@ -3,6 +3,7 @@ mod command_executor;
 mod commands;
 mod config;
 mod hub;
+mod metrics;
 mod observability;
 mod producer;
 mod server;
@@ -70,9 +71,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let media_actuator = new_media_actuator();
 
     start_telemetry_source(&config, Arc::clone(&runtime), Arc::clone(&hub))?;
+    metrics::spawn_metrics_reporter(config.metrics_interval);
     match &config.config_path {
-        Some(path) => tracing::info!(config_path = %path.display(), "configuration_loaded"),
-        None => tracing::info!(config_source = "defaults+environment", "configuration_loaded"),
+        Some(path) => tracing::info!(
+            config_path = %path.display(),
+            metrics_interval_ms = config.metrics_interval.as_millis() as u64,
+            "configuration_loaded"
+        ),
+        None => tracing::info!(
+            config_source = "defaults+environment",
+            metrics_interval_ms = config.metrics_interval.as_millis() as u64,
+            "configuration_loaded"
+        ),
     }
     tracing::info!(listen_addr = %config.listen_addr, "server_listening");
     server::serve(listener, runtime, hub, climate_actuator, media_actuator).await
@@ -198,10 +208,13 @@ fn start_socketcan(
         match publish_next_bus_frame(&mut source, &adapter, &runtime, &hub) {
             Ok(_) => {}
             Err(VehicleSourceError::Decode(error)) => {
+                metrics::process_metrics().record_telemetry_error();
                 tracing::warn!(interface = %interface, error = ?error, "can_frame_ignored");
             }
             Err(VehicleSourceError::Read(error)) => {
+                metrics::process_metrics().record_telemetry_error();
                 if source_error_requires_reconnect(&error) {
+                    metrics::process_metrics().record_socketcan_reconnect();
                     tracing::warn!(
                         interface = %interface,
                         error = %error,
