@@ -3,7 +3,7 @@ import test from 'node:test';
 import { DashboardView } from './dashboard-view.js';
 
 function element() {
-  return { textContent: '', dataset: {}, style: {} };
+  return { textContent: '', dataset: {}, style: {}, value: '', disabled: false };
 }
 
 function fakeRoot() {
@@ -15,10 +15,15 @@ function fakeRoot() {
     ['#speed-bar', element()],
     ['#rpm', element()],
     ['#rpm-bar', element()],
+    ['#media-player', element()],
     ['#media-source', element()],
     ['#media-title', element()],
     ['#media-artist', element()],
     ['#media-playback', element()],
+    ['#media-track', element()],
+    ['#media-volume-value', element()],
+    ['#media-volume', element()],
+    ['#media-feedback', element()],
   ]);
   return {
     elements,
@@ -65,7 +70,7 @@ test('DashboardView rend les états de fraîcheur de télémétrie', () => {
   assert.equal(root.elements.get('#vehicle-health').dataset.state, 'stale');
 });
 
-test('DashboardView rend le panneau infotainment', () => {
+test('DashboardView rend le media player depuis l état serveur', () => {
   const root = fakeRoot();
   const view = new DashboardView(root);
 
@@ -74,6 +79,9 @@ test('DashboardView rend le panneau infotainment', () => {
     title: 'Road to Nowhere',
     artist: 'Talking Heads',
     playing: true,
+    volume: 64,
+    trackIndex: 2,
+    command: { status: 'idle', name: null, detail: null },
   });
 
   assert.equal(root.elements.get('#media-source').textContent, 'Bluetooth');
@@ -81,17 +89,46 @@ test('DashboardView rend le panneau infotainment', () => {
   assert.equal(root.elements.get('#media-artist').textContent, 'Talking Heads');
   assert.equal(root.elements.get('#media-playback').textContent, 'LECTURE');
   assert.equal(root.elements.get('#media-playback').dataset.state, 'playing');
+  assert.equal(root.elements.get('#media-track').textContent, 'PISTE 3');
+  assert.equal(root.elements.get('#media-volume-value').textContent, '64');
+  assert.equal(root.elements.get('#media-volume').value, '64');
+  assert.equal(root.elements.get('#media-player').dataset.playback, 'playing');
+  assert.equal(root.elements.get('#media-feedback').textContent, 'MÉDIA PRÊT');
 });
 
-test('DashboardView rend un etat media vide sans undefined', () => {
+test('DashboardView rend un état media inconnu sans inventer de valeur', () => {
   const root = fakeRoot();
   const view = new DashboardView(root);
 
-  view.renderInfotainment({ source: null, title: null, artist: null, playing: false });
+  view.renderInfotainment({
+    source: null,
+    title: null,
+    artist: null,
+    playing: false,
+    volume: null,
+    trackIndex: null,
+    command: { status: 'idle', name: null, detail: null },
+  });
 
-  assert.equal(root.elements.get('#media-source').textContent, 'Aucune source');
-  assert.equal(root.elements.get('#media-title').textContent, 'Aucun média');
-  assert.equal(root.elements.get('#media-artist').textContent, '—');
-  assert.equal(root.elements.get('#media-playback').textContent, 'PAUSE');
-  assert.equal(root.elements.get('#media-playback').dataset.state, 'paused');
+  assert.equal(root.elements.get('#media-source').textContent, 'RADOME MEDIA');
+  assert.equal(root.elements.get('#media-title').textContent, 'Lecteur média');
+  assert.equal(root.elements.get('#media-artist').textContent, 'Contrôle véhicule');
+  assert.equal(root.elements.get('#media-track').textContent, 'PISTE —');
+  assert.equal(root.elements.get('#media-volume-value').textContent, '--');
+});
+
+test('DashboardView rend le feedback pending succès et refus', () => {
+  const root = fakeRoot();
+  const view = new DashboardView(root);
+
+  view.renderMediaCommand({ status: 'pending', name: 'media.next_track', detail: null });
+  assert.equal(root.elements.get('#media-feedback').textContent, 'COMMANDE EN COURS · Suivant');
+  assert.equal(root.elements.get('#media-player').dataset.command, 'pending');
+
+  view.renderMediaCommand({ status: 'succeeded', name: 'media.volume_up', detail: null });
+  assert.equal(root.elements.get('#media-feedback').textContent, 'COMMANDE ACCEPTÉE · Volume +');
+
+  view.renderMediaCommand({ status: 'failed', name: 'media.set_volume', detail: 'volume_out_of_range' });
+  assert.equal(root.elements.get('#media-feedback').textContent, 'COMMANDE REFUSÉE · volume_out_of_range');
+  assert.equal(root.elements.get('#media-feedback').dataset.state, 'failed');
 });
