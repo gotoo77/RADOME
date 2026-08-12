@@ -3,14 +3,18 @@ import test from 'node:test';
 import { DashboardView } from './dashboard-view.js';
 
 function element() {
-  return { textContent: '', dataset: {} };
+  return { textContent: '', dataset: {}, style: {} };
 }
 
 function fakeRoot() {
   const elements = new Map([
     ['#status', element()],
+    ['#vehicle-display', element()],
+    ['#vehicle-health', element()],
     ['#speed', element()],
+    ['#speed-bar', element()],
     ['#rpm', element()],
+    ['#rpm-bar', element()],
     ['#media-source', element()],
     ['#media-title', element()],
     ['#media-artist', element()],
@@ -21,6 +25,45 @@ function fakeRoot() {
     querySelector(selector) { return elements.get(selector); },
   };
 }
+
+test('DashboardView rend les métriques véhicule et leurs progressions', () => {
+  const root = fakeRoot();
+  const view = new DashboardView(root);
+
+  view.renderVehicle({ speedKmh: 120, engineRpm: 4_000 });
+
+  assert.equal(root.elements.get('#speed').textContent, '120');
+  assert.equal(root.elements.get('#rpm').textContent, '4000');
+  assert.equal(root.elements.get('#speed-bar').style.width, '50%');
+  assert.equal(root.elements.get('#rpm-bar').style.width, '50%');
+  assert.equal(root.elements.get('#vehicle-display').dataset.motion, 'moving');
+});
+
+test('DashboardView rend explicitement les valeurs véhicule absentes', () => {
+  const root = fakeRoot();
+  const view = new DashboardView(root);
+
+  view.renderVehicle({ speedKmh: null, engineRpm: null });
+
+  assert.equal(root.elements.get('#speed').textContent, '--');
+  assert.equal(root.elements.get('#rpm').textContent, '----');
+  assert.equal(root.elements.get('#speed-bar').style.width, '0%');
+  assert.equal(root.elements.get('#rpm-bar').style.width, '0%');
+  assert.equal(root.elements.get('#vehicle-display').dataset.motion, 'stationary');
+});
+
+test('DashboardView rend les états de fraîcheur de télémétrie', () => {
+  const root = fakeRoot();
+  const view = new DashboardView(root);
+
+  view.renderVehicleHealth({ state: 'live' });
+  assert.equal(root.elements.get('#vehicle-health').textContent, 'TÉLÉMÉTRIE ACTIVE');
+  assert.equal(root.elements.get('#vehicle-display').dataset.telemetry, 'live');
+
+  view.renderVehicleHealth({ state: 'stale' });
+  assert.equal(root.elements.get('#vehicle-health').textContent, 'TÉLÉMÉTRIE INTERROMPUE');
+  assert.equal(root.elements.get('#vehicle-health').dataset.state, 'stale');
+});
 
 test('DashboardView rend le panneau infotainment', () => {
   const root = fakeRoot();
