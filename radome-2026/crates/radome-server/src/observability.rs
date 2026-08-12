@@ -10,6 +10,7 @@ pub fn init_tracing() -> Result<(), Box<dyn Error + Send + Sync>> {
     tracing_subscriber::fmt()
         .json()
         .with_env_filter(filter)
+        .with_writer(std::io::stderr)
         .with_current_span(false)
         .with_span_list(false)
         .with_target(true)
