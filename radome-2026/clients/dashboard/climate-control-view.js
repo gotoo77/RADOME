@@ -33,9 +33,11 @@ export function mountClimateControl(root = document) {
         <div id="climate-feedback" class="climate-feedback" data-state="idle" aria-live="polite">CLIMATISATION PRÊTE</div>
       </div>`;
 
+    const operationalSecondary = root.querySelector('#operational-secondary');
     const tools = root.querySelector('.tools');
-    const parent = tools?.parentNode ?? root.querySelector('main') ?? root.body;
-    if (tools?.parentNode) tools.parentNode.insertBefore(section, tools);
+    const parent = operationalSecondary ?? tools?.parentNode ?? root.querySelector('main') ?? root.body;
+    if (operationalSecondary) operationalSecondary.appendChild(section);
+    else if (tools?.parentNode) tools.parentNode.insertBefore(section, tools);
     else parent?.appendChild(section);
   }
   return new ClimateControlView(root);
@@ -151,15 +153,16 @@ function injectClimateStyles(root) {
   style.id = STYLE_ID;
   style.textContent = `
     .climate-control {
-      margin-top: 1rem;
+      min-width: 0;
       display: grid;
-      grid-template-columns: minmax(220px, .72fr) minmax(320px, 1.28fr);
-      gap: clamp(1.5rem, 4vw, 4rem);
+      grid-template-columns: minmax(180px, .7fr) minmax(280px, 1.3fr);
+      gap: clamp(1.25rem, 3vw, 2.5rem);
       align-items: center;
-      padding: clamp(1.4rem, 3vw, 2rem);
+      padding: clamp(1.35rem, 2.5vw, 1.8rem);
       border: 1px solid #29323d;
       border-radius: 1.2rem;
       background: linear-gradient(120deg, rgba(116, 151, 184, .07), transparent 42%), #0e1319;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .025);
     }
     .climate-label, .climate-caption, .climate-target-head, .climate-feedback {
       text-transform: uppercase;
@@ -167,7 +170,7 @@ function injectClimateStyles(root) {
     }
     .climate-label { color: #8c98a7; font-size: .68rem; margin-bottom: .9rem; }
     .climate-temperature-row { display: flex; align-items: baseline; gap: .55rem; }
-    .climate-temperature { font-size: clamp(4rem, 10vw, 6.2rem); font-weight: 700; line-height: .9; font-variant-numeric: tabular-nums; }
+    .climate-temperature { font-size: clamp(3.5rem, 7vw, 5.2rem); font-weight: 700; line-height: .9; font-variant-numeric: tabular-nums; }
     .climate-unit { color: #9ba7b5; font-size: 1rem; }
     .climate-caption { margin-top: .8rem; color: #5f6b79; font-size: .62rem; }
     .climate-console { display: grid; gap: .9rem; }
