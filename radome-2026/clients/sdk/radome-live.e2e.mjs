@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { createConnection, createServer } from 'node:net';
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
 import test from 'node:test';
 
 import { RadomeClient } from './radome-client.js';
@@ -71,17 +73,40 @@ function stopProcess(child) {
   });
 }
 
+async function writeServerConfig(port) {
+  const directory = await mkdtemp(join(tmpdir(), 'radome-e2e-'));
+  const configPath = join(directory, 'server.json');
+  await writeFile(configPath, JSON.stringify({
+    listen_addr: `127.0.0.1:${port}`,
+    telemetry: {
+      source: 'demo',
+      socketcan: {
+        interface: 'can0',
+        retry_ms: 1000,
+      },
+    },
+  }));
+  return { directory, configPath };
+}
+
 test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisation', { timeout: 30_000 }, async () => {
   assert.equal(typeof WebSocket, 'function', 'Node.js doit fournir WebSocket pour ce smoke test');
 
   const port = await freePort();
+  const { directory: configDirectory, configPath } = await writeServerConfig(port);
   let stderr = '';
+  const serverEnv = {
+    ...process.env,
+    RADOME_CONFIG: configPath,
+  };
+  delete serverEnv.RADOME_ADDR;
+  delete serverEnv.RADOME_TELEMETRY_SOURCE;
+  delete serverEnv.RADOME_CAN_INTERFACE;
+  delete serverEnv.RADOME_CAN_RETRY_MS;
+  delete serverEnv.RADOME_CAN_PROFILE;
+
   const server = spawn(serverBinary(), [], {
-    env: {
-      ...process.env,
-      RADOME_ADDR: `127.0.0.1:${port}`,
-      RADOME_TELEMETRY_SOURCE: 'demo',
-    },
+    env: serverEnv,
     stdio: ['ignore', 'pipe', 'pipe'],
   });
   server.stderr.setEncoding('utf8');
@@ -174,5 +199,6 @@ test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisati
   } finally {
     client.disconnect();
     await stopProcess(server);
+    await rm(configDirectory, { recursive: true, force: true });
   }
 });
