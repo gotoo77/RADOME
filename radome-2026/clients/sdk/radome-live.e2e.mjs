@@ -89,6 +89,20 @@ async function writeServerConfig(port) {
   return { directory, configPath };
 }
 
+function structuredLogs(stderr) {
+  return stderr
+    .split('\n')
+    .map(line => line.trim())
+    .filter(Boolean)
+    .flatMap(line => {
+      try {
+        return [JSON.parse(line)];
+      } catch {
+        return [];
+      }
+    });
+}
+
 test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisation', { timeout: 30_000 }, async () => {
   assert.equal(typeof WebSocket, 'function', 'Node.js doit fournir WebSocket pour ce smoke test');
 
@@ -98,6 +112,7 @@ test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisati
   const serverEnv = {
     ...process.env,
     RADOME_CONFIG: configPath,
+    RUST_LOG: 'info',
   };
   delete serverEnv.RADOME_ADDR;
   delete serverEnv.RADOME_TELEMETRY_SOURCE;
@@ -131,6 +146,23 @@ test('le SDK réel boucle bootstrap, télémétrie, commandes et resynchronisati
     const connected = waitForClientEvent(client, 'status', status => status === 'connected');
     client.connect();
     await connected;
+
+    const logs = structuredLogs(stderr);
+    assert.ok(
+      logs.some(entry => entry?.fields?.message === 'configuration_loaded'
+        && entry?.fields?.config_path === configPath),
+      `configuration_loaded absent des logs structurés:\n${stderr}`,
+    );
+    assert.ok(
+      logs.some(entry => entry?.fields?.message === 'server_listening'
+        && entry?.fields?.listen_addr === `127.0.0.1:${port}`),
+      `server_listening absent des logs structurés:\n${stderr}`,
+    );
+    assert.ok(
+      logs.some(entry => entry?.fields?.message === 'telemetry_source_started'
+        && entry?.fields?.source === 'demo'),
+      `telemetry_source_started absent des logs structurés:\n${stderr}`,
+    );
 
     assert.ok(client.sessionId);
     const firstSession = client.sessionId;
