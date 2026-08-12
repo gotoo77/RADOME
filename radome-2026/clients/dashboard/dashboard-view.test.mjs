@@ -23,6 +23,7 @@ function fakeRoot() {
     ['#media-track', element()],
     ['#media-volume-value', element()],
     ['#media-volume', element()],
+    ['#media-toggle', element()],
     ['#media-feedback', element()],
   ]);
   return {
@@ -92,6 +93,7 @@ test('DashboardView rend le media player depuis l état serveur', () => {
   assert.equal(root.elements.get('#media-track').textContent, 'PISTE 3');
   assert.equal(root.elements.get('#media-volume-value').textContent, '64');
   assert.equal(root.elements.get('#media-volume').value, '64');
+  assert.equal(root.elements.get('#media-toggle').textContent, 'Pause');
   assert.equal(root.elements.get('#media-player').dataset.playback, 'playing');
   assert.equal(root.elements.get('#media-feedback').textContent, 'MÉDIA PRÊT');
 });
@@ -115,6 +117,25 @@ test('DashboardView rend un état media inconnu sans inventer de valeur', () => 
   assert.equal(root.elements.get('#media-artist').textContent, 'Contrôle véhicule');
   assert.equal(root.elements.get('#media-track').textContent, 'PISTE —');
   assert.equal(root.elements.get('#media-volume-value').textContent, '--');
+  assert.equal(root.elements.get('#media-toggle').textContent, 'Lecture');
+});
+
+test('DashboardView utilise l index serveur comme numéro de piste lisible', () => {
+  const root = fakeRoot();
+  const view = new DashboardView(root);
+
+  view.renderInfotainment({
+    source: null,
+    title: null,
+    artist: null,
+    playing: false,
+    volume: 50,
+    trackIndex: 0,
+    command: { status: 'idle', name: null, detail: null },
+  });
+
+  assert.equal(root.elements.get('#media-title').textContent, 'Piste 1');
+  assert.equal(root.elements.get('#media-track').textContent, 'PISTE 1');
 });
 
 test('DashboardView rend le feedback pending succès et refus', () => {
