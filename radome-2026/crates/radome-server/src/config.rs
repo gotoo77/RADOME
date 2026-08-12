@@ -9,6 +9,9 @@ const DEFAULT_ADDR: &str = "127.0.0.1:8787";
 const DEFAULT_CAN_INTERFACE: &str = "can0";
 const DEFAULT_CAN_RETRY_MS: u64 = 1_000;
 const DEFAULT_METRICS_INTERVAL_MS: u64 = 30_000;
+const DEFAULT_OUTBOUND_QUEUE_CAPACITY: usize = 128;
+const DEFAULT_COMMAND_CACHE_CAPACITY: usize = 256;
+const DEFAULT_MAX_CAPABILITIES: usize = 32;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TelemetrySource {
@@ -29,11 +32,29 @@ pub struct TelemetryConfig {
     pub socketcan: SocketCanConfig,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ConnectionLimits {
+    pub outbound_queue_capacity: usize,
+    pub command_cache_capacity: usize,
+    pub max_capabilities: usize,
+}
+
+impl Default for ConnectionLimits {
+    fn default() -> Self {
+        Self {
+            outbound_queue_capacity: DEFAULT_OUTBOUND_QUEUE_CAPACITY,
+            command_cache_capacity: DEFAULT_COMMAND_CACHE_CAPACITY,
+            max_capabilities: DEFAULT_MAX_CAPABILITIES,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ServerConfig {
     pub listen_addr: String,
     pub telemetry: TelemetryConfig,
     pub metrics_interval: Duration,
+    pub connection_limits: ConnectionLimits,
     pub config_path: Option<PathBuf>,
 }
 
@@ -43,6 +64,7 @@ struct FileConfig {
     listen_addr: Option<String>,
     telemetry: Option<FileTelemetryConfig>,
     metrics_interval_ms: Option<u64>,
+    limits: Option<FileConnectionLimits>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -58,6 +80,14 @@ struct FileSocketCanConfig {
     interface: Option<String>,
     retry_ms: Option<u64>,
     profile: Option<String>,
+}
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct FileConnectionLimits {
+    outbound_queue_capacity: Option<usize>,
+    command_cache_capacity: Option<usize>,
+    max_capabilities: Option<usize>,
 }
 
 impl ServerConfig {
@@ -81,6 +111,9 @@ fn collect_environment() -> Result<BTreeMap<String, String>, String> {
         "RADOME_CAN_RETRY_MS",
         "RADOME_CAN_PROFILE",
         "RADOME_METRICS_INTERVAL_MS",
+        "RADOME_OUTBOUND_QUEUE_CAPACITY",
+        "RADOME_COMMAND_CACHE_CAPACITY",
+        "RADOME_MAX_CAPABILITIES",
     ];
 
     let mut vars = BTreeMap::new();
@@ -113,6 +146,7 @@ fn resolve(
     let file = file.unwrap_or_default();
     let telemetry = file.telemetry.unwrap_or_default();
     let socketcan = telemetry.socketcan.unwrap_or_default();
+    let limits = file.limits.unwrap_or_default();
 
     let listen_addr = vars
         .get("RADOME_ADDR")
@@ -157,6 +191,27 @@ fn resolve(
         return Err("metrics_interval_ms must be greater than zero".to_owned());
     }
 
+    let connection_limits = ConnectionLimits {
+        outbound_queue_capacity: resolve_positive_usize(
+            vars.get("RADOME_OUTBOUND_QUEUE_CAPACITY"),
+            limits.outbound_queue_capacity,
+            DEFAULT_OUTBOUND_QUEUE_CAPACITY,
+            "RADOME_OUTBOUND_QUEUE_CAPACITY",
+        )?,
+        command_cache_capacity: resolve_positive_usize(
+            vars.get("RADOME_COMMAND_CACHE_CAPACITY"),
+            limits.command_cache_capacity,
+            DEFAULT_COMMAND_CACHE_CAPACITY,
+            "RADOME_COMMAND_CACHE_CAPACITY",
+        )?,
+        max_capabilities: resolve_positive_usize(
+            vars.get("RADOME_MAX_CAPABILITIES"),
+            limits.max_capabilities,
+            DEFAULT_MAX_CAPABILITIES,
+            "RADOME_MAX_CAPABILITIES",
+        )?,
+    };
+
     let profile = match vars.get("RADOME_CAN_PROFILE") {
         Some(path) => Some(non_empty_path(path, "RADOME_CAN_PROFILE")?),
         None => match socketcan.profile {
@@ -179,8 +234,27 @@ fn resolve(
             },
         },
         metrics_interval: Duration::from_millis(metrics_interval_ms),
+        connection_limits,
         config_path,
     })
+}
+
+fn resolve_positive_usize(
+    environment: Option<&String>,
+    file: Option<usize>,
+    default: usize,
+    name: &str,
+) -> Result<usize, String> {
+    let value = match environment {
+        Some(value) => value
+            .parse::<usize>()
+            .map_err(|_| format!("invalid {name}: {value}"))?,
+        None => file.unwrap_or(default),
+    };
+    if value == 0 {
+        return Err(format!("{name} must be greater than zero"));
+    }
+    Ok(value)
 }
 
 fn parse_telemetry_source(value: &str) -> Result<TelemetrySource, String> {
@@ -242,14 +316,20 @@ mod tests {
         assert_eq!(config.telemetry.socketcan.retry_delay, Duration::from_secs(1));
         assert_eq!(config.telemetry.socketcan.profile, None);
         assert_eq!(config.metrics_interval, Duration::from_secs(30));
+        assert_eq!(config.connection_limits, ConnectionLimits::default());
     }
 
     #[test]
-    fn file_configures_socketcan_and_resolves_profile_relative_to_itself() {
+    fn file_configures_socketcan_limits_and_resolves_profile_relative_to_itself() {
         let file = parse_file(
             r#"{
                 "listen_addr": "0.0.0.0:9000",
                 "metrics_interval_ms": 2500,
+                "limits": {
+                    "outbound_queue_capacity": 64,
+                    "command_cache_capacity": 120,
+                    "max_capabilities": 8
+                },
                 "telemetry": {
                     "source": "socketcan",
                     "socketcan": {
@@ -273,6 +353,14 @@ mod tests {
         assert_eq!(config.telemetry.socketcan.retry_delay, Duration::from_millis(250));
         assert_eq!(config.metrics_interval, Duration::from_millis(2500));
         assert_eq!(
+            config.connection_limits,
+            ConnectionLimits {
+                outbound_queue_capacity: 64,
+                command_cache_capacity: 120,
+                max_capabilities: 8,
+            }
+        );
+        assert_eq!(
             config.telemetry.socketcan.profile,
             Some(PathBuf::from("/etc/radome/can-profile.json"))
         );
@@ -284,6 +372,11 @@ mod tests {
             r#"{
                 "listen_addr": "0.0.0.0:9000",
                 "metrics_interval_ms": 5000,
+                "limits": {
+                    "outbound_queue_capacity": 64,
+                    "command_cache_capacity": 120,
+                    "max_capabilities": 8
+                },
                 "telemetry": {
                     "source": "socketcan",
                     "socketcan": {"interface": "can0", "retry_ms": 5000}
@@ -300,6 +393,9 @@ mod tests {
                 ("RADOME_CAN_RETRY_MS", "25"),
                 ("RADOME_CAN_PROFILE", "override.json"),
                 ("RADOME_METRICS_INTERVAL_MS", "75"),
+                ("RADOME_OUTBOUND_QUEUE_CAPACITY", "16"),
+                ("RADOME_COMMAND_CACHE_CAPACITY", "24"),
+                ("RADOME_MAX_CAPABILITIES", "4"),
             ]),
         )
         .unwrap();
@@ -309,6 +405,14 @@ mod tests {
         assert_eq!(config.telemetry.socketcan.interface, "vcan42");
         assert_eq!(config.telemetry.socketcan.retry_delay, Duration::from_millis(25));
         assert_eq!(config.metrics_interval, Duration::from_millis(75));
+        assert_eq!(
+            config.connection_limits,
+            ConnectionLimits {
+                outbound_queue_capacity: 16,
+                command_cache_capacity: 24,
+                max_capabilities: 4,
+            }
+        );
         assert_eq!(
             config.telemetry.socketcan.profile,
             Some(PathBuf::from("override.json"))
@@ -340,6 +444,17 @@ mod tests {
         )
         .unwrap_err()
         .contains("metrics_interval_ms"));
+
+        for field in [
+            "outbound_queue_capacity",
+            "command_cache_capacity",
+            "max_capabilities",
+        ] {
+            let json = format!(r#"{{"limits":{{"{field}":0}}}}"#);
+            assert!(resolve(Some(parse_file(&json)), None, &BTreeMap::new())
+                .unwrap_err()
+                .contains("must be greater than zero"));
+        }
 
         assert!(serde_json::from_str::<FileConfig>(r#"{"surprise":true}"#).is_err());
     }
