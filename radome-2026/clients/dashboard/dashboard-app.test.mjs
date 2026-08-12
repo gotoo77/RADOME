@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createMediaCommandExecutor } from './dashboard-app.js';
+import { createClimateCommandExecutor, createMediaCommandExecutor } from './dashboard-app.js';
+import { ClimateState } from './climate-state.js';
 import { InfotainmentState } from './infotainment-state.js';
 
 function deferred() {
@@ -65,4 +66,53 @@ test('une commande media refusée conserve l état observé et expose le détail
   });
   assert.equal(infotainment.snapshot.volume, 80);
   assert.equal(infotainment.snapshot.playing, true);
+});
+
+test('une commande climat attend l événement avant de modifier la température observée', async () => {
+  const climate = new ClimateState();
+  climate.applySnapshot({ temperature_c: 20 });
+  const pending = deferred();
+  const calls = [];
+  const client = {
+    sendCommand(name, data) {
+      calls.push({ name, data });
+      return pending.promise;
+    },
+  };
+  const sendClimateCommand = createClimateCommandExecutor({ client, climate });
+
+  const resultPromise = sendClimateCommand(23.5);
+  assert.deepEqual(calls, [{
+    name: 'climate.set_temperature',
+    data: { temperature_c: 23.5 },
+  }]);
+  assert.equal(climate.snapshot.command.status, 'pending');
+  assert.equal(climate.snapshot.temperatureC, 20);
+
+  pending.resolve({ outcome: 'succeeded', data: 'accepted' });
+  await resultPromise;
+  assert.equal(climate.snapshot.command.status, 'succeeded');
+  assert.equal(climate.snapshot.temperatureC, 20);
+
+  climate.applyRadomeEvent('climate.temperature_changed', { temperature_c: 23.5 });
+  assert.equal(climate.snapshot.temperatureC, 23.5);
+});
+
+test('un refus climat conserve la température du snapshot', async () => {
+  const climate = new ClimateState();
+  climate.applySnapshot({ temperature_c: 21 });
+  const client = {
+    sendCommand() {
+      return Promise.reject(new Error('temperature_c_out_of_range'));
+    },
+  };
+  const sendClimateCommand = createClimateCommandExecutor({ client, climate });
+
+  await assert.rejects(sendClimateCommand(31), /temperature_c_out_of_range/);
+  assert.equal(climate.snapshot.temperatureC, 21);
+  assert.deepEqual(climate.snapshot.command, {
+    status: 'failed',
+    requestedTemperatureC: 31,
+    detail: 'temperature_c_out_of_range',
+  });
 });
