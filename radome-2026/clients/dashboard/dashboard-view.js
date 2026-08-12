@@ -15,6 +15,7 @@ export class DashboardView {
     this.mediaTrack = root.querySelector('#media-track');
     this.mediaVolumeValue = root.querySelector('#media-volume-value');
     this.mediaVolume = root.querySelector('#media-volume');
+    this.mediaToggle = root.querySelector('#media-toggle');
     this.mediaFeedback = root.querySelector('#media-feedback');
   }
 
@@ -47,18 +48,18 @@ export class DashboardView {
   }
 
   renderInfotainment(state) {
-    this.mediaSource.textContent = state.source ?? 'RADOME MEDIA';
-    this.mediaTitle.textContent = state.title ?? 'Lecteur média';
-    this.mediaArtist.textContent = state.artist ?? 'Contrôle véhicule';
-    this.mediaPlayback.textContent = state.playing ? 'LECTURE' : 'PAUSE';
-    this.mediaPlayback.dataset.state = state.playing ? 'playing' : 'paused';
-
     const trackIndex = Number.isInteger(state.trackIndex) && state.trackIndex >= 0
       ? state.trackIndex
       : null;
     const volume = Number.isInteger(state.volume) && state.volume >= 0 && state.volume <= 100
       ? state.volume
       : null;
+
+    this.mediaSource.textContent = state.source ?? 'RADOME MEDIA';
+    this.mediaTitle.textContent = state.title ?? (trackIndex === null ? 'Lecteur média' : `Piste ${trackIndex + 1}`);
+    this.mediaArtist.textContent = state.artist ?? 'Contrôle véhicule';
+    this.mediaPlayback.textContent = state.playing ? 'LECTURE' : 'PAUSE';
+    this.mediaPlayback.dataset.state = state.playing ? 'playing' : 'paused';
 
     if (this.mediaTrack) {
       this.mediaTrack.textContent = trackIndex === null ? 'PISTE —' : `PISTE ${trackIndex + 1}`;
@@ -68,6 +69,10 @@ export class DashboardView {
     }
     if (this.mediaVolume && volume !== null) {
       this.mediaVolume.value = String(volume);
+    }
+    if (this.mediaToggle) {
+      this.mediaToggle.textContent = state.playing ? 'Pause' : 'Lecture';
+      this.mediaToggle.dataset.playback = state.playing ? 'playing' : 'paused';
     }
     if (this.mediaPlayer) {
       this.mediaPlayer.dataset.playback = state.playing ? 'playing' : 'paused';
