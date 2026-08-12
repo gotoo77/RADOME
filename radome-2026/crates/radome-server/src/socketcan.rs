@@ -152,10 +152,16 @@ mod linux {
                 return Err(io::Error::last_os_error());
             }
             if read as usize != size_of::<CanFrame>() {
-                return Err(io::Error::new(io::ErrorKind::UnexpectedEof, "incomplete CAN frame"));
+                return Err(io::Error::new(
+                    io::ErrorKind::UnexpectedEof,
+                    "incomplete CAN frame",
+                ));
             }
             if frame.can_id & (CAN_RTR_FLAG | CAN_ERR_FLAG) != 0 {
-                return Err(io::Error::new(io::ErrorKind::InvalidData, "unsupported CAN RTR/error frame"));
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "unsupported CAN RTR/error frame",
+                ));
             }
             let len = usize::from(frame.can_dlc.min(8));
             let id = if frame.can_id & CAN_EFF_FLAG != 0 {
@@ -300,7 +306,7 @@ mod tests {
             [Capability::new("display")],
         ));
 
-        let (tx, mut rx) = mpsc::unbounded_channel();
+        let (tx, mut rx) = mpsc::channel(4);
         let hub = Arc::new(Mutex::new(ConnectionHub::default()));
         hub.lock().unwrap().register("vcan-dashboard", tx);
 
