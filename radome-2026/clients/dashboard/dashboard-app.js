@@ -26,6 +26,7 @@ export function createDashboardApp({
     capabilities,
     supportedCapabilities,
   });
+  const sendMediaCommand = createMediaCommandExecutor({ client, infotainment });
   let healthTimer = null;
 
   const renderHealth = () => view.renderVehicleHealth(vehicleHealth.snapshot);
@@ -55,17 +56,6 @@ export function createDashboardApp({
     }
     vehicleHealth.setConnectionStatus(status);
     renderHealth();
-  };
-  const sendMediaCommand = async (name, data = null) => {
-    infotainment.markCommandPending(name);
-    try {
-      const result = await client.sendCommand(name, data);
-      infotainment.markCommandSucceeded(name);
-      return result;
-    } catch (error) {
-      infotainment.markCommandFailed(name, error);
-      throw error;
-    }
   };
 
   vehicle.addEventListener('change', ({ detail }) => view.renderVehicle(detail));
@@ -119,5 +109,19 @@ export function createDashboardApp({
       cancelHealthTimer();
       client.disconnect();
     },
+  };
+}
+
+export function createMediaCommandExecutor({ client, infotainment }) {
+  return async (name, data = null) => {
+    infotainment.markCommandPending(name);
+    try {
+      const result = await client.sendCommand(name, data);
+      infotainment.markCommandSucceeded(name);
+      return result;
+    } catch (error) {
+      infotainment.markCommandFailed(name, error);
+      throw error;
+    }
   };
 }
