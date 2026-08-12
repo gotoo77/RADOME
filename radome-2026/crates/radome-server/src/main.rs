@@ -3,6 +3,7 @@ mod command_executor;
 mod commands;
 mod config;
 mod hub;
+mod observability;
 mod producer;
 mod server;
 mod socketcan;
@@ -46,22 +47,34 @@ fn new_media_actuator() -> SharedMediaActuator {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let config = ServerConfig::load().map_err(|error| {
-        std::io::Error::new(std::io::ErrorKind::InvalidInput, error)
-    })?;
-    let listener = TcpListener::bind(&config.listen_addr).await?;
+    observability::init_tracing()
+        .map_err(|error| std::io::Error::other(error.to_string()))?;
+
+    let config = match ServerConfig::load() {
+        Ok(config) => config,
+        Err(error) => {
+            tracing::error!(error = %error, "configuration_invalid");
+            return Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, error).into());
+        }
+    };
+    let listener = match TcpListener::bind(&config.listen_addr).await {
+        Ok(listener) => listener,
+        Err(error) => {
+            tracing::error!(listen_addr = %config.listen_addr, error = %error, "server_bind_failed");
+            return Err(error.into());
+        }
+    };
     let runtime = new_runtime();
     let hub = new_hub();
     let climate_actuator = new_climate_actuator();
     let media_actuator = new_media_actuator();
 
     start_telemetry_source(&config, Arc::clone(&runtime), Arc::clone(&hub))?;
-    if let Some(path) = &config.config_path {
-        println!("RADOME configuration: {}", path.display());
-    } else {
-        println!("RADOME configuration: defaults + environment");
+    match &config.config_path {
+        Some(path) => tracing::info!(config_path = %path.display(), "configuration_loaded"),
+        None => tracing::info!(config_source = "defaults+environment", "configuration_loaded"),
     }
-    println!("RADOME server listening on ws://{}", config.listen_addr);
+    tracing::info!(listen_addr = %config.listen_addr, "server_listening");
     server::serve(listener, runtime, hub, climate_actuator, media_actuator).await
 }
 
@@ -73,7 +86,7 @@ fn start_telemetry_source(
     match config.telemetry.source {
         TelemetrySource::Demo => {
             tokio::spawn(run_demo_telemetry(runtime, hub, Duration::from_secs(1)));
-            println!("RADOME telemetry source: demo");
+            tracing::info!(source = "demo", "telemetry_source_started");
             Ok(())
         }
         TelemetrySource::SocketCan => start_socketcan(&config.telemetry.socketcan, runtime, hub),
@@ -173,26 +186,31 @@ fn start_socketcan(
         SocketCanSource::open(&interface_for_open)
     });
 
-    println!(
-        "RADOME telemetry source: SocketCAN ({interface}), profile={profile}, retry={}ms",
-        retry_delay.as_millis()
+    tracing::info!(
+        source = "socketcan",
+        interface = %interface,
+        profile = %profile,
+        retry_ms = retry_delay.as_millis() as u64,
+        "telemetry_source_started"
     );
 
     tokio::task::spawn_blocking(move || loop {
         match publish_next_bus_frame(&mut source, &adapter, &runtime, &hub) {
             Ok(_) => {}
             Err(VehicleSourceError::Decode(error)) => {
-                eprintln!("CAN frame ignored: {error:?}");
+                tracing::warn!(interface = %interface, error = ?error, "can_frame_ignored");
             }
             Err(VehicleSourceError::Read(error)) => {
                 if source_error_requires_reconnect(&error) {
-                    eprintln!(
-                        "SocketCAN unavailable on {interface}: {error}; retry in {}ms",
-                        retry_delay.as_millis()
+                    tracing::warn!(
+                        interface = %interface,
+                        error = %error,
+                        retry_ms = retry_delay.as_millis() as u64,
+                        "socketcan_unavailable"
                     );
                     std::thread::sleep(retry_delay);
                 } else {
-                    eprintln!("SocketCAN frame read ignored on {interface}: {error}");
+                    tracing::warn!(interface = %interface, error = %error, "socketcan_frame_read_ignored");
                 }
             }
         }
