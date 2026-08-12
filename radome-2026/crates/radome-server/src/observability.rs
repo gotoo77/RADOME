@@ -38,6 +38,6 @@ mod tests {
 
     #[test]
     fn invalid_filter_is_rejected_before_server_startup() {
-        assert!(tracing_filter(Some("radome_server=[oops")).is_err());
+        assert!(tracing_filter(Some("radome_server=verbose")).is_err());
     }
 }
