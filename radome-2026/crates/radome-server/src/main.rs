@@ -23,6 +23,7 @@ use std::time::Duration;
 use tokio::net::TcpListener;
 
 const DEFAULT_ADDR: &str = "127.0.0.1:8787";
+const DEFAULT_CAN_RETRY_MS: u64 = 1_000;
 
 fn new_runtime() -> SharedRuntime {
     Arc::new(Mutex::new(Runtime::new(SystemCapabilities::new([
@@ -72,16 +73,45 @@ fn start_telemetry_source(
     }
 }
 
+fn parse_can_retry_delay(value: &str) -> Result<Duration, String> {
+    let milliseconds = value
+        .parse::<u64>()
+        .map_err(|_| format!("invalid RADOME_CAN_RETRY_MS: {value}"))?;
+    if milliseconds == 0 {
+        return Err("RADOME_CAN_RETRY_MS must be greater than zero".to_owned());
+    }
+    Ok(Duration::from_millis(milliseconds))
+}
+
+fn can_retry_delay() -> Result<Duration, Box<dyn std::error::Error>> {
+    let value = std::env::var("RADOME_CAN_RETRY_MS")
+        .unwrap_or_else(|_| DEFAULT_CAN_RETRY_MS.to_string());
+    parse_can_retry_delay(&value).map_err(Into::into)
+}
+
 #[cfg(target_os = "linux")]
 fn start_socketcan(
     runtime: SharedRuntime,
     hub: SharedHub,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    use socketcan::SocketCanSource;
+    use socketcan::{
+        source_error_requires_reconnect, ReconnectingVehicleSource, SocketCanSource,
+    };
 
     let interface = std::env::var("RADOME_CAN_INTERFACE").unwrap_or_else(|_| "can0".to_owned());
-    let mut source = SocketCanSource::open(&interface)?;
-    println!("RADOME telemetry source: SocketCAN ({interface})");
+    if interface.as_bytes().contains(&0) {
+        return Err("RADOME_CAN_INTERFACE contains an invalid NUL byte".into());
+    }
+    let retry_delay = can_retry_delay()?;
+    let interface_for_open = interface.clone();
+    let mut source = ReconnectingVehicleSource::new(move || {
+        SocketCanSource::open(&interface_for_open)
+    });
+
+    println!(
+        "RADOME telemetry source: SocketCAN ({interface}), retry={}ms",
+        retry_delay.as_millis()
+    );
 
     tokio::task::spawn_blocking(move || {
         let adapter = DemoCanAdapter;
@@ -92,8 +122,15 @@ fn start_socketcan(
                     eprintln!("CAN frame ignored: {error:?}");
                 }
                 Err(VehicleSourceError::Read(error)) => {
-                    eprintln!("SocketCAN receive failed: {error}");
-                    break;
+                    if source_error_requires_reconnect(&error) {
+                        eprintln!(
+                            "SocketCAN unavailable on {interface}: {error}; retry in {}ms",
+                            retry_delay.as_millis()
+                        );
+                        std::thread::sleep(retry_delay);
+                    } else {
+                        eprintln!("SocketCAN frame read ignored on {interface}: {error}");
+                    }
                 }
             }
         }
@@ -107,4 +144,17 @@ fn start_socketcan(
     _hub: SharedHub,
 ) -> Result<(), Box<dyn std::error::Error>> {
     Err("SocketCAN telemetry is only available on Linux".into())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn can_retry_delay_is_explicit_and_non_zero() {
+        assert_eq!(parse_can_retry_delay("1000").unwrap(), Duration::from_secs(1));
+        assert_eq!(parse_can_retry_delay("25").unwrap(), Duration::from_millis(25));
+        assert!(parse_can_retry_delay("0").is_err());
+        assert!(parse_can_retry_delay("later").is_err());
+    }
 }
