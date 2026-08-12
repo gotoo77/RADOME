@@ -73,16 +73,20 @@ fn start_telemetry_source(
     }
 }
 
-fn can_retry_delay() -> Result<Duration, Box<dyn std::error::Error>> {
-    let value = std::env::var("RADOME_CAN_RETRY_MS")
-        .unwrap_or_else(|_| DEFAULT_CAN_RETRY_MS.to_string());
+fn parse_can_retry_delay(value: &str) -> Result<Duration, String> {
     let milliseconds = value
         .parse::<u64>()
         .map_err(|_| format!("invalid RADOME_CAN_RETRY_MS: {value}"))?;
     if milliseconds == 0 {
-        return Err("RADOME_CAN_RETRY_MS must be greater than zero".into());
+        return Err("RADOME_CAN_RETRY_MS must be greater than zero".to_owned());
     }
     Ok(Duration::from_millis(milliseconds))
+}
+
+fn can_retry_delay() -> Result<Duration, Box<dyn std::error::Error>> {
+    let value = std::env::var("RADOME_CAN_RETRY_MS")
+        .unwrap_or_else(|_| DEFAULT_CAN_RETRY_MS.to_string());
+    parse_can_retry_delay(&value).map_err(Into::into)
 }
 
 #[cfg(target_os = "linux")]
@@ -147,8 +151,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn can_retry_delay_defaults_to_one_second() {
-        std::env::remove_var("RADOME_CAN_RETRY_MS");
-        assert_eq!(can_retry_delay().unwrap(), Duration::from_secs(1));
+    fn can_retry_delay_is_explicit_and_non_zero() {
+        assert_eq!(parse_can_retry_delay("1000").unwrap(), Duration::from_secs(1));
+        assert_eq!(parse_can_retry_delay("25").unwrap(), Duration::from_millis(25));
+        assert!(parse_can_retry_delay("0").is_err());
+        assert!(parse_can_retry_delay("later").is_err());
     }
 }
