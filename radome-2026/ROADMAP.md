@@ -225,10 +225,13 @@ Le premier client doit servir à la fois de démonstrateur du protocole et de pr
   - aucune mutation optimiste de l'état réel : l'événement d'actionneur réconcilie l'UI ;
   - identité visuelle cohérente avec le Vehicle Info Display.
 
-- [ ] **M6.4 — Climate Control**
-  - température courante ;
-  - réglage de consigne ;
-  - validation par le serveur et affichage de l'état réellement obtenu ;
+- [x] **M6.4 — Climate Control**
+  - température courante issue du snapshot puis réconciliée par événement ;
+  - consigne tactile de `16 à 30 °C`, par pas de `0,5 °C` ;
+  - activation uniquement si `climate.set_temperature` est réellement découvert ;
+  - validation autoritaire par le serveur ;
+  - aucune mutation optimiste de la température observée ;
+  - feedback local `pending / succeeded / failed` ;
   - cohérence graphique avec les autres modules de l'IHM.
 
 - [ ] **M6.5 — Composition de l'écran RADOME**
