@@ -142,8 +142,8 @@ Passer d'un protocole fonctionnel à un protocole dont les invariants sont suffi
 - [x] **Erreurs protocolaires stables** : les erreurs utilisent un contrat explicite et testable ;
 - [x] **Ordering** : l'ordre garanti pour `CommandResult`, `Event` et `StateSnapshot` sur une connexion est documenté et testé ;
 - [x] **Idempotence des commandes** : une retransmission exacte d'une commande dans la même session rejoue les mêmes réponses sans seconde actuation ; une réutilisation conflictuelle d'un ID est refusée ;
-- [ ] **Reconnexion** : définir l'identité client/session lors d'une reconnexion ;
-- [ ] **Resynchronisation** : garantir un chemin simple `reconnect → snapshot → reprise` ;
+- [x] **Reconnexion** : le `client_id` logique peut être réutilisé mais chaque nouvelle connexion obtient une nouvelle `session_id`, réannonce ses capabilities et conserve l'état serveur ;
+- [x] **Resynchronisation** : le workflow canonique refait le bootstrap puis utilise le snapshot comme barrière de vérité avant de reprendre événements et commandes ;
 - [ ] **Tests multi-clients** : vérifier isolation de session, routage et absence de fuite de contexte entre clients.
 
 ### Critère de sortie
@@ -152,7 +152,7 @@ Un client peut perdre puis rétablir sa connexion, récupérer un état cohéren
 
 ### Prochaine tranche
 
-`feature/client-reconnection`
+`feature/multi-client-isolation`
 
 ---
 
