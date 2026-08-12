@@ -24,8 +24,13 @@ export class DashboardView {
 
   renderStatus(status) {
     const labels = {
+      connecting: 'connexion…',
+      handshake: 'hello…',
+      discovering: 'discovery…',
+      announcing_capabilities: 'capabilities…',
+      synchronizing: 'synchronisation…',
       connected: 'RADOME connecté',
-      handshake: 'connexion…',
+      reconnecting: 'reconnexion…',
       disconnected: 'déconnecté',
     };
     this.status.textContent = labels[status] ?? status;

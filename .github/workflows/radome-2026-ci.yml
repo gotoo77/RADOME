@@ -54,6 +54,9 @@ jobs:
       - name: Test dashboard
         run: node --test clients/dashboard/*.test.mjs
 
+      - name: Test client SDK
+        run: node --test clients/sdk/*.test.mjs
+
   vcan:
     name: SocketCAN vcan smoke test
     runs-on: ubuntu-latest
