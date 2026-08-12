@@ -16,7 +16,8 @@ Les champs exposés sont :
 - `telemetry_events_total` : événements métier de télémétrie produits, indépendamment du nombre de destinataires ;
 - `telemetry_errors_total` : erreurs de lecture ou décodage de la source SocketCAN ;
 - `socketcan_reconnects_total` : pertes de source nécessitant une réouverture SocketCAN ;
-- `outbound_backpressure_drops_total` : événements asynchrones abandonnés parce que la file sortante d'un client était pleine.
+- `outbound_backpressure_drops_total` : événements asynchrones abandonnés parce que la file sortante d'un client était pleine ;
+- `connection_limit_rejections_total` : opérations refusées parce qu'une connexion a atteint un budget configuré.
 
 Les compteurs `_total` sont monotones pendant la durée de vie du processus. `active_clients` est une jauge.
 
@@ -36,7 +37,8 @@ Par défaut, un snapshot est écrit toutes les 30 secondes sur stderr via le mê
     "telemetry_events_total": 42,
     "telemetry_errors_total": 0,
     "socketcan_reconnects_total": 0,
-    "outbound_backpressure_drops_total": 0
+    "outbound_backpressure_drops_total": 0,
+    "connection_limit_rejections_total": 0
   }
 }
 ```
@@ -67,6 +69,8 @@ La priorité reste celle de la configuration M7 : valeurs par défaut, puis fich
 
 `outbound_backpressure_drops_total` compte les pertes de diffusion asynchrone dues à un consommateur lent. Les réponses protocolaires directes ne sont pas abandonnées : elles attendent de la capacité dans la file bornée de leur connexion.
 
+`connection_limit_rejections_total` compte les refus dus aux budgets de session, par exemple une annonce de capabilities trop grande ou un nouveau command ID alors que le cache d'idempotence est plein.
+
 ## Validation
 
 Le smoke test live utilise un intervalle court de 50 ms et vérifie sur le vrai binaire que :
@@ -76,7 +80,7 @@ Le smoke test live utilise un intervalle court de 50 ms et vérifie sur le vrai 
 3. la télémétrie de démonstration augmente `telemetry_events_total` ;
 4. la reconnexion du SDK provoque un nouvel enregistrement client.
 
-La tranche backpressure ajoute en complément un test déterministe du hub qui remplit volontairement une file bornée et vérifie que seul l'événement excédentaire est abandonné.
+La tranche backpressure ajoute en complément un test déterministe du hub qui remplit volontairement une file bornée et vérifie que seul l'événement excédentaire est abandonné. La tranche de limites par connexion teste les refus de budgets sans casser le replay idempotent des commandes déjà mémorisées.
 
 ## Hors périmètre
 
@@ -88,4 +92,4 @@ Cette couche de métriques ne fournit volontairement pas encore :
 - métriques système CPU/mémoire ;
 - persistance des compteurs entre redémarrages.
 
-Après la backpressure, le prochain risque M7 est la définition de **limites de ressources par connexion** plus larges que la seule file sortante.
+La prochaine tranche M7 est **timeouts explicites**.

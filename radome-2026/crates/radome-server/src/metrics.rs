@@ -13,6 +13,7 @@ pub struct ServerMetrics {
     telemetry_errors_total: AtomicU64,
     socketcan_reconnects_total: AtomicU64,
     outbound_backpressure_drops_total: AtomicU64,
+    connection_limit_rejections_total: AtomicU64,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -26,6 +27,7 @@ pub struct MetricsSnapshot {
     pub telemetry_errors_total: u64,
     pub socketcan_reconnects_total: u64,
     pub outbound_backpressure_drops_total: u64,
+    pub connection_limit_rejections_total: u64,
 }
 
 static PROCESS_METRICS: OnceLock<ServerMetrics> = OnceLock::new();
@@ -76,6 +78,11 @@ impl ServerMetrics {
             .fetch_add(1, Ordering::Relaxed);
     }
 
+    pub fn record_connection_limit_rejection(&self) {
+        self.connection_limit_rejections_total
+            .fetch_add(1, Ordering::Relaxed);
+    }
+
     pub fn snapshot(&self) -> MetricsSnapshot {
         MetricsSnapshot {
             active_clients: self.active_clients.load(Ordering::Relaxed),
@@ -88,6 +95,9 @@ impl ServerMetrics {
             socketcan_reconnects_total: self.socketcan_reconnects_total.load(Ordering::Relaxed),
             outbound_backpressure_drops_total: self
                 .outbound_backpressure_drops_total
+                .load(Ordering::Relaxed),
+            connection_limit_rejections_total: self
+                .connection_limit_rejections_total
                 .load(Ordering::Relaxed),
         }
     }
@@ -105,6 +115,7 @@ pub fn emit_process_metrics() {
         telemetry_errors_total = snapshot.telemetry_errors_total,
         socketcan_reconnects_total = snapshot.socketcan_reconnects_total,
         outbound_backpressure_drops_total = snapshot.outbound_backpressure_drops_total,
+        connection_limit_rejections_total = snapshot.connection_limit_rejections_total,
         "metrics_snapshot"
     );
 }
@@ -138,6 +149,7 @@ mod tests {
         metrics.record_telemetry_error();
         metrics.record_socketcan_reconnect();
         metrics.record_outbound_backpressure_drop();
+        metrics.record_connection_limit_rejection();
 
         assert_eq!(
             metrics.snapshot(),
@@ -151,6 +163,7 @@ mod tests {
                 telemetry_errors_total: 1,
                 socketcan_reconnects_total: 1,
                 outbound_backpressure_drops_total: 1,
+                connection_limit_rejections_total: 1,
             }
         );
     }
