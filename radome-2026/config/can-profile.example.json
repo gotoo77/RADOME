@@ -1,0 +1,12 @@
+{
+  "frames": [
+    {
+      "id": "0x100",
+      "signal": "speed_kmh_u16_be"
+    },
+    {
+      "id": "0x101",
+      "signal": "engine_rpm_u16_be"
+    }
+  ]
+}
