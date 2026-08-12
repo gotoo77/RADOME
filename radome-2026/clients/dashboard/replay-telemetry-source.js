@@ -16,6 +16,7 @@ export class ReplayTelemetrySource extends EventTarget {
     if (this.running) return;
     this.running = true;
     this.pending = this.entries.length;
+    this.app.setVehicleTelemetryConnectionStatus?.('connected');
 
     if (this.pending === 0) {
       this.#complete();
@@ -40,6 +41,7 @@ export class ReplayTelemetrySource extends EventTarget {
     this.pending = 0;
     for (const timer of this.timers) this.clearTimer(timer);
     this.timers = [];
+    this.app.setVehicleTelemetryConnectionStatus?.('disconnected');
   }
 
   #complete() {

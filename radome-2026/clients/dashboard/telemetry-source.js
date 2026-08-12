@@ -21,11 +21,13 @@ export class DemoTelemetrySource {
 
   start() {
     if (this.cancel) return;
+    this.app.setVehicleTelemetryConnectionStatus?.('connected');
     this.cancel = this.play(this.app);
   }
 
   stop() {
     this.cancel?.();
     this.cancel = null;
+    this.app.setVehicleTelemetryConnectionStatus?.('disconnected');
   }
 }

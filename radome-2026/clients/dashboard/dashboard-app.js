@@ -1,5 +1,6 @@
 import { RadomeClient } from '../sdk/radome-client.js';
 import { VehicleState } from './vehicle-state.js';
+import { VehicleTelemetryHealth } from './vehicle-telemetry-health.js';
 import { InfotainmentState } from './infotainment-state.js';
 import { DashboardView } from './dashboard-view.js';
 
@@ -9,9 +10,13 @@ export function createDashboardApp({
   role = 'driver-display',
   capabilities = ['display', 'touch'],
   supportedCapabilities = ['media.control'],
+  vehicleTelemetryStaleAfterMs = 3_000,
+  setTimer = setTimeout,
+  clearTimer = clearTimeout,
   root = document,
 } = {}) {
   const vehicle = new VehicleState();
+  const vehicleHealth = new VehicleTelemetryHealth({ staleAfterMs: vehicleTelemetryStaleAfterMs });
   const infotainment = new InfotainmentState();
   const view = new DashboardView(root);
   const client = new RadomeClient({
@@ -21,12 +26,45 @@ export function createDashboardApp({
     capabilities,
     supportedCapabilities,
   });
+  let healthTimer = null;
+
+  const renderHealth = () => view.renderVehicleHealth(vehicleHealth.snapshot);
+  const cancelHealthTimer = () => {
+    if (healthTimer !== null) {
+      clearTimer(healthTimer);
+      healthTimer = null;
+    }
+  };
+  const scheduleHealthExpiry = () => {
+    cancelHealthTimer();
+    healthTimer = setTimer(() => {
+      healthTimer = null;
+      renderHealth();
+    }, vehicleTelemetryStaleAfterMs + 1);
+  };
+  const applyVehicleEvent = (name, data) => {
+    vehicleHealth.noteTelemetry();
+    renderHealth();
+    scheduleHealthExpiry();
+    return vehicle.applyRadomeEvent(name, data);
+  };
+  const setVehicleTelemetryConnectionStatus = status => {
+    if (status === 'reconnecting' || status === 'disconnected') {
+      vehicleHealth.reset();
+      cancelHealthTimer();
+    }
+    vehicleHealth.setConnectionStatus(status);
+    renderHealth();
+  };
 
   vehicle.addEventListener('change', ({ detail }) => view.renderVehicle(detail));
   infotainment.addEventListener('change', ({ detail }) => view.renderInfotainment(detail));
-  client.on('status', status => view.renderStatus(status));
-  client.on('event:vehicle.speed_changed', data => vehicle.applyRadomeEvent('vehicle.speed_changed', data));
-  client.on('event:vehicle.engine_rpm_changed', data => vehicle.applyRadomeEvent('vehicle.engine_rpm_changed', data));
+  client.on('status', status => {
+    view.renderStatus(status);
+    setVehicleTelemetryConnectionStatus(status);
+  });
+  client.on('event:vehicle.speed_changed', data => applyVehicleEvent('vehicle.speed_changed', data));
+  client.on('event:vehicle.engine_rpm_changed', data => applyVehicleEvent('vehicle.engine_rpm_changed', data));
   for (const name of [
     'media.source_changed',
     'media.title_changed',
@@ -40,14 +78,21 @@ export function createDashboardApp({
 
   view.renderVehicle(vehicle.snapshot);
   view.renderInfotainment(infotainment.snapshot);
+  renderHealth();
 
   return {
     client,
     vehicle,
+    vehicleHealth,
     infotainment,
     view,
+    applyVehicleEvent,
+    setVehicleTelemetryConnectionStatus,
     togglePlayback() { return client.sendCommand('media.toggle_playback'); },
     start() { client.connect(); },
-    stop() { client.disconnect(); },
+    stop() {
+      cancelHealthTimer();
+      client.disconnect();
+    },
   };
 }

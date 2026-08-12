@@ -13,8 +13,8 @@ Le principe de progression est simple : avancer par **tranches verticales testab
 | M2 | Commandes et actionneurs | ✅ Terminé |
 | M3 | Discovery, état et bootstrap dynamique | ✅ Terminé |
 | M4 | Robustesse et cohérence du protocole | ✅ Terminé |
-| M5 | Bus véhicule réel | ⏳ À venir |
-| M6 | Premier client RADOME réel et IHM véhicule | ⏳ À venir |
+| M5 | Bus véhicule réel | ✅ Terminé côté logiciel |
+| M6 | Premier client RADOME réel et IHM véhicule | ⏳ En cours |
 | M7 | Durcissement et exploitation | ⏳ À venir |
 
 ---
@@ -152,36 +152,34 @@ Un client peut perdre puis rétablir sa connexion, récupérer un état cohéren
 
 **État : atteint.**
 
-### Prochaine milestone
-
-**M5 — Bus véhicule réel.** Avant de choisir la première tranche, comparer la roadmap avec l'implémentation SocketCAN déjà présente afin de ne pas refaire ce qui existe.
-
 ---
 
-## M5 — Bus véhicule réel ⏳
+## M5 — Bus véhicule réel ✅
 
 ### Objectif
 
 Brancher RADOME sur une vraie source véhicule Linux sans contaminer le domaine par les détails matériels.
 
-### Tranches prévues
+### Tranches réalisées
 
-- [ ] implémentation réelle de `VehicleFrameSource` via SocketCAN ;
-- [ ] configuration de l'interface CAN ;
-- [ ] lecture asynchrone et conversion vers `VehicleBusFrame` ;
-- [ ] gestion des erreurs et de la perte d'interface ;
-- [ ] mapping configurable des IDs/trames vers les événements de domaine ;
-- [ ] tests sans hardware via source simulée ;
-- [ ] test manuel sur interface `vcan` ;
-- [ ] validation optionnelle sur matériel CAN réel.
+- [x] implémentation réelle de `VehicleFrameSource` via SocketCAN ;
+- [x] configuration de l'interface CAN ;
+- [x] lecture bloquante isolée hors du runtime async et conversion vers `VehicleBusFrame` ;
+- [x] gestion des erreurs et récupération après perte ou indisponibilité d'interface ;
+- [x] mapping configurable des IDs/trames vers les événements de domaine ;
+- [x] tests sans hardware via source simulée ;
+- [x] validation automatisée sur interface noyau `vcan` en CI ;
+- [ ] validation optionnelle sur matériel CAN physique réel.
 
 ### Critère de sortie
 
-Le même pipeline de domaine fonctionne avec une source simulée, `vcan` et une interface SocketCAN réelle, sans changement du runtime ou des consommateurs.
+Le même pipeline de domaine fonctionne avec une source simulée, `vcan` et une interface SocketCAN Linux sans changement du runtime ou des consommateurs. Le mapping CAN peut être fourni par configuration externe et une disparition de l'interface ne tue pas le service.
+
+**État : atteint côté logiciel.** La validation sur contrôleur CAN physique, câblage et bus réel reste une validation optionnelle de déploiement et ne bloque pas M6.
 
 ### Hors périmètre immédiat
 
-Le support LIN réel reste différé : l'adapter de démonstration existe, mais le chantier matériel LIN n'est pas prioritaire tant que M5 CAN n'est pas stabilisé.
+Le support LIN réel reste différé : l'adapter de démonstration existe, mais le chantier matériel LIN n'est pas prioritaire tant que le premier client RADOME n'a pas validé l'expérience de bout en bout.
 
 ---
 
@@ -195,22 +193,25 @@ Le premier client doit servir à la fois de démonstrateur du protocole et de pr
 
 ### Tranches prévues
 
-- [ ] **M6.1 — Shell client et bootstrap dynamique**
-  - connexion/déconnexion ;
+- [x] **M6.1 — Shell client et bootstrap dynamique**
+  - connexion/déconnexion et reconnexion automatique ;
   - `hello → discovery → capability_announce → state_snapshot` ;
   - état de connexion visible ;
   - aucun catalogue de commandes serveur dupliqué côté client ;
-  - resynchronisation après reconnexion.
+  - sélection dynamique des capabilities proposées par le serveur ;
+  - snapshot comme barrière de vérité et tampon des événements reçus pendant la synchronisation ;
+  - aucune retransmission automatique d'une commande au résultat ambigu ;
+  - resynchronisation complète après reconnexion.
 
-- [ ] **M6.2 — Vehicle Info Display**
-  - vue véhicule dédiée ;
+- [x] **M6.2 — Vehicle Info Display**
+  - vue véhicule dédiée et visuellement prioritaire ;
   - vitesse clairement lisible ;
   - régime moteur / RPM ;
-  - autres télémétries disponibles exposées progressivement ;
-  - indicateurs animés à partir des événements reçus ;
-  - état initial issu du snapshot quand la donnée existe ;
-  - comportement explicite en absence ou perte de télémétrie ;
-  - présentation pensée pour une lecture rapide de type écran embarqué, pas pour afficher du JSON brut.
+  - jauges animées à partir des événements reçus ;
+  - état initial explicitement inconnu tant qu'aucune télémétrie n'existe ;
+  - états `waiting`, `live`, `stale` et `offline` ;
+  - perte de télémétrie détectée par fraîcheur temporelle ;
+  - présentation responsive pensée pour une lecture rapide de type écran embarqué, sans JSON brut.
 
 - [ ] **M6.3 — Media Player**
   - composant visuel dédié ;

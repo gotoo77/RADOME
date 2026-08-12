@@ -1,8 +1,12 @@
 export class DashboardView {
   constructor(root = document) {
     this.status = root.querySelector('#status');
+    this.vehicleDisplay = root.querySelector('#vehicle-display');
+    this.vehicleHealth = root.querySelector('#vehicle-health');
     this.speed = root.querySelector('#speed');
+    this.speedBar = root.querySelector('#speed-bar');
     this.rpm = root.querySelector('#rpm');
+    this.rpmBar = root.querySelector('#rpm-bar');
     this.mediaSource = root.querySelector('#media-source');
     this.mediaTitle = root.querySelector('#media-title');
     this.mediaArtist = root.querySelector('#media-artist');
@@ -10,8 +14,31 @@ export class DashboardView {
   }
 
   renderVehicle(state) {
-    this.speed.textContent = formatValue(state.speedKmh, '--');
-    this.rpm.textContent = formatValue(state.engineRpm, '----');
+    const speed = numericValue(state.speedKmh);
+    const rpm = numericValue(state.engineRpm);
+
+    this.speed.textContent = speed === null ? '--' : String(Math.round(speed));
+    this.rpm.textContent = rpm === null ? '----' : String(Math.round(rpm));
+
+    if (this.speedBar) this.speedBar.style.width = `${progress(speed, 240)}%`;
+    if (this.rpmBar) this.rpmBar.style.width = `${progress(rpm, 8_000)}%`;
+    if (this.vehicleDisplay) {
+      this.vehicleDisplay.dataset.motion = speed !== null && speed > 0 ? 'moving' : 'stationary';
+    }
+  }
+
+  renderVehicleHealth(health) {
+    const labels = {
+      live: 'TÉLÉMÉTRIE ACTIVE',
+      waiting: 'EN ATTENTE DE TÉLÉMÉTRIE',
+      stale: 'TÉLÉMÉTRIE INTERROMPUE',
+      offline: 'SOURCE VÉHICULE HORS LIGNE',
+    };
+    if (this.vehicleHealth) {
+      this.vehicleHealth.textContent = labels[health.state] ?? health.state;
+      this.vehicleHealth.dataset.state = health.state;
+    }
+    if (this.vehicleDisplay) this.vehicleDisplay.dataset.telemetry = health.state;
   }
 
   renderInfotainment(state) {
@@ -43,6 +70,11 @@ export class DashboardView {
   }
 }
 
-function formatValue(value, fallback) {
-  return Number.isFinite(value) ? String(Math.round(value)) : fallback;
+function numericValue(value) {
+  return Number.isFinite(value) && value >= 0 ? value : null;
+}
+
+function progress(value, maximum) {
+  if (value === null) return 0;
+  return Math.max(0, Math.min(100, (value / maximum) * 100));
 }
