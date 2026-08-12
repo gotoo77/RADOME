@@ -7,10 +7,16 @@ export class DashboardView {
     this.speedBar = root.querySelector('#speed-bar');
     this.rpm = root.querySelector('#rpm');
     this.rpmBar = root.querySelector('#rpm-bar');
+    this.mediaPlayer = root.querySelector('#media-player');
     this.mediaSource = root.querySelector('#media-source');
     this.mediaTitle = root.querySelector('#media-title');
     this.mediaArtist = root.querySelector('#media-artist');
     this.mediaPlayback = root.querySelector('#media-playback');
+    this.mediaTrack = root.querySelector('#media-track');
+    this.mediaVolumeValue = root.querySelector('#media-volume-value');
+    this.mediaVolume = root.querySelector('#media-volume');
+    this.mediaToggle = root.querySelector('#media-toggle');
+    this.mediaFeedback = root.querySelector('#media-feedback');
   }
 
   renderVehicle(state) {
@@ -42,11 +48,54 @@ export class DashboardView {
   }
 
   renderInfotainment(state) {
-    this.mediaSource.textContent = state.source ?? 'Aucune source';
-    this.mediaTitle.textContent = state.title ?? 'Aucun média';
-    this.mediaArtist.textContent = state.artist ?? '—';
+    const trackIndex = Number.isInteger(state.trackIndex) && state.trackIndex >= 0
+      ? state.trackIndex
+      : null;
+    const volume = Number.isInteger(state.volume) && state.volume >= 0 && state.volume <= 100
+      ? state.volume
+      : null;
+
+    this.mediaSource.textContent = state.source ?? 'RADOME MEDIA';
+    this.mediaTitle.textContent = state.title ?? (trackIndex === null ? 'Lecteur média' : `Piste ${trackIndex + 1}`);
+    this.mediaArtist.textContent = state.artist ?? 'Contrôle véhicule';
     this.mediaPlayback.textContent = state.playing ? 'LECTURE' : 'PAUSE';
     this.mediaPlayback.dataset.state = state.playing ? 'playing' : 'paused';
+
+    if (this.mediaTrack) {
+      this.mediaTrack.textContent = trackIndex === null ? 'PISTE —' : `PISTE ${trackIndex + 1}`;
+    }
+    if (this.mediaVolumeValue) {
+      this.mediaVolumeValue.textContent = volume === null ? '--' : String(volume);
+    }
+    if (this.mediaVolume && volume !== null) {
+      this.mediaVolume.value = String(volume);
+    }
+    if (this.mediaToggle) {
+      this.mediaToggle.textContent = state.playing ? 'Pause' : 'Lecture';
+      this.mediaToggle.dataset.playback = state.playing ? 'playing' : 'paused';
+    }
+    if (this.mediaPlayer) {
+      this.mediaPlayer.dataset.playback = state.playing ? 'playing' : 'paused';
+    }
+
+    this.renderMediaCommand(state.command ?? { status: 'idle', name: null, detail: null });
+  }
+
+  renderMediaCommand(command) {
+    const status = command?.status ?? 'idle';
+    const label = mediaCommandLabel(command?.name);
+    const messages = {
+      idle: 'MÉDIA PRÊT',
+      pending: `COMMANDE EN COURS${label ? ` · ${label}` : ''}`,
+      succeeded: `COMMANDE ACCEPTÉE${label ? ` · ${label}` : ''}`,
+      failed: `COMMANDE REFUSÉE${command?.detail ? ` · ${command.detail}` : ''}`,
+    };
+
+    if (this.mediaFeedback) {
+      this.mediaFeedback.textContent = messages[status] ?? status;
+      this.mediaFeedback.dataset.state = status;
+    }
+    if (this.mediaPlayer) this.mediaPlayer.dataset.command = status;
   }
 
   renderStatus(status) {
@@ -68,6 +117,20 @@ export class DashboardView {
     this.status.textContent = `erreur: ${error.message}`;
     this.status.dataset.state = 'error';
   }
+}
+
+function mediaCommandLabel(name) {
+  const labels = {
+    'media.play': 'Lecture',
+    'media.pause': 'Pause',
+    'media.toggle_playback': 'Lecture / pause',
+    'media.next_track': 'Suivant',
+    'media.previous_track': 'Précédent',
+    'media.volume_up': 'Volume +',
+    'media.volume_down': 'Volume −',
+    'media.set_volume': 'Volume',
+  };
+  return labels[name] ?? name ?? '';
 }
 
 function numericValue(value) {

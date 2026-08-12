@@ -47,6 +47,22 @@ function replay(entries) {
   return { vehicle: vehicle.snapshot, infotainment: infotainment.snapshot };
 }
 
+function expectedDemoInfotainment({ title = 'Once in a Lifetime' } = {}) {
+  return {
+    source: 'Bluetooth',
+    title,
+    artist: 'Talking Heads',
+    playing: true,
+    volume: null,
+    trackIndex: null,
+    command: {
+      status: 'idle',
+      name: null,
+      detail: null,
+    },
+  };
+}
+
 test('une trace valide rejouee reconstruit exactement l etat final attendu', () => {
   const recording = JSON.stringify({
     version: 1,
@@ -67,12 +83,7 @@ test('une trace valide rejouee reconstruit exactement l etat final attendu', () 
 
   assert.deepEqual(replay(parseTelemetryRecording(recording)), {
     vehicle: { speedKmh: 0, engineRpm: 850 },
-    infotainment: {
-      source: 'Bluetooth',
-      title: 'Once in a Lifetime',
-      artist: 'Talking Heads',
-      playing: true,
-    },
+    infotainment: expectedDemoInfotainment(),
   });
 });
 
@@ -96,12 +107,7 @@ test('record JSON parse replay conserve exactement l etat observable', () => {
 
   assert.deepEqual(replay(entries), {
     vehicle: { speedKmh: 82, engineRpm: 850 },
-    infotainment: {
-      source: 'Bluetooth',
-      title: 'Once in a Lifetime',
-      artist: 'Talking Heads',
-      playing: true,
-    },
+    infotainment: expectedDemoInfotainment(),
   });
 
   assert.deepEqual(entries.map(entry => entry.afterMs), [0, 10, 10, 10, 10, 100, 0]);
