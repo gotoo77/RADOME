@@ -137,11 +137,11 @@ Passer d'un protocole fonctionnel à un protocole dont les invariants sont suffi
 
 ### Tranches prévues
 
-- [ ] **Contexte de session des événements de commande** : un événement produit à la suite d'une commande WebSocket conserve la `session_id` de la commande d'origine ;
-- [ ] **Causalité explicite des événements issus de commande** : décider et documenter si l'événement doit également porter la corrélation vers la commande causale ;
-- [ ] **Erreurs protocolaires stables** : remplacer les chaînes ad hoc par un contrat d'erreur explicite et testable ;
-- [ ] **Ordering** : définir ce que le serveur garantit pour `CommandResult`, `Event` et `StateSnapshot` sur une connexion ;
-- [ ] **Idempotence des commandes** : empêcher qu'une retransmission involontaire d'une même commande produise deux actuations ;
+- [x] **Contexte de session des événements de commande** : un événement produit à la suite d'une commande WebSocket conserve la `session_id` de la commande d'origine ;
+- [x] **Causalité explicite des événements issus de commande** : l'événement porte la corrélation vers la commande causale ;
+- [x] **Erreurs protocolaires stables** : les erreurs utilisent un contrat explicite et testable ;
+- [x] **Ordering** : l'ordre garanti pour `CommandResult`, `Event` et `StateSnapshot` sur une connexion est documenté et testé ;
+- [x] **Idempotence des commandes** : une retransmission exacte d'une commande dans la même session rejoue les mêmes réponses sans seconde actuation ; une réutilisation conflictuelle d'un ID est refusée ;
 - [ ] **Reconnexion** : définir l'identité client/session lors d'une reconnexion ;
 - [ ] **Resynchronisation** : garantir un chemin simple `reconnect → snapshot → reprise` ;
 - [ ] **Tests multi-clients** : vérifier isolation de session, routage et absence de fuite de contexte entre clients.
@@ -152,7 +152,7 @@ Un client peut perdre puis rétablir sa connexion, récupérer un état cohéren
 
 ### Prochaine tranche
 
-`feature/event-session-context`
+`feature/client-reconnection`
 
 ---
 
