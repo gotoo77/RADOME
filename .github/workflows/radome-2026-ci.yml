@@ -53,3 +53,37 @@ jobs:
 
       - name: Test dashboard
         run: node --test clients/dashboard/*.test.mjs
+
+  vcan:
+    name: SocketCAN vcan smoke test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: radome-2026
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: radome-2026
+
+      - name: Configure vcan0
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y can-utils
+          sudo modprobe vcan || true
+          sudo ip link del vcan0 2>/dev/null || true
+          sudo ip link add dev vcan0 type vcan
+          sudo ip link set up vcan0
+          ip -details link show vcan0
+
+      - name: Test real SocketCAN pipeline on vcan0
+        env:
+          RADOME_VCAN_INTERFACE: vcan0
+        run: cargo test -p radome-server vcan_frame_reaches_runtime_and_hub_through_real_socketcan -- --nocapture
