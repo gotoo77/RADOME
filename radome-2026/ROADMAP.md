@@ -234,13 +234,14 @@ Le premier client doit servir à la fois de démonstrateur du protocole et de pr
   - feedback local `pending / succeeded / failed` ;
   - cohérence graphique avec les autres modules de l'IHM.
 
-- [ ] **M6.5 — Composition de l'écran RADOME**
-  - navigation ou composition claire entre véhicule, média et climat ;
-  - layout responsive pour écran embarqué / navigateur desktop ;
-  - hiérarchie visuelle cohérente ;
-  - états connecté, reconnexion, dégradé et erreur ;
-  - aucune information protocolaire interne imposée à l'utilisateur normal ;
-  - possibilité d'un mode diagnostic séparé pour afficher discovery, session, événements et erreurs brutes.
+- [x] **M6.5 — Composition de l'écran RADOME**
+  - Vehicle Info Display conservé comme zone visuelle prioritaire ;
+  - Media Player et Climate Control regroupés dans une zone opérationnelle secondaire ;
+  - composition responsive desktop, écran embarqué étroit et mobile ;
+  - projection explicite des phases réseau en états `connecting`, `online`, `degraded`, `offline` et `error` ;
+  - aucune information protocolaire interne affichée dans le cockpit normal ;
+  - panneau diagnostic fermé par défaut avec session, discovery, dernier événement, dernière erreur, enregistrement et replay ;
+  - modes live, demo et replay partageant la même composition visuelle.
 
 - [ ] **M6.6 — Boucle UX complète et démonstration**
   - démarrage serveur + client documenté ;
