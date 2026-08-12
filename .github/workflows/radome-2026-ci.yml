@@ -57,6 +57,14 @@ jobs:
       - name: Test client SDK
         run: node --test clients/sdk/*.test.mjs
 
+      - name: Build live RADOME server
+        if: matrix.os == 'ubuntu-latest'
+        run: cargo build -p radome-server
+
+      - name: Test live client end to end
+        if: matrix.os == 'ubuntu-latest'
+        run: node --test clients/sdk/radome-live.e2e.mjs
+
   vcan:
     name: SocketCAN vcan smoke test
     runs-on: ubuntu-latest

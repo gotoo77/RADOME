@@ -14,7 +14,7 @@ Le principe de progression est simple : avancer par **tranches verticales testab
 | M3 | Discovery, état et bootstrap dynamique | ✅ Terminé |
 | M4 | Robustesse et cohérence du protocole | ✅ Terminé |
 | M5 | Bus véhicule réel | ✅ Terminé côté logiciel |
-| M6 | Premier client RADOME réel et IHM véhicule | ⏳ En cours |
+| M6 | Premier client RADOME réel et IHM véhicule | ✅ Terminé |
 | M7 | Durcissement et exploitation | ⏳ À venir |
 
 ---
@@ -183,7 +183,7 @@ Le support LIN réel reste différé : l'adapter de démonstration existe, mais 
 
 ---
 
-## M6 — Premier client RADOME réel et IHM véhicule ⏳
+## M6 — Premier client RADOME réel et IHM véhicule ✅
 
 ### Objectif
 
@@ -191,7 +191,7 @@ Valider le protocole avec une vraie application indépendante **et produire une 
 
 Le premier client doit servir à la fois de démonstrateur du protocole et de première incarnation visuelle de RADOME.
 
-### Tranches prévues
+### Tranches réalisées
 
 - [x] **M6.1 — Shell client et bootstrap dynamique**
   - connexion/déconnexion et reconnexion automatique ;
@@ -243,13 +243,13 @@ Le premier client doit servir à la fois de démonstrateur du protocole et de pr
   - panneau diagnostic fermé par défaut avec session, discovery, dernier événement, dernière erreur, enregistrement et replay ;
   - modes live, demo et replay partageant la même composition visuelle.
 
-- [ ] **M6.6 — Boucle UX complète et démonstration**
-  - démarrage serveur + client documenté ;
+- [x] **M6.6 — Boucle UX complète et démonstration**
+  - lancement serveur + client reproductible via `scripts/run-live-demo.sh` ;
   - bootstrap sans configuration manuelle du catalogue ;
-  - télémétrie animant le Vehicle Info Display ;
-  - commandes média et climat réellement exécutées ;
-  - reconnexion suivie d'une resynchronisation visible ;
-  - scénario de démonstration reproductible.
+  - télémétrie réelle du serveur animant le Vehicle Info Display ;
+  - commandes média et climat réellement exécutées par le SDK JavaScript ;
+  - reconnexion suivie d'un nouveau bootstrap et d'une resynchronisation par snapshot ;
+  - scénario live documenté et smoke test automatisé `radome-server ↔ RadomeClient` en CI Linux.
 
 ### Contraintes d'architecture
 
@@ -263,16 +263,16 @@ Le premier client doit servir à la fois de démonstrateur du protocole et de pr
 
 ### Direction UX
 
-L'IHM doit viser une esthétique de **cockpit numérique / infotainment sobre et lisible**, avec deux zones particulièrement soignées :
+L'IHM vise une esthétique de **cockpit numérique / infotainment sobre et lisible**, avec deux zones particulièrement soignées :
 
 1. **Vehicle Info Display** : priorité à la lecture instantanée des informations de conduite ;
 2. **Media Player** : commandes tactiles évidentes et état du lecteur immédiatement perceptible.
 
-L'objectif n'est pas de figer une DA définitive dès M6, mais la première version doit déjà être suffisamment propre pour donner envie de l'utiliser et de la montrer.
-
 ### Critère de sortie
 
 Une application distincte du serveur peut se bootstrapper depuis le protocole public, afficher une IHM véhicule cohérente, recevoir la télémétrie, piloter média et climat, puis survivre à une reconnexion sans perdre la cohérence de son état local.
+
+**État : atteint.** Le scénario complet est documenté et la frontière serveur ↔ SDK client est exercée automatiquement en CI.
 
 ---
 
