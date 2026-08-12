@@ -288,7 +288,7 @@ Rendre RADOME exploitable comme service de longue durée et préparer les extens
 - [x] **`tracing` structuré** : logs JSON sur stderr, niveaux filtrables via `RUST_LOG`, événements nommés pour démarrage/configuration/sources véhicule et erreurs SocketCAN, contrat validé par le smoke test live ;
 - [x] **métriques essentielles** : jauge des clients actifs, compteurs d'enregistrements, commandes réussies/échouées, événements télémétriques, erreurs et reconnexions SocketCAN, publiés périodiquement via `metrics_snapshot` ;
 - [x] **backpressure** : file WebSocket sortante bornée par connexion, pression bloquante pour les réponses causales, perte isolée des événements asynchrones d'un client lent et compteur `outbound_backpressure_drops_total` ;
-- [ ] limites de ressources par connexion ;
+- [x] **limites de ressources par connexion** : budgets configurables pour la file sortante, le cache d'idempotence et les capabilities ; fermeture contrôlée lorsqu'un nouveau command ID dépasse le cache afin de préserver le replay des commandes déjà mémorisées ; compteur `connection_limit_rejections_total` ;
 - [ ] timeouts explicites ;
 - [ ] stratégie de shutdown propre ;
 - [ ] tests de charge ciblés ;
@@ -300,7 +300,7 @@ Rendre RADOME exploitable comme service de longue durée et préparer les extens
 
 Le serveur peut être lancé, observé, arrêté et diagnostiqué proprement dans un environnement Linux réel, avec un comportement défini sous charge et en cas de défaillance réseau.
 
-**État : en cours.** La prochaine tranche recommandée est **limites de ressources par connexion**.
+**État : en cours.** La prochaine tranche recommandée est **timeouts explicites**.
 
 ---
 
