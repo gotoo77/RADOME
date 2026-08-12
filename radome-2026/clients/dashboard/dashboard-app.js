@@ -7,13 +7,20 @@ export function createDashboardApp({
   url,
   clientId = 'dashboard-web',
   role = 'driver-display',
-  capabilities = ['display', 'touch', 'media.control'],
+  capabilities = ['display', 'touch'],
+  supportedCapabilities = ['media.control'],
   root = document,
 } = {}) {
   const vehicle = new VehicleState();
   const infotainment = new InfotainmentState();
   const view = new DashboardView(root);
-  const client = new RadomeClient({ url, clientId, role, capabilities });
+  const client = new RadomeClient({
+    url,
+    clientId,
+    role,
+    capabilities,
+    supportedCapabilities,
+  });
 
   vehicle.addEventListener('change', ({ detail }) => view.renderVehicle(detail));
   infotainment.addEventListener('change', ({ detail }) => view.renderInfotainment(detail));
