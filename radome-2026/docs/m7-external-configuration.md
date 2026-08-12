@@ -25,7 +25,10 @@ Les variables disponibles pour surcharger ponctuellement un déploiement sont :
 - `RADOME_CAN_INTERFACE` ;
 - `RADOME_CAN_RETRY_MS` ;
 - `RADOME_CAN_PROFILE` ;
-- `RADOME_METRICS_INTERVAL_MS`.
+- `RADOME_METRICS_INTERVAL_MS` ;
+- `RADOME_OUTBOUND_QUEUE_CAPACITY` ;
+- `RADOME_COMMAND_CACHE_CAPACITY` ;
+- `RADOME_MAX_CAPABILITIES`.
 
 ## Format
 
@@ -35,6 +38,11 @@ Exemple :
 {
   "listen_addr": "127.0.0.1:8787",
   "metrics_interval_ms": 30000,
+  "limits": {
+    "outbound_queue_capacity": 128,
+    "command_cache_capacity": 256,
+    "max_capabilities": 32
+  },
   "telemetry": {
     "source": "demo",
     "socketcan": {
@@ -52,6 +60,8 @@ Le chemin `telemetry.socketcan.profile` est résolu relativement au fichier de c
 
 `metrics_interval_ms` définit la période de publication des snapshots de métriques structurées. Sa valeur par défaut est 30 000 ms.
 
+Le bloc `limits` fixe les budgets persistants par connexion : file sortante, cache d'idempotence et nombre maximal de capabilities annoncées. Les détails de leur sémantique sont dans `docs/m7-connection-resource-limits.md`.
+
 ## Validation
 
 La configuration est validée avant l'écoute réseau :
@@ -61,6 +71,7 @@ La configuration est validée avant l'écoute réseau :
 - interface SocketCAN non vide et sans octet NUL ;
 - délai de reconnexion strictement positif ;
 - intervalle de métriques strictement positif ;
+- chaque limite de connexion strictement positive ;
 - chemins de profil non vides ;
 - champs JSON inconnus refusés.
 
