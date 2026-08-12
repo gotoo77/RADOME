@@ -47,8 +47,12 @@ export function playDashboardDemo(app, frames = DASHBOARD_DEMO_FRAMES) {
   };
 }
 
-export function applyDemoEvent({ vehicle, infotainment }, name, data) {
-  if (name.startsWith('vehicle.')) return vehicle.applyRadomeEvent(name, data);
-  if (name.startsWith('media.')) return infotainment.applyRadomeEvent(name, data);
+export function applyDemoEvent(app, name, data) {
+  if (name.startsWith('vehicle.')) {
+    return app.applyVehicleEvent
+      ? app.applyVehicleEvent(name, data)
+      : app.vehicle.applyRadomeEvent(name, data);
+  }
+  if (name.startsWith('media.')) return app.infotainment.applyRadomeEvent(name, data);
   return false;
 }
