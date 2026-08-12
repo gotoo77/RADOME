@@ -12,6 +12,7 @@ pub struct ServerMetrics {
     telemetry_events_total: AtomicU64,
     telemetry_errors_total: AtomicU64,
     socketcan_reconnects_total: AtomicU64,
+    outbound_backpressure_drops_total: AtomicU64,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -24,6 +25,7 @@ pub struct MetricsSnapshot {
     pub telemetry_events_total: u64,
     pub telemetry_errors_total: u64,
     pub socketcan_reconnects_total: u64,
+    pub outbound_backpressure_drops_total: u64,
 }
 
 static PROCESS_METRICS: OnceLock<ServerMetrics> = OnceLock::new();
@@ -69,6 +71,11 @@ impl ServerMetrics {
             .fetch_add(1, Ordering::Relaxed);
     }
 
+    pub fn record_outbound_backpressure_drop(&self) {
+        self.outbound_backpressure_drops_total
+            .fetch_add(1, Ordering::Relaxed);
+    }
+
     pub fn snapshot(&self) -> MetricsSnapshot {
         MetricsSnapshot {
             active_clients: self.active_clients.load(Ordering::Relaxed),
@@ -79,6 +86,9 @@ impl ServerMetrics {
             telemetry_events_total: self.telemetry_events_total.load(Ordering::Relaxed),
             telemetry_errors_total: self.telemetry_errors_total.load(Ordering::Relaxed),
             socketcan_reconnects_total: self.socketcan_reconnects_total.load(Ordering::Relaxed),
+            outbound_backpressure_drops_total: self
+                .outbound_backpressure_drops_total
+                .load(Ordering::Relaxed),
         }
     }
 }
@@ -94,6 +104,7 @@ pub fn emit_process_metrics() {
         telemetry_events_total = snapshot.telemetry_events_total,
         telemetry_errors_total = snapshot.telemetry_errors_total,
         socketcan_reconnects_total = snapshot.socketcan_reconnects_total,
+        outbound_backpressure_drops_total = snapshot.outbound_backpressure_drops_total,
         "metrics_snapshot"
     );
 }
@@ -126,6 +137,7 @@ mod tests {
         metrics.add_telemetry_events(3);
         metrics.record_telemetry_error();
         metrics.record_socketcan_reconnect();
+        metrics.record_outbound_backpressure_drop();
 
         assert_eq!(
             metrics.snapshot(),
@@ -138,6 +150,7 @@ mod tests {
                 telemetry_events_total: 3,
                 telemetry_errors_total: 1,
                 socketcan_reconnects_total: 1,
+                outbound_backpressure_drops_total: 1,
             }
         );
     }
